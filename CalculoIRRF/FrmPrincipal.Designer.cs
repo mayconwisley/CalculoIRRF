@@ -104,6 +104,7 @@
             this.BtnCalcular.TabIndex = 3;
             this.BtnCalcular.Text = "&Calcular";
             this.BtnCalcular.UseVisualStyleBackColor = true;
+            this.BtnCalcular.Click += new System.EventHandler(this.BtnCalcular_Click);
             // 
             // BtnTabelaIRRF
             // 

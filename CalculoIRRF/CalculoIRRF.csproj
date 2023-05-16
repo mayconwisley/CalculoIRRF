@@ -80,7 +80,7 @@
     <Compile Include="FrmPrincipal.Designer.cs">
       <DependentUpon>FrmPrincipal.cs</DependentUpon>
     </Compile>
-    <Compile Include="Modelos\Calculo\IrrfNormal.cs" />
+    <Compile Include="Modelos\Calculo\Irrf.cs" />
     <Compile Include="Modelos\Irrf\Alterar.cs" />
     <Compile Include="Modelos\Irrf\Excluir.cs" />
     <Compile Include="Modelos\Irrf\Gravar.cs" />

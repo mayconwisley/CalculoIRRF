@@ -28,5 +28,20 @@ namespace CalculoIRRF
             FrmDeducaoSimplificada deducaoSimplificada = new FrmDeducaoSimplificada();
             deducaoSimplificada.ShowDialog();
         }
+
+        private void BtnCalcular_Click(object sender, EventArgs e)
+        {
+            Modelos.Calculo.Irrf irrf = new Modelos.Calculo.Irrf(DateTime.Parse(DateTime.Now.Date.ToString("MM/yyyy")), 1, 526.17m, 5000m);
+            irrf.Normal();
+
+            irrf.Simplificado();
+
+
+
+            Modelos.Calculo.Irrf irrf1 = new Modelos.Calculo.Irrf(DateTime.Parse(DateTime.Now.Date.ToString("MM/yyyy")), 1, 220.12m, 2640m);
+            irrf1.Normal();
+
+            irrf1.Simplificado();
+        }
     }
 }
