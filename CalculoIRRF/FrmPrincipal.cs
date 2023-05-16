@@ -40,8 +40,12 @@ namespace CalculoIRRF
             Modelos.Calculo.Irrf irrf = new Modelos.Calculo.Irrf(competencia, qtdDependente, valorInss, valorBruto);
 
             string str = irrf.DescricaoCalculoNormal();
+            str += "--------------------------------------------------------------------\n";
             str += irrf.DescricaoCalculoSimplificado();
+            str += "--------------------------------------------------------------------\n";
             str += irrf.Vantagem();
+            str += "--------------------------------------------------------------------\n";
+            str += irrf.DescricaoCalculoNormalProgrssivo();
 
             RTxtResultado.Text = str;
 

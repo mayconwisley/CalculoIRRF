@@ -106,7 +106,8 @@ namespace CalculoIRRF.Modelos.Irrf
             StringBuilder sqlBuilder = new StringBuilder();
 
             sqlBuilder.Append("SELECT Id, Competencia, Faixa, Valor, Porcentagem, Deducao ");
-            sqlBuilder.Append("FROM IRRF");
+            sqlBuilder.Append("FROM IRRF ");
+            sqlBuilder.Append("ORDER BY Competencia DESC");
 
             try
             {

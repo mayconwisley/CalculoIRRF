@@ -34,44 +34,6 @@ namespace CalculoIRRF.Modelos.Calculo
 
             return desconto;
         }
-        public decimal NormalProgressivo()
-        {
-            Modelos.Irrf.Listar listar = new Modelos.Irrf.Listar();
-            Modelos.Dependente.Listar listarDep = new Dependente.Listar();
-            decimal valorDependente = listarDep.Valor(_competencia);
-
-            decimal baseIrrf = _valorBruto - _valorInss - (_qtdDependente * valorDependente);
-            int faixaIrrf = listar.Faixa(baseIrrf, _competencia);
-
-            decimal desconto = 0;
-            decimal valorIrrfAnterior = 0;
-            decimal baseIrrfCalculo = 0;
-            for (int i = 1; i <= faixaIrrf; i++)
-            {
-                decimal porcentagemIrrf = listar.Porcentagem(i, _competencia);
-                decimal valorIrrf = listar.Valor(i, _competencia);
-
-                if (valorIrrf > baseIrrf)
-                {
-                    valorIrrfAnterior = baseIrrf;
-                }
-                else
-                {
-                    valorIrrfAnterior = valorIrrf;
-                }
-                baseIrrfCalculo = valorIrrf - valorIrrfAnterior;
-
-                desconto += (baseIrrfCalculo * (porcentagemIrrf / 100));
-
-                
-
-
-            }
-            desconto = Math.Round(desconto, 2);
-
-            return desconto;
-        }
-
         public string DescricaoCalculoNormal()
         {
             Modelos.Irrf.Listar listar = new Modelos.Irrf.Listar();
@@ -94,6 +56,89 @@ namespace CalculoIRRF.Modelos.Calculo
             strMensagem.Append($"Valor Base do IR: {baseIrrf:#,##0.00}\n");
             strMensagem.Append($"Porcentagem: {porcentagemIrrf:#,##0.00}% - Dedução: {deducaoIrrf:#,##0.00}\n");
             strMensagem.Append($"Valor do Desconto: {desconto:#,##0.00}\n\n");
+
+            return strMensagem.ToString();
+        }
+
+        public decimal NormalProgressivo()
+        {
+            Modelos.Irrf.Listar listar = new Modelos.Irrf.Listar();
+            Modelos.Dependente.Listar listarDep = new Dependente.Listar();
+            decimal valorDependente = listarDep.Valor(_competencia);
+
+            decimal baseIrrf = _valorBruto - _valorInss - (_qtdDependente * valorDependente);
+            int faixaIrrf = listar.Faixa(baseIrrf, _competencia);
+
+            decimal desconto = 0;
+            decimal valorIrrfAnterior = 0;
+            for (int i = 1; i <= faixaIrrf; i++)
+            {
+                decimal porcentagemIrrf = listar.Porcentagem(i, _competencia);
+                decimal valorIrrf = listar.Valor(i, _competencia);
+
+                decimal baseIrrfCalculo = valorIrrf - valorIrrfAnterior;
+
+                if (baseIrrfCalculo > _valorBruto)
+                {
+                    baseIrrfCalculo = _valorBruto - valorIrrfAnterior;
+                }
+
+                desconto += (baseIrrfCalculo * (porcentagemIrrf / 100));
+                valorIrrfAnterior = valorIrrf;
+            }
+            desconto = Math.Round(desconto, 2);
+
+            return desconto;
+        }
+
+        public string DescricaoCalculoNormalProgrssivo()
+        {
+            StringBuilder strMensagem = new StringBuilder();
+            Modelos.Irrf.Listar listar = new Modelos.Irrf.Listar();
+            Modelos.Dependente.Listar listarDep = new Dependente.Listar();
+            decimal valorDependente = listarDep.Valor(_competencia);
+
+            decimal baseIrrf = _valorBruto - _valorInss - (_qtdDependente * valorDependente);
+            int faixaIrrf = listar.Faixa(baseIrrf, _competencia);
+
+            decimal desconto = 0;
+            decimal totalDesconto = 0;
+            decimal valorIrrfAnterior = 0;
+
+            strMensagem.Append("Informações de Calculo do IR Normal Prograssivo\n\n");
+            strMensagem.Append($"Valor Bruto: {_valorBruto:#,##0.00}\n");
+            strMensagem.Append($"Valor INSS: {_valorInss:#,##0.00}\n");
+            strMensagem.Append($"Quantidade Dependente: {_qtdDependente} Valor: {valorDependente:#,##0.00} Total: {(_qtdDependente * valorDependente):#,##0.00}\n");
+            strMensagem.Append($"Base de IR: {baseIrrf:#,##0.00}\n");
+
+            for (int i = 1; i <= faixaIrrf; i++)
+            {
+                decimal porcentagemIrrf = listar.Porcentagem(i, _competencia);
+                decimal valorIrrf = listar.Valor(i, _competencia);
+
+                decimal baseIrrfCalculo = valorIrrf - valorIrrfAnterior;
+
+                if (valorIrrf > baseIrrf)
+                {
+                    baseIrrfCalculo = baseIrrf - valorIrrfAnterior;
+                }
+
+                if (baseIrrfCalculo > _valorBruto)
+                {
+                    baseIrrfCalculo = baseIrrf - valorIrrfAnterior;
+                }
+
+                desconto = (baseIrrfCalculo * (porcentagemIrrf / 100));
+                totalDesconto += desconto;
+
+                valorIrrfAnterior = valorIrrf;
+
+                strMensagem.Append($"{i}º Faixa ");
+                strMensagem.Append($"Base do IR: {baseIrrfCalculo:#,##0.00} ");
+                strMensagem.Append($"Porcentagem: {porcentagemIrrf:#,##0.00}% ");
+                strMensagem.Append($"Imposto: {desconto:#,##0.00}\n");
+            }
+            strMensagem.Append($"Valor do Desconto: {totalDesconto:#,##0.00}\n\n");
 
             return strMensagem.ToString();
         }
@@ -165,12 +210,12 @@ namespace CalculoIRRF.Modelos.Calculo
             {
                 decimal total = valorNormal - valorSimplificado;
 
-                return $"Calculo Simplificado é mais vantajoso!\nDiferença: {total:#,##0.00}";
+                return $"Calculo Simplificado é mais vantajoso!\nDiferença: {total:#,##0.00}\n\n";
             }
             else
             {
                 decimal total = valorSimplificado - valorNormal;
-                return $"Calculo Normal é mais vantajoso!\nDiferença: {total:#,##0.00}";
+                return $"Calculo Normal é mais vantajoso!\nDiferença: {total:#,##0.00}\n\n";
             }
         }
     }

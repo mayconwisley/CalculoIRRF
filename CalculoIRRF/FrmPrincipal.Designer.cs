@@ -121,7 +121,7 @@
             // 
             // BtnTabelaIRRF
             // 
-            this.BtnTabelaIRRF.Location = new System.Drawing.Point(371, 12);
+            this.BtnTabelaIRRF.Location = new System.Drawing.Point(479, 12);
             this.BtnTabelaIRRF.Name = "BtnTabelaIRRF";
             this.BtnTabelaIRRF.Size = new System.Drawing.Size(112, 23);
             this.BtnTabelaIRRF.TabIndex = 5;
@@ -131,7 +131,7 @@
             // 
             // BtnTabelaValSimplificado
             // 
-            this.BtnTabelaValSimplificado.Location = new System.Drawing.Point(371, 70);
+            this.BtnTabelaValSimplificado.Location = new System.Drawing.Point(479, 70);
             this.BtnTabelaValSimplificado.Name = "BtnTabelaValSimplificado";
             this.BtnTabelaValSimplificado.Size = new System.Drawing.Size(112, 23);
             this.BtnTabelaValSimplificado.TabIndex = 7;
@@ -144,23 +144,24 @@
             this.groupBox1.Controls.Add(this.RTxtResultado);
             this.groupBox1.Location = new System.Drawing.Point(11, 99);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(472, 349);
+            this.groupBox1.Size = new System.Drawing.Size(580, 349);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Calculo do IRRF";
             // 
             // RTxtResultado
             // 
-            this.RTxtResultado.Location = new System.Drawing.Point(6, 19);
+            this.RTxtResultado.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RTxtResultado.Location = new System.Drawing.Point(6, 12);
             this.RTxtResultado.Name = "RTxtResultado";
             this.RTxtResultado.ReadOnly = true;
-            this.RTxtResultado.Size = new System.Drawing.Size(460, 324);
+            this.RTxtResultado.Size = new System.Drawing.Size(568, 324);
             this.RTxtResultado.TabIndex = 0;
             this.RTxtResultado.Text = "";
             // 
             // BtnDependente
             // 
-            this.BtnDependente.Location = new System.Drawing.Point(371, 41);
+            this.BtnDependente.Location = new System.Drawing.Point(479, 41);
             this.BtnDependente.Name = "BtnDependente";
             this.BtnDependente.Size = new System.Drawing.Size(112, 23);
             this.BtnDependente.TabIndex = 6;
@@ -198,7 +199,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(495, 491);
+            this.ClientSize = new System.Drawing.Size(603, 491);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.MktCompetencia);
             this.Controls.Add(this.label2);
