@@ -7,19 +7,21 @@ namespace CalculoIRRF.Modelos.Irrf
 {
     public class Listar
     {
-        public int Faixa(decimal baseIrrf)
+        public int Faixa(decimal baseIrrf, DateTime competencia)
         {
             Crud crud = new Crud();
             StringBuilder sqlBuilder = new StringBuilder();
 
             sqlBuilder.Append("SELECT MIN(Faixa) AS Faixa ");
             sqlBuilder.Append("FROM IRRF ");
-            sqlBuilder.Append("WHERE Valor >= @Valor");
+            sqlBuilder.Append("WHERE Valor >= @Valor ");
+            sqlBuilder.Append("AND Competencia = (SELECT MAX(Competencia) FROM IRRF WHERE Competencia <= @Competencia)");
 
             try
             {
                 crud.LimparParametro();
                 crud.AdicionarParamentro("Valor", baseIrrf);
+                crud.AdicionarParamentro("Competencia", competencia);
                 return int.Parse(crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString());
             }
             catch (Exception ex)
@@ -29,19 +31,21 @@ namespace CalculoIRRF.Modelos.Irrf
             }
         }
 
-        public decimal Porcentagem(int faixa)
+        public decimal Porcentagem(int faixa, DateTime competencia)
         {
             Crud crud = new Crud();
             StringBuilder sqlBuilder = new StringBuilder();
 
             sqlBuilder.Append("SELECT Porcentagem ");
             sqlBuilder.Append("FROM IRRF ");
-            sqlBuilder.Append("WHERE Faixa = @Faixa");
+            sqlBuilder.Append("WHERE Faixa = @Faixa ");
+            sqlBuilder.Append("AND Competencia = (SELECT MAX(Competencia) FROM IRRF WHERE Competencia <= @Competencia)");
 
             try
             {
                 crud.LimparParametro();
                 crud.AdicionarParamentro("Faixa", faixa);
+                crud.AdicionarParamentro("Competencia", competencia);
                 return decimal.Parse(crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString());
             }
             catch (Exception ex)
@@ -50,19 +54,21 @@ namespace CalculoIRRF.Modelos.Irrf
             }
         }
 
-        public decimal Deducao(int faixa)
+        public decimal Deducao(int faixa, DateTime competencia)
         {
             Crud crud = new Crud();
             StringBuilder sqlBuilder = new StringBuilder();
 
             sqlBuilder.Append("SELECT Deducao ");
             sqlBuilder.Append("FROM IRRF ");
-            sqlBuilder.Append("WHERE Faixa = @Faixa");
+            sqlBuilder.Append("WHERE Faixa = @Faixa ");
+            sqlBuilder.Append("AND Competencia = (SELECT MAX(Competencia) FROM IRRF WHERE Competencia <= @Competencia)");
 
             try
             {
                 crud.LimparParametro();
                 crud.AdicionarParamentro("Faixa", faixa);
+                crud.AdicionarParamentro("Competencia", competencia);
                 return decimal.Parse(crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString());
             }
             catch (Exception ex)
@@ -119,7 +125,7 @@ namespace CalculoIRRF.Modelos.Irrf
 
             sqlBuilder.Append("SELECT Id, Competencia, Faixa, Valor, Porcentagem, Deducao ");
             sqlBuilder.Append("FROM IRRF ");
-            sqlBuilder.Append("WHERE Competencia = @Competencia ");
+            sqlBuilder.Append("WHERE Competencia = (SELECT MAX(Competencia) FROM IRRF WHERE Competencia <= @Competencia)");
 
             try
             {

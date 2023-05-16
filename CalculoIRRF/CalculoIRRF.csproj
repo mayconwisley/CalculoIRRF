@@ -36,6 +36,14 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Release\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
@@ -74,6 +82,12 @@
     <Compile Include="FrmDeducaoSimplificada.Designer.cs">
       <DependentUpon>FrmDeducaoSimplificada.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmDependente.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmDependente.Designer.cs">
+      <DependentUpon>FrmDependente.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmPrincipal.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -81,6 +95,10 @@
       <DependentUpon>FrmPrincipal.cs</DependentUpon>
     </Compile>
     <Compile Include="Modelos\Calculo\Irrf.cs" />
+    <Compile Include="Modelos\Dependente\Alterar.cs" />
+    <Compile Include="Modelos\Dependente\Excluir.cs" />
+    <Compile Include="Modelos\Dependente\Gravar.cs" />
+    <Compile Include="Modelos\Dependente\Listar.cs" />
     <Compile Include="Modelos\Irrf\Alterar.cs" />
     <Compile Include="Modelos\Irrf\Excluir.cs" />
     <Compile Include="Modelos\Irrf\Gravar.cs" />
@@ -89,6 +107,8 @@
     <Compile Include="Modelos\Simplificado\Excluir.cs" />
     <Compile Include="Modelos\Simplificado\Gravar.cs" />
     <Compile Include="Modelos\Simplificado\Listar.cs" />
+    <Compile Include="Modelos\Validacao\Validar.cs" />
+    <Compile Include="Objetos\Dependente.cs" />
     <Compile Include="Objetos\Irrf.cs" />
     <Compile Include="Objetos\Simplificado.cs" />
     <Compile Include="Program.cs" />
@@ -101,6 +121,9 @@
     </Compile>
     <EmbeddedResource Include="FrmDeducaoSimplificada.resx">
       <DependentUpon>FrmDeducaoSimplificada.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmDependente.resx">
+      <DependentUpon>FrmDependente.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmPrincipal.resx">
       <DependentUpon>FrmPrincipal.cs</DependentUpon>

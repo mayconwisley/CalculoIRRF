@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle61 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle62 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle63 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle64 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle65 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.MktCompetencia = new System.Windows.Forms.MaskedTextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -44,15 +44,15 @@
             this.label5 = new System.Windows.Forms.Label();
             this.TxtDeducao = new System.Windows.Forms.TextBox();
             this.DgvTabelaIRRF = new System.Windows.Forms.DataGridView();
-            this.BtnGravar = new System.Windows.Forms.Button();
-            this.BtnAlterar = new System.Windows.Forms.Button();
-            this.BtnExcluir = new System.Windows.Forms.Button();
             this.Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Competencia = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Faixa = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Valor = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Porcentagem = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Deducao = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BtnGravar = new System.Windows.Forms.Button();
+            this.BtnAlterar = new System.Windows.Forms.Button();
+            this.BtnExcluir = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.DgvTabelaIRRF)).BeginInit();
             this.SuspendLayout();
             // 
@@ -90,6 +90,9 @@
             this.TxtFaixa.TabIndex = 1;
             this.TxtFaixa.Text = "1";
             this.TxtFaixa.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.TxtFaixa.TextChanged += new System.EventHandler(this.TxtFaixa_TextChanged);
+            this.TxtFaixa.Enter += new System.EventHandler(this.TxtFaixa_Enter);
+            this.TxtFaixa.Leave += new System.EventHandler(this.TxtFaixa_Leave);
             // 
             // label3
             // 
@@ -108,6 +111,9 @@
             this.TxtValor.TabIndex = 2;
             this.TxtValor.Text = "0,00";
             this.TxtValor.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.TxtValor.TextChanged += new System.EventHandler(this.TxtValor_TextChanged);
+            this.TxtValor.Enter += new System.EventHandler(this.TxtValor_Enter);
+            this.TxtValor.Leave += new System.EventHandler(this.TxtValor_Leave);
             // 
             // label4
             // 
@@ -124,8 +130,11 @@
             this.TxtPorcentagem.Name = "TxtPorcentagem";
             this.TxtPorcentagem.Size = new System.Drawing.Size(35, 20);
             this.TxtPorcentagem.TabIndex = 3;
-            this.TxtPorcentagem.Text = "0";
+            this.TxtPorcentagem.Text = "0,00";
             this.TxtPorcentagem.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.TxtPorcentagem.TextChanged += new System.EventHandler(this.TxtPorcentagem_TextChanged);
+            this.TxtPorcentagem.Enter += new System.EventHandler(this.TxtPorcentagem_Enter);
+            this.TxtPorcentagem.Leave += new System.EventHandler(this.TxtPorcentagem_Leave);
             // 
             // label5
             // 
@@ -144,6 +153,9 @@
             this.TxtDeducao.TabIndex = 4;
             this.TxtDeducao.Text = "0,00";
             this.TxtDeducao.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.TxtDeducao.TextChanged += new System.EventHandler(this.TxtDeducao_TextChanged);
+            this.TxtDeducao.Enter += new System.EventHandler(this.TxtDeducao_Enter);
+            this.TxtDeducao.Leave += new System.EventHandler(this.TxtDeducao_Leave);
             // 
             // DgvTabelaIRRF
             // 
@@ -167,6 +179,78 @@
             this.DgvTabelaIRRF.Size = new System.Drawing.Size(326, 150);
             this.DgvTabelaIRRF.TabIndex = 5;
             this.DgvTabelaIRRF.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvTabelaIRRF_CellDoubleClick);
+            // 
+            // Id
+            // 
+            this.Id.DataPropertyName = "Id";
+            this.Id.HeaderText = "Id";
+            this.Id.Name = "Id";
+            this.Id.ReadOnly = true;
+            this.Id.Visible = false;
+            // 
+            // Competencia
+            // 
+            this.Competencia.DataPropertyName = "Competencia";
+            dataGridViewCellStyle61.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle61.Format = "MM/yyyy";
+            dataGridViewCellStyle61.NullValue = null;
+            this.Competencia.DefaultCellStyle = dataGridViewCellStyle61;
+            this.Competencia.HeaderText = "Competencia";
+            this.Competencia.Name = "Competencia";
+            this.Competencia.ReadOnly = true;
+            this.Competencia.Visible = false;
+            // 
+            // Faixa
+            // 
+            this.Faixa.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.Faixa.DataPropertyName = "Faixa";
+            dataGridViewCellStyle62.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle62.Format = "N0";
+            dataGridViewCellStyle62.NullValue = null;
+            this.Faixa.DefaultCellStyle = dataGridViewCellStyle62;
+            this.Faixa.HeaderText = "Faixa";
+            this.Faixa.Name = "Faixa";
+            this.Faixa.ReadOnly = true;
+            this.Faixa.Width = 57;
+            // 
+            // Valor
+            // 
+            this.Valor.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.Valor.DataPropertyName = "Valor";
+            dataGridViewCellStyle63.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle63.Format = "N2";
+            dataGridViewCellStyle63.NullValue = null;
+            this.Valor.DefaultCellStyle = dataGridViewCellStyle63;
+            this.Valor.HeaderText = "Valor";
+            this.Valor.Name = "Valor";
+            this.Valor.ReadOnly = true;
+            this.Valor.Width = 56;
+            // 
+            // Porcentagem
+            // 
+            this.Porcentagem.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.Porcentagem.DataPropertyName = "Porcentagem";
+            dataGridViewCellStyle64.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle64.Format = "N2";
+            dataGridViewCellStyle64.NullValue = null;
+            this.Porcentagem.DefaultCellStyle = dataGridViewCellStyle64;
+            this.Porcentagem.HeaderText = "%";
+            this.Porcentagem.Name = "Porcentagem";
+            this.Porcentagem.ReadOnly = true;
+            this.Porcentagem.Width = 40;
+            // 
+            // Deducao
+            // 
+            this.Deducao.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.Deducao.DataPropertyName = "Deducao";
+            dataGridViewCellStyle65.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle65.Format = "N2";
+            dataGridViewCellStyle65.NullValue = null;
+            this.Deducao.DefaultCellStyle = dataGridViewCellStyle65;
+            this.Deducao.HeaderText = "Dedução";
+            this.Deducao.Name = "Deducao";
+            this.Deducao.ReadOnly = true;
+            this.Deducao.Width = 76;
             // 
             // BtnGravar
             // 
@@ -197,78 +281,6 @@
             this.BtnExcluir.Text = "&Excluir";
             this.BtnExcluir.UseVisualStyleBackColor = true;
             this.BtnExcluir.Click += new System.EventHandler(this.BtnExcluir_Click);
-            // 
-            // Id
-            // 
-            this.Id.DataPropertyName = "Id";
-            this.Id.HeaderText = "Id";
-            this.Id.Name = "Id";
-            this.Id.ReadOnly = true;
-            this.Id.Visible = false;
-            // 
-            // Competencia
-            // 
-            this.Competencia.DataPropertyName = "Competencia";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle6.Format = "MM/yyyy";
-            dataGridViewCellStyle6.NullValue = null;
-            this.Competencia.DefaultCellStyle = dataGridViewCellStyle6;
-            this.Competencia.HeaderText = "Competencia";
-            this.Competencia.Name = "Competencia";
-            this.Competencia.ReadOnly = true;
-            this.Competencia.Visible = false;
-            // 
-            // Faixa
-            // 
-            this.Faixa.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Faixa.DataPropertyName = "Faixa";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle7.Format = "N0";
-            dataGridViewCellStyle7.NullValue = null;
-            this.Faixa.DefaultCellStyle = dataGridViewCellStyle7;
-            this.Faixa.HeaderText = "Faixa";
-            this.Faixa.Name = "Faixa";
-            this.Faixa.ReadOnly = true;
-            this.Faixa.Width = 57;
-            // 
-            // Valor
-            // 
-            this.Valor.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Valor.DataPropertyName = "Valor";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle8.Format = "N2";
-            dataGridViewCellStyle8.NullValue = null;
-            this.Valor.DefaultCellStyle = dataGridViewCellStyle8;
-            this.Valor.HeaderText = "Valor";
-            this.Valor.Name = "Valor";
-            this.Valor.ReadOnly = true;
-            this.Valor.Width = 56;
-            // 
-            // Porcentagem
-            // 
-            this.Porcentagem.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Porcentagem.DataPropertyName = "Porcentagem";
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle9.Format = "N2";
-            dataGridViewCellStyle9.NullValue = null;
-            this.Porcentagem.DefaultCellStyle = dataGridViewCellStyle9;
-            this.Porcentagem.HeaderText = "%";
-            this.Porcentagem.Name = "Porcentagem";
-            this.Porcentagem.ReadOnly = true;
-            this.Porcentagem.Width = 40;
-            // 
-            // Deducao
-            // 
-            this.Deducao.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Deducao.DataPropertyName = "Deducao";
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle10.Format = "N2";
-            dataGridViewCellStyle10.NullValue = null;
-            this.Deducao.DefaultCellStyle = dataGridViewCellStyle10;
-            this.Deducao.HeaderText = "Dedução";
-            this.Deducao.Name = "Deducao";
-            this.Deducao.ReadOnly = true;
-            this.Deducao.Width = 76;
             // 
             // FrmTabelaIRRF
             // 

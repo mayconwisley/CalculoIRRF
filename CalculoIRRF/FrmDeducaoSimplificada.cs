@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CalculoIRRF.Modelos.Validacao;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -95,6 +96,28 @@ namespace CalculoIRRF
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void TxtValor_TextChanged(object sender, EventArgs e)
+        {
+            Validar validar = new Validar();
+            TxtValor.Text = validar.ValidarValor(TxtValor.Text);
+            TxtValor.Select(TxtValor.Text.Length, 0);
+        }
+
+        private void TxtValor_Leave(object sender, EventArgs e)
+        {
+            Validar validar = new Validar();
+            TxtValor.Text = validar.Zero(TxtValor.Text);
+            TxtValor.Text = validar.Formatar(TxtValor.Text);
+        }
+
+        private void TxtValor_Enter(object sender, EventArgs e)
+        {
+            if (TxtValor.Text == "0,00")
+            {
+                TxtValor.Text = "";
             }
         }
     }

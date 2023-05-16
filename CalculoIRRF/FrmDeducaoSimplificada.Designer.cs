@@ -28,26 +28,26 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.MktCompetencia = new System.Windows.Forms.MaskedTextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.TxtValor = new System.Windows.Forms.TextBox();
             this.DgvValorSimplificado = new System.Windows.Forms.DataGridView();
-            this.BtnGravar = new System.Windows.Forms.Button();
-            this.BtnAlterar = new System.Windows.Forms.Button();
-            this.BtnExcluir = new System.Windows.Forms.Button();
             this.Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Competencia = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Valor = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BtnGravar = new System.Windows.Forms.Button();
+            this.BtnAlterar = new System.Windows.Forms.Button();
+            this.BtnExcluir = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.DgvValorSimplificado)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Location = new System.Drawing.Point(11, 10);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(69, 13);
             this.label1.TabIndex = 0;
@@ -55,7 +55,7 @@
             // 
             // MktCompetencia
             // 
-            this.MktCompetencia.Location = new System.Drawing.Point(12, 25);
+            this.MktCompetencia.Location = new System.Drawing.Point(11, 26);
             this.MktCompetencia.Mask = "00/0000";
             this.MktCompetencia.Name = "MktCompetencia";
             this.MktCompetencia.Size = new System.Drawing.Size(69, 20);
@@ -64,7 +64,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 48);
+            this.label2.Location = new System.Drawing.Point(11, 49);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(31, 13);
             this.label2.TabIndex = 2;
@@ -72,12 +72,15 @@
             // 
             // TxtValor
             // 
-            this.TxtValor.Location = new System.Drawing.Point(12, 64);
+            this.TxtValor.Location = new System.Drawing.Point(11, 65);
             this.TxtValor.Name = "TxtValor";
             this.TxtValor.Size = new System.Drawing.Size(69, 20);
             this.TxtValor.TabIndex = 3;
             this.TxtValor.Text = "0,00";
             this.TxtValor.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.TxtValor.TextChanged += new System.EventHandler(this.TxtValor_TextChanged);
+            this.TxtValor.Enter += new System.EventHandler(this.TxtValor_Enter);
+            this.TxtValor.Leave += new System.EventHandler(this.TxtValor_Leave);
             // 
             // DgvValorSimplificado
             // 
@@ -90,42 +93,12 @@
             this.Id,
             this.Competencia,
             this.Valor});
-            this.DgvValorSimplificado.Location = new System.Drawing.Point(12, 104);
+            this.DgvValorSimplificado.Location = new System.Drawing.Point(11, 105);
             this.DgvValorSimplificado.Name = "DgvValorSimplificado";
             this.DgvValorSimplificado.ReadOnly = true;
             this.DgvValorSimplificado.Size = new System.Drawing.Size(238, 150);
             this.DgvValorSimplificado.TabIndex = 4;
             this.DgvValorSimplificado.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvValorSimplificado_CellDoubleClick);
-            // 
-            // BtnGravar
-            // 
-            this.BtnGravar.Location = new System.Drawing.Point(175, 12);
-            this.BtnGravar.Name = "BtnGravar";
-            this.BtnGravar.Size = new System.Drawing.Size(75, 23);
-            this.BtnGravar.TabIndex = 5;
-            this.BtnGravar.Text = "&Gravar";
-            this.BtnGravar.UseVisualStyleBackColor = true;
-            this.BtnGravar.Click += new System.EventHandler(this.BtnGravar_Click);
-            // 
-            // BtnAlterar
-            // 
-            this.BtnAlterar.Location = new System.Drawing.Point(175, 41);
-            this.BtnAlterar.Name = "BtnAlterar";
-            this.BtnAlterar.Size = new System.Drawing.Size(75, 23);
-            this.BtnAlterar.TabIndex = 5;
-            this.BtnAlterar.Text = "&Alterar";
-            this.BtnAlterar.UseVisualStyleBackColor = true;
-            this.BtnAlterar.Click += new System.EventHandler(this.BtnAlterar_Click);
-            // 
-            // BtnExcluir
-            // 
-            this.BtnExcluir.Location = new System.Drawing.Point(175, 70);
-            this.BtnExcluir.Name = "BtnExcluir";
-            this.BtnExcluir.Size = new System.Drawing.Size(75, 23);
-            this.BtnExcluir.TabIndex = 5;
-            this.BtnExcluir.Text = "&Excluir";
-            this.BtnExcluir.UseVisualStyleBackColor = true;
-            this.BtnExcluir.Click += new System.EventHandler(this.BtnExcluir_Click);
             // 
             // Id
             // 
@@ -139,10 +112,10 @@
             // 
             this.Competencia.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.Competencia.DataPropertyName = "Competencia";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle1.Format = "MM/yyyy";
-            dataGridViewCellStyle1.NullValue = null;
-            this.Competencia.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle7.Format = "MM/yyyy";
+            dataGridViewCellStyle7.NullValue = null;
+            this.Competencia.DefaultCellStyle = dataGridViewCellStyle7;
             this.Competencia.HeaderText = "Competência";
             this.Competencia.Name = "Competencia";
             this.Competencia.ReadOnly = true;
@@ -152,14 +125,44 @@
             // 
             this.Valor.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.Valor.DataPropertyName = "Valor";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle2.Format = "N2";
-            dataGridViewCellStyle2.NullValue = null;
-            this.Valor.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle8.Format = "N2";
+            dataGridViewCellStyle8.NullValue = null;
+            this.Valor.DefaultCellStyle = dataGridViewCellStyle8;
             this.Valor.HeaderText = "Valor";
             this.Valor.Name = "Valor";
             this.Valor.ReadOnly = true;
             this.Valor.Width = 56;
+            // 
+            // BtnGravar
+            // 
+            this.BtnGravar.Location = new System.Drawing.Point(174, 13);
+            this.BtnGravar.Name = "BtnGravar";
+            this.BtnGravar.Size = new System.Drawing.Size(75, 23);
+            this.BtnGravar.TabIndex = 5;
+            this.BtnGravar.Text = "&Gravar";
+            this.BtnGravar.UseVisualStyleBackColor = true;
+            this.BtnGravar.Click += new System.EventHandler(this.BtnGravar_Click);
+            // 
+            // BtnAlterar
+            // 
+            this.BtnAlterar.Location = new System.Drawing.Point(174, 42);
+            this.BtnAlterar.Name = "BtnAlterar";
+            this.BtnAlterar.Size = new System.Drawing.Size(75, 23);
+            this.BtnAlterar.TabIndex = 5;
+            this.BtnAlterar.Text = "&Alterar";
+            this.BtnAlterar.UseVisualStyleBackColor = true;
+            this.BtnAlterar.Click += new System.EventHandler(this.BtnAlterar_Click);
+            // 
+            // BtnExcluir
+            // 
+            this.BtnExcluir.Location = new System.Drawing.Point(174, 71);
+            this.BtnExcluir.Name = "BtnExcluir";
+            this.BtnExcluir.Size = new System.Drawing.Size(75, 23);
+            this.BtnExcluir.TabIndex = 5;
+            this.BtnExcluir.Text = "&Excluir";
+            this.BtnExcluir.UseVisualStyleBackColor = true;
+            this.BtnExcluir.Click += new System.EventHandler(this.BtnExcluir_Click);
             // 
             // FrmDeducaoSimplificada
             // 

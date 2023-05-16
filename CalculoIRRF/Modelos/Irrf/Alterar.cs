@@ -13,7 +13,7 @@ namespace CalculoIRRF.Modelos.Irrf
             StringBuilder sqlBuilder = new StringBuilder();
 
             sqlBuilder.Append("UPDATE Irrf ");
-            sqlBuilder.Append("SET Competencia = @Competencia, Faixa = @Faixa, Valor = @Valor, Porcentagem = @Porcentagem, Deducao = @Deducao) ");
+            sqlBuilder.Append("SET Competencia = @Competencia, Faixa = @Faixa, Valor = @Valor, Porcentagem = @Porcentagem, Deducao = @Deducao ");
             sqlBuilder.Append("WHERE Id = @Id");
 
             try
