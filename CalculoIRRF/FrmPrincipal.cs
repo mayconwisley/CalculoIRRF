@@ -44,6 +44,8 @@ namespace CalculoIRRF
             str += irrf.Vantagem();
 
             RTxtResultado.Text = str;
+
+            irrf.NormalProgressivo();
         }
 
         private void BtnDependente_Click(object sender, EventArgs e)

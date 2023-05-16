@@ -77,19 +77,21 @@ namespace CalculoIRRF.Modelos.Irrf
             }
         }
 
-        public decimal Valor(int faixa)
+        public decimal Valor(int faixa, DateTime competencia)
         {
             Crud crud = new Crud();
             StringBuilder sqlBuilder = new StringBuilder();
 
             sqlBuilder.Append("SELECT Valor ");
             sqlBuilder.Append("FROM IRRF ");
-            sqlBuilder.Append("WHERE Faixa = @Faixa");
+            sqlBuilder.Append("WHERE Faixa = @Faixa ");
+            sqlBuilder.Append("AND Competencia = (SELECT MAX(Competencia) FROM IRRF WHERE Competencia <= @Competencia)");
 
             try
             {
                 crud.LimparParametro();
                 crud.AdicionarParamentro("Faixa", faixa);
+                crud.AdicionarParamentro("Competencia", competencia);
                 return decimal.Parse(crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString());
             }
             catch (Exception ex)

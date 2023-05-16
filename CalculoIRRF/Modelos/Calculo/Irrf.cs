@@ -34,6 +34,43 @@ namespace CalculoIRRF.Modelos.Calculo
 
             return desconto;
         }
+        public decimal NormalProgressivo()
+        {
+            Modelos.Irrf.Listar listar = new Modelos.Irrf.Listar();
+            Modelos.Dependente.Listar listarDep = new Dependente.Listar();
+            decimal valorDependente = listarDep.Valor(_competencia);
+
+            decimal baseIrrf = _valorBruto - _valorInss - (_qtdDependente * valorDependente);
+            int faixaIrrf = listar.Faixa(baseIrrf, _competencia);
+
+            decimal desconto = 0;
+            decimal valorIrrfAnterior = 0;
+            decimal baseIrrfCalculo = 0;
+            for (int i = 1; i <= faixaIrrf; i++)
+            {
+                decimal porcentagemIrrf = listar.Porcentagem(i, _competencia);
+                decimal valorIrrf = listar.Valor(i, _competencia);
+
+                if (valorIrrf > baseIrrf)
+                {
+                    valorIrrfAnterior = baseIrrf;
+                }
+                else
+                {
+                    valorIrrfAnterior = valorIrrf;
+                }
+                baseIrrfCalculo = valorIrrf - valorIrrfAnterior;
+
+                desconto += (baseIrrfCalculo * (porcentagemIrrf / 100));
+
+                
+
+
+            }
+            desconto = Math.Round(desconto, 2);
+
+            return desconto;
+        }
 
         public string DescricaoCalculoNormal()
         {
