@@ -59,7 +59,6 @@ namespace CalculoIRRF.Modelos.Calculo
 
             return strMensagem.ToString();
         }
-
         public decimal NormalProgressivo()
         {
             Modelos.Irrf.Listar listar = new Modelos.Irrf.Listar();
@@ -78,9 +77,14 @@ namespace CalculoIRRF.Modelos.Calculo
 
                 decimal baseIrrfCalculo = valorIrrf - valorIrrfAnterior;
 
+                if (valorIrrf > baseIrrf)
+                {
+                    baseIrrfCalculo = baseIrrf - valorIrrfAnterior;
+                }
+
                 if (baseIrrfCalculo > _valorBruto)
                 {
-                    baseIrrfCalculo = _valorBruto - valorIrrfAnterior;
+                    baseIrrfCalculo = baseIrrf - valorIrrfAnterior;
                 }
 
                 desconto += (baseIrrfCalculo * (porcentagemIrrf / 100));
@@ -90,7 +94,6 @@ namespace CalculoIRRF.Modelos.Calculo
 
             return desconto;
         }
-
         public string DescricaoCalculoNormalProgrssivo()
         {
             StringBuilder strMensagem = new StringBuilder();
@@ -105,7 +108,7 @@ namespace CalculoIRRF.Modelos.Calculo
             decimal totalDesconto = 0;
             decimal valorIrrfAnterior = 0;
 
-            strMensagem.Append("Informações de Calculo do IR Normal Prograssivo\n\n");
+            strMensagem.Append("Informações de Calculo do IR Normal Progressivo\n\n");
             strMensagem.Append($"Valor Bruto: {_valorBruto:#,##0.00}\n");
             strMensagem.Append($"Valor INSS: {_valorInss:#,##0.00}\n");
             strMensagem.Append($"Quantidade Dependente: {_qtdDependente} Valor: {valorDependente:#,##0.00} Total: {(_qtdDependente * valorDependente):#,##0.00}\n");
@@ -142,7 +145,6 @@ namespace CalculoIRRF.Modelos.Calculo
 
             return strMensagem.ToString();
         }
-
         public decimal Simplificado()
         {
             if (_competencia < DateTime.Parse("01/05/2023"))
@@ -164,12 +166,11 @@ namespace CalculoIRRF.Modelos.Calculo
 
             return desconto;
         }
-
         public string DescricaoCalculoSimplificado()
         {
             if (_competencia < DateTime.Parse("01/05/2023"))
             {
-                return "Calculo Simplificado é a partir de 05/2023!\n\n\n";
+                return "Calculo Simplificado é a partir de 05/2023!\n\n";
             }
 
             Modelos.Simplificado.Listar listar = new Simplificado.Listar();
@@ -190,12 +191,11 @@ namespace CalculoIRRF.Modelos.Calculo
             strMensagem.Append($"Valor Dedução: {valorDeducao:#,##0.00}\n");
             strMensagem.Append($"Valor Base do IR: {baseIrrf:#,##0.00}\n");
             strMensagem.Append($"Porcentagem: {porcentagemIrrf:#,##0.00}% - Dedução: {deducaoIrrf:#,##0.00}\n");
-            strMensagem.Append($"Valor do Desconto: {desconto:#,##0.00}\n\n\n");
+            strMensagem.Append($"Valor do Desconto: {desconto:#,##0.00}\n\n");
 
             return strMensagem.ToString();
 
         }
-
         public string Vantagem()
         {
             if (_competencia < DateTime.Parse("01/05/2023"))

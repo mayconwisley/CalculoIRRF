@@ -44,15 +44,15 @@
             this.label5 = new System.Windows.Forms.Label();
             this.TxtDeducao = new System.Windows.Forms.TextBox();
             this.DgvTabelaIRRF = new System.Windows.Forms.DataGridView();
-            this.BtnGravar = new System.Windows.Forms.Button();
-            this.BtnAlterar = new System.Windows.Forms.Button();
-            this.BtnExcluir = new System.Windows.Forms.Button();
             this.Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Competencia = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Faixa = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Valor = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Porcentagem = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Deducao = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BtnGravar = new System.Windows.Forms.Button();
+            this.BtnAlterar = new System.Windows.Forms.Button();
+            this.BtnExcluir = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.DgvTabelaIRRF)).BeginInit();
             this.SuspendLayout();
             // 
@@ -180,36 +180,6 @@
             this.DgvTabelaIRRF.TabIndex = 5;
             this.DgvTabelaIRRF.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvTabelaIRRF_CellDoubleClick);
             // 
-            // BtnGravar
-            // 
-            this.BtnGravar.Location = new System.Drawing.Point(334, 13);
-            this.BtnGravar.Name = "BtnGravar";
-            this.BtnGravar.Size = new System.Drawing.Size(75, 23);
-            this.BtnGravar.TabIndex = 6;
-            this.BtnGravar.Text = "&Gravar";
-            this.BtnGravar.UseVisualStyleBackColor = true;
-            this.BtnGravar.Click += new System.EventHandler(this.BtnGravar_Click);
-            // 
-            // BtnAlterar
-            // 
-            this.BtnAlterar.Location = new System.Drawing.Point(334, 42);
-            this.BtnAlterar.Name = "BtnAlterar";
-            this.BtnAlterar.Size = new System.Drawing.Size(75, 23);
-            this.BtnAlterar.TabIndex = 7;
-            this.BtnAlterar.Text = "&Alterar";
-            this.BtnAlterar.UseVisualStyleBackColor = true;
-            this.BtnAlterar.Click += new System.EventHandler(this.BtnAlterar_Click);
-            // 
-            // BtnExcluir
-            // 
-            this.BtnExcluir.Location = new System.Drawing.Point(334, 71);
-            this.BtnExcluir.Name = "BtnExcluir";
-            this.BtnExcluir.Size = new System.Drawing.Size(75, 23);
-            this.BtnExcluir.TabIndex = 8;
-            this.BtnExcluir.Text = "&Excluir";
-            this.BtnExcluir.UseVisualStyleBackColor = true;
-            this.BtnExcluir.Click += new System.EventHandler(this.BtnExcluir_Click);
-            // 
             // Id
             // 
             this.Id.DataPropertyName = "Id";
@@ -282,6 +252,48 @@
             this.Deducao.Name = "Deducao";
             this.Deducao.ReadOnly = true;
             this.Deducao.Width = 76;
+            // 
+            // BtnGravar
+            // 
+            this.BtnGravar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.BtnGravar.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
+            this.BtnGravar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver;
+            this.BtnGravar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BtnGravar.Location = new System.Drawing.Point(334, 13);
+            this.BtnGravar.Name = "BtnGravar";
+            this.BtnGravar.Size = new System.Drawing.Size(75, 23);
+            this.BtnGravar.TabIndex = 6;
+            this.BtnGravar.Text = "&Gravar";
+            this.BtnGravar.UseVisualStyleBackColor = true;
+            this.BtnGravar.Click += new System.EventHandler(this.BtnGravar_Click);
+            // 
+            // BtnAlterar
+            // 
+            this.BtnAlterar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.BtnAlterar.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
+            this.BtnAlterar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver;
+            this.BtnAlterar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BtnAlterar.Location = new System.Drawing.Point(334, 42);
+            this.BtnAlterar.Name = "BtnAlterar";
+            this.BtnAlterar.Size = new System.Drawing.Size(75, 23);
+            this.BtnAlterar.TabIndex = 7;
+            this.BtnAlterar.Text = "&Alterar";
+            this.BtnAlterar.UseVisualStyleBackColor = true;
+            this.BtnAlterar.Click += new System.EventHandler(this.BtnAlterar_Click);
+            // 
+            // BtnExcluir
+            // 
+            this.BtnExcluir.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.BtnExcluir.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
+            this.BtnExcluir.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver;
+            this.BtnExcluir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BtnExcluir.Location = new System.Drawing.Point(334, 71);
+            this.BtnExcluir.Name = "BtnExcluir";
+            this.BtnExcluir.Size = new System.Drawing.Size(75, 23);
+            this.BtnExcluir.TabIndex = 8;
+            this.BtnExcluir.Text = "&Excluir";
+            this.BtnExcluir.UseVisualStyleBackColor = true;
+            this.BtnExcluir.Click += new System.EventHandler(this.BtnExcluir_Click);
             // 
             // FrmTabelaIRRF
             // 

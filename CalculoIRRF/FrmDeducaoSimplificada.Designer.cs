@@ -138,6 +138,10 @@
             // 
             // BtnGravar
             // 
+            this.BtnGravar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.BtnGravar.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
+            this.BtnGravar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver;
+            this.BtnGravar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnGravar.Location = new System.Drawing.Point(174, 13);
             this.BtnGravar.Name = "BtnGravar";
             this.BtnGravar.Size = new System.Drawing.Size(75, 23);
@@ -148,6 +152,10 @@
             // 
             // BtnAlterar
             // 
+            this.BtnAlterar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.BtnAlterar.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
+            this.BtnAlterar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver;
+            this.BtnAlterar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnAlterar.Location = new System.Drawing.Point(174, 42);
             this.BtnAlterar.Name = "BtnAlterar";
             this.BtnAlterar.Size = new System.Drawing.Size(75, 23);
@@ -158,6 +166,10 @@
             // 
             // BtnExcluir
             // 
+            this.BtnExcluir.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.BtnExcluir.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
+            this.BtnExcluir.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver;
+            this.BtnExcluir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnExcluir.Location = new System.Drawing.Point(174, 71);
             this.BtnExcluir.Name = "BtnExcluir";
             this.BtnExcluir.Size = new System.Drawing.Size(75, 23);

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmPrincipal));
             this.label1 = new System.Windows.Forms.Label();
             this.TxtValorBruto = new System.Windows.Forms.TextBox();
             this.TxtDescontoInss = new System.Windows.Forms.Label();
@@ -111,6 +112,12 @@
             // 
             // BtnCalcular
             // 
+            this.BtnCalcular.FlatAppearance.BorderColor = System.Drawing.Color.DarkGreen;
+            this.BtnCalcular.FlatAppearance.BorderSize = 2;
+            this.BtnCalcular.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.BtnCalcular.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Green;
+            this.BtnCalcular.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BtnCalcular.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnCalcular.Location = new System.Drawing.Point(11, 60);
             this.BtnCalcular.Name = "BtnCalcular";
             this.BtnCalcular.Size = new System.Drawing.Size(354, 33);
@@ -121,6 +128,11 @@
             // 
             // BtnTabelaIRRF
             // 
+            this.BtnTabelaIRRF.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaption;
+            this.BtnTabelaIRRF.FlatAppearance.CheckedBackColor = System.Drawing.Color.Gray;
+            this.BtnTabelaIRRF.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGray;
+            this.BtnTabelaIRRF.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.BtnTabelaIRRF.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnTabelaIRRF.Location = new System.Drawing.Point(479, 12);
             this.BtnTabelaIRRF.Name = "BtnTabelaIRRF";
             this.BtnTabelaIRRF.Size = new System.Drawing.Size(112, 23);
@@ -131,6 +143,11 @@
             // 
             // BtnTabelaValSimplificado
             // 
+            this.BtnTabelaValSimplificado.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaption;
+            this.BtnTabelaValSimplificado.FlatAppearance.CheckedBackColor = System.Drawing.Color.Gray;
+            this.BtnTabelaValSimplificado.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGray;
+            this.BtnTabelaValSimplificado.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.BtnTabelaValSimplificado.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnTabelaValSimplificado.Location = new System.Drawing.Point(479, 70);
             this.BtnTabelaValSimplificado.Name = "BtnTabelaValSimplificado";
             this.BtnTabelaValSimplificado.Size = new System.Drawing.Size(112, 23);
@@ -161,6 +178,11 @@
             // 
             // BtnDependente
             // 
+            this.BtnDependente.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaption;
+            this.BtnDependente.FlatAppearance.CheckedBackColor = System.Drawing.Color.Gray;
+            this.BtnDependente.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGray;
+            this.BtnDependente.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.BtnDependente.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnDependente.Location = new System.Drawing.Point(479, 41);
             this.BtnDependente.Name = "BtnDependente";
             this.BtnDependente.Size = new System.Drawing.Size(112, 23);
@@ -215,6 +237,7 @@
             this.Controls.Add(this.TxtValorBruto);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmPrincipal";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Calculo IRRF";
