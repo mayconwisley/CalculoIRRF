@@ -30,7 +30,36 @@ namespace CalculoIRRF.Modelos.Irrf
                 throw new Exception(ex.Message);
             }
         }
+        public int UltimaFaixa(DateTime competencia)
+        {
+            Crud crud = new Crud();
+            StringBuilder sqlBuilder = new StringBuilder();
 
+            sqlBuilder.Append("SELECT MAX(Faixa) AS Faixa ");
+            sqlBuilder.Append("FROM IRRF ");
+            sqlBuilder.Append("WHERE Competencia = @Competencia");
+
+            try
+            {
+                crud.LimparParametro();
+                crud.AdicionarParamentro("Competencia", competencia);
+
+                string faixa = crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString();
+
+                if (faixa == "")
+                {
+                    return 0;
+                }
+                else
+                {
+                    return int.Parse(faixa);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
         public decimal Porcentagem(int faixa, DateTime competencia)
         {
             Crud crud = new Crud();

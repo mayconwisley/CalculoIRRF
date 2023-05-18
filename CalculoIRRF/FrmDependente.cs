@@ -17,11 +17,16 @@ namespace CalculoIRRF
             {
                 Modelos.Dependente.Listar listar = new Modelos.Dependente.Listar();
                 DgvValorDependente.DataSource = listar.TodosItens();
+                LimparCampos();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+        private void LimparCampos()
+        {
+            TxtValor.Text = "0,00";
         }
         private void BtnGravar_Click(object sender, EventArgs e)
         {
@@ -88,6 +93,7 @@ namespace CalculoIRRF
 
         private void FrmDependente_Load(object sender, EventArgs e)
         {
+            MktCompetencia.Text = DateTime.Now.ToString("MM/yyyy");
             ListarTabelaDependente();
         }
 

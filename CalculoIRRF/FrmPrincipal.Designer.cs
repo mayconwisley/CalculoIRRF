@@ -52,9 +52,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(86, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(59, 13);
+            this.label1.Size = new System.Drawing.Size(73, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Valor Bruto";
+            this.label1.Text = "Valor Bruto IR";
             // 
             // TxtValorBruto
             // 
@@ -164,7 +164,7 @@
             this.groupBox1.Size = new System.Drawing.Size(580, 349);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Calculo do IRRF";
+            this.groupBox1.Text = "Calculo do IR";
             // 
             // RTxtResultado
             // 
@@ -241,7 +241,8 @@
             this.MaximizeBox = false;
             this.Name = "FrmPrincipal";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Calculo IRRF";
+            this.Text = "Calculadora Novo IR";
+            this.Load += new System.EventHandler(this.FrmPrincipal_Load);
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -18,13 +18,23 @@ namespace CalculoIRRF
             {
                 Modelos.Irrf.Listar listar = new Modelos.Irrf.Listar();
                 DgvTabelaIRRF.DataSource = listar.TodosItens();
+                LimparCampos();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
+        private void LimparCampos()
+        {
+            Modelos.Irrf.Listar listar = new Modelos.Irrf.Listar();
+            DateTime competencia = DateTime.Parse(MktCompetencia.Text);
+            TxtFaixa.Text = (listar.UltimaFaixa(competencia) + 1).ToString();
+            TxtValor.Text = "0,00";
+            TxtPorcentagem.Text = "0,00";
+            TxtDeducao.Text = "0,00";
 
+        }
         private void BtnGravar_Click(object sender, EventArgs e)
         {
             try
@@ -84,6 +94,7 @@ namespace CalculoIRRF
 
         private void FrmTabelaIRRF_Load(object sender, EventArgs e)
         {
+            MktCompetencia.Text = DateTime.Now.ToString("MM/yyyy");
             ListarTabelaIrrf();
         }
 
@@ -190,6 +201,22 @@ namespace CalculoIRRF
             if (TxtPorcentagem.Text == "0,00")
             {
                 TxtPorcentagem.Text = "";
+            }
+        }
+
+        private void MktCompetencia_Leave(object sender, EventArgs e)
+        {
+            try
+            {
+                Modelos.Irrf.Listar listar = new Modelos.Irrf.Listar();
+                DateTime competencia = DateTime.Parse(MktCompetencia.Text);
+                int faixa = listar.UltimaFaixa(competencia) + 1;
+
+                TxtFaixa.Text = faixa.ToString();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
     }

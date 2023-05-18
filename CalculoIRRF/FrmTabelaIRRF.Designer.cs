@@ -72,6 +72,7 @@
             this.MktCompetencia.Name = "MktCompetencia";
             this.MktCompetencia.Size = new System.Drawing.Size(69, 20);
             this.MktCompetencia.TabIndex = 0;
+            this.MktCompetencia.Leave += new System.EventHandler(this.MktCompetencia_Leave);
             // 
             // label2
             // 

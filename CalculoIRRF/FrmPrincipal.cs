@@ -30,19 +30,26 @@ namespace CalculoIRRF
             decimal valorInss = decimal.Parse(TxtDescInss.Text.Trim());
             int qtdDependente = int.Parse(TxtQtdDependente.Text.Trim());
 
-            Modelos.Calculo.Irrf irrf = new Modelos.Calculo.Irrf(competencia, qtdDependente, valorInss, valorBruto);
+            try
+            {
+                Modelos.Calculo.Irrf irrf = new Modelos.Calculo.Irrf(competencia, qtdDependente, valorInss, valorBruto);
 
-            string str = irrf.DescricaoCalculoNormal();
-            str += "--------------------------------------------------------------------\n";
-            str += irrf.DescricaoCalculoSimplificado();
-            str += "--------------------------------------------------------------------\n";
-            str += irrf.Vantagem();
-            str += "--------------------------------------------------------------------\n";
-            str += irrf.DescricaoCalculoNormalProgrssivo();
+                string str = irrf.DescricaoCalculoNormal();
+                str += "--------------------------------------------------------------------\n";
+                str += irrf.DescricaoCalculoSimplificado();
+                str += "--------------------------------------------------------------------\n";
+                str += irrf.Vantagem();
+                str += "--------------------------------------------------------------------\n";
+                str += irrf.DescricaoCalculoNormalProgrssivo();
 
-            RTxtResultado.Text = str;
+                RTxtResultado.Text = str;
 
-            irrf.NormalProgressivo();
+                irrf.NormalProgressivo();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void BtnDependente_Click(object sender, EventArgs e)
@@ -115,6 +122,11 @@ namespace CalculoIRRF
             {
                 TxtQtdDependente.Text = "";
             }
+        }
+
+        private void FrmPrincipal_Load(object sender, EventArgs e)
+        {
+            MktCompetencia.Text = DateTime.Now.ToString("MM/yyyy");
         }
     }
 }

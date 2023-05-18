@@ -18,11 +18,16 @@ namespace CalculoIRRF
             {
                 Modelos.Simplificado.Listar listar = new Modelos.Simplificado.Listar();
                 DgvValorSimplificado.DataSource = listar.TodosItens();
+                LimparCampos();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+        private void LimparCampos()
+        {
+            TxtValor.Text = "0,00";
         }
         private void BtnGravar_Click(object sender, EventArgs e)
         {
@@ -75,6 +80,7 @@ namespace CalculoIRRF
 
         private void FrmDeducaoSimplificada_Load(object sender, EventArgs e)
         {
+            MktCompetencia.Text = DateTime.Now.ToString("MM/yyyy");
             ListarTabelaSimplificado();
         }
 
