@@ -44,7 +44,6 @@ namespace CalculoIRRF
                 MessageBox.Show(ex.Message);
             }
         }
-
         private void BtnAlterar_Click(object sender, EventArgs e)
         {
             try
@@ -62,7 +61,6 @@ namespace CalculoIRRF
                 MessageBox.Show(ex.Message);
             }
         }
-
         private void BtnExcluir_Click(object sender, EventArgs e)
         {
             try
@@ -76,7 +74,6 @@ namespace CalculoIRRF
                 MessageBox.Show(ex.Message);
             }
         }
-
         private void DgvValorSimplificado_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -90,27 +87,23 @@ namespace CalculoIRRF
                 MessageBox.Show(ex.Message);
             }
         }
-
         private void FrmDependente_Load(object sender, EventArgs e)
         {
             MktCompetencia.Text = DateTime.Now.ToString("MM/yyyy");
             ListarTabelaDependente();
         }
-
         private void TxtValor_TextChanged(object sender, EventArgs e)
         {
             Validar validar = new Validar();
             TxtValor.Text = validar.ValidarValor(TxtValor.Text);
             TxtValor.Select(TxtValor.Text.Length, 0);
         }
-
         private void TxtValor_Leave(object sender, EventArgs e)
         {
             Validar validar = new Validar();
             TxtValor.Text = validar.Zero(TxtValor.Text);
             TxtValor.Text = validar.Formatar(TxtValor.Text);
         }
-
         private void TxtValor_Enter(object sender, EventArgs e)
         {
             if (TxtValor.Text == "0,00")
