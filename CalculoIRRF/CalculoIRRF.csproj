@@ -91,17 +91,38 @@
     <Compile Include="FrmDependente.Designer.cs">
       <DependentUpon>FrmDependente.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmDescontoMinimo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmDescontoMinimo.Designer.cs">
+      <DependentUpon>FrmDescontoMinimo.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmPrincipal.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FrmPrincipal.Designer.cs">
       <DependentUpon>FrmPrincipal.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmTabelaINSS.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmTabelaINSS.Designer.cs">
+      <DependentUpon>FrmTabelaINSS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Modelos\Calculo\Inss.cs" />
     <Compile Include="Modelos\Calculo\Irrf.cs" />
     <Compile Include="Modelos\Dependente\Alterar.cs" />
     <Compile Include="Modelos\Dependente\Excluir.cs" />
     <Compile Include="Modelos\Dependente\Gravar.cs" />
     <Compile Include="Modelos\Dependente\Listar.cs" />
+    <Compile Include="Modelos\DescontoMinimo\Alterar.cs" />
+    <Compile Include="Modelos\DescontoMinimo\Excluir.cs" />
+    <Compile Include="Modelos\DescontoMinimo\Gravar.cs" />
+    <Compile Include="Modelos\DescontoMinimo\Listar.cs" />
+    <Compile Include="Modelos\Inss\Alterar.cs" />
+    <Compile Include="Modelos\Inss\Excluir.cs" />
+    <Compile Include="Modelos\Inss\Gravar.cs" />
+    <Compile Include="Modelos\Inss\Listar.cs" />
     <Compile Include="Modelos\Irrf\Alterar.cs" />
     <Compile Include="Modelos\Irrf\Excluir.cs" />
     <Compile Include="Modelos\Irrf\Gravar.cs" />
@@ -112,6 +133,8 @@
     <Compile Include="Modelos\Simplificado\Listar.cs" />
     <Compile Include="Modelos\Validacao\Validar.cs" />
     <Compile Include="Objetos\Dependente.cs" />
+    <Compile Include="Objetos\DescontoMinimo.cs" />
+    <Compile Include="Objetos\Inss.cs" />
     <Compile Include="Objetos\Irrf.cs" />
     <Compile Include="Objetos\Simplificado.cs" />
     <Compile Include="Program.cs" />
@@ -128,8 +151,14 @@
     <EmbeddedResource Include="FrmDependente.resx">
       <DependentUpon>FrmDependente.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FrmDescontoMinimo.resx">
+      <DependentUpon>FrmDescontoMinimo.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmPrincipal.resx">
       <DependentUpon>FrmPrincipal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmTabelaINSS.resx">
+      <DependentUpon>FrmTabelaINSS.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
