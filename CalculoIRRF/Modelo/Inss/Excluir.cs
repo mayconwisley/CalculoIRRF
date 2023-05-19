@@ -3,7 +3,7 @@ using System;
 using System.Data;
 using System.Text;
 
-namespace CalculoIRRF.Modelos.Inss
+namespace CalculoIRRF.Modelo.Inss
 {
     public class Excluir
     {

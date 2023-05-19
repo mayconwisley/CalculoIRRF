@@ -3,25 +3,22 @@ using System;
 using System.Data;
 using System.Text;
 
-namespace CalculoIRRF.Modelos.DescontoMinimo
+namespace CalculoIRRF.Modelo.Dependente
 {
-    public class Alterar
+    public class Excluir
     {
-        public bool Item(Objetos.DescontoMinimo descontoMinimo)
+        public bool Item(int id)
         {
             Crud crud = new Crud();
             StringBuilder sqlBuilder = new StringBuilder();
 
-            sqlBuilder.Append("UPDATE DescontoMinimo ");
-            sqlBuilder.Append("SET Competencia = @Competencia, Valor = @Valor ");
+            sqlBuilder.Append("DELETE FROM Dependente ");
             sqlBuilder.Append("WHERE Id = @Id");
 
             try
             {
                 crud.LimparParametro();
-                crud.AdicionarParamentro("Competencia", descontoMinimo.Competencia);
-                crud.AdicionarParamentro("Valor", descontoMinimo.Valor);
-                crud.AdicionarParamentro("Id", descontoMinimo.Id);
+                crud.AdicionarParamentro("Id", id);
                 crud.Executar(CommandType.Text, sqlBuilder.ToString());
                 return true;
             }

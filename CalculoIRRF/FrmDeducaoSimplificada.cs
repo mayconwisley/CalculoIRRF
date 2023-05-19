@@ -1,4 +1,4 @@
-﻿using CalculoIRRF.Modelos.Validacao;
+﻿using CalculoIRRF.Modelo.Validacao;
 using System;
 using System.Windows.Forms;
 
@@ -16,7 +16,7 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelos.Simplificado.Listar listar = new Modelos.Simplificado.Listar();
+                Modelo.Simplificado.Listar listar = new Modelo.Simplificado.Listar();
                 DgvValorSimplificado.DataSource = listar.TodosItens();
                 LimparCampos();
             }
@@ -37,7 +37,7 @@ namespace CalculoIRRF
                 Objetos.Simplificado simplificado = new Objetos.Simplificado();
                 simplificado.Competencia = DateTime.Parse(MktCompetencia.Text.Trim());
                 simplificado.Valor = decimal.Parse(TxtValor.Text.Trim());
-                Modelos.Simplificado.Gravar gravar = new Modelos.Simplificado.Gravar();
+                Modelo.Simplificado.Gravar gravar = new Modelo.Simplificado.Gravar();
                 gravar.Item(simplificado);
                 ListarTabelaSimplificado();
             }
@@ -55,7 +55,7 @@ namespace CalculoIRRF
                 simplificado.Id = idSimplificado;
                 simplificado.Competencia = DateTime.Parse(MktCompetencia.Text.Trim());
                 simplificado.Valor = decimal.Parse(TxtValor.Text.Trim());
-                Modelos.Simplificado.Alterar alterar = new Modelos.Simplificado.Alterar();
+                Modelo.Simplificado.Alterar alterar = new Modelo.Simplificado.Alterar();
                 alterar.Item(simplificado);
                 ListarTabelaSimplificado();
             }
@@ -69,7 +69,7 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelos.Simplificado.Excluir excluir = new Modelos.Simplificado.Excluir();
+                Modelo.Simplificado.Excluir excluir = new Modelo.Simplificado.Excluir();
                 excluir.Item(idSimplificado);
                 ListarTabelaSimplificado();
             }

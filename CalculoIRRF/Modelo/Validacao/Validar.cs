@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace CalculoIRRF.Modelos.Validacao
+namespace CalculoIRRF.Modelo.Validacao
 {
     public class Validar
     {

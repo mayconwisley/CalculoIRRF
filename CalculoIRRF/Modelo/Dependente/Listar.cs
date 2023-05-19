@@ -3,7 +3,7 @@ using System;
 using System.Data;
 using System.Text;
 
-namespace CalculoIRRF.Modelos.Simplificado
+namespace CalculoIRRF.Modelo.Dependente
 {
     public class Listar
     {
@@ -13,21 +13,23 @@ namespace CalculoIRRF.Modelos.Simplificado
             StringBuilder sqlBuilder = new StringBuilder();
 
             sqlBuilder.Append("SELECT Valor ");
-            sqlBuilder.Append("FROM Simplificado ");
-            sqlBuilder.Append("WHERE Competencia = (SELECT MAX(Competencia) FROM Simplificado WHERE Competencia <= @Competencia)");
+            sqlBuilder.Append("FROM Dependente ");
+            sqlBuilder.Append("WHERE Competencia = (SELECT MAX(Competencia) FROM Dependente WHERE Competencia <= @Competencia)");
 
             try
             {
                 crud.LimparParametro();
                 crud.AdicionarParamentro("Competencia", competencia);
 
-
                 var strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString());
-                if (strValor == null)
+                if (strValor is null)
                 {
                     return 0;
                 }
-                return decimal.Parse(strValor.ToString());
+                else
+                {
+                    return decimal.Parse(strValor.ToString());
+                }
             }
             catch (Exception ex)
             {
@@ -41,7 +43,7 @@ namespace CalculoIRRF.Modelos.Simplificado
             StringBuilder sqlBuilder = new StringBuilder();
 
             sqlBuilder.Append("SELECT Id, Competencia, Valor ");
-            sqlBuilder.Append("FROM Simplificado");
+            sqlBuilder.Append("FROM Dependente");
 
             try
             {
@@ -61,8 +63,8 @@ namespace CalculoIRRF.Modelos.Simplificado
             StringBuilder sqlBuilder = new StringBuilder();
 
             sqlBuilder.Append("SELECT Id, Competencia, Valor ");
-            sqlBuilder.Append("FROM Simplificado ");
-            sqlBuilder.Append("WHERE Competencia = (SELECT MAX(Competencia) FROM Simplificado WHERE Competencia <= @Competencia)");
+            sqlBuilder.Append("FROM Dependente ");
+            sqlBuilder.Append("WHERE Competencia = (SELECT MAX(Competencia) FROM Dependente WHERE Competencia <= @Competencia)");
 
             try
             {

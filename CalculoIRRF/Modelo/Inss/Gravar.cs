@@ -3,18 +3,17 @@ using System;
 using System.Data;
 using System.Text;
 
-namespace CalculoIRRF.Modelos.Inss
+namespace CalculoIRRF.Modelo.Inss
 {
-    public class Alterar
+    public class Gravar
     {
         public bool Item(Objetos.Inss inss)
         {
             Crud crud = new Crud();
             StringBuilder sqlBuilder = new StringBuilder();
 
-            sqlBuilder.Append("UPDATE INSS ");
-            sqlBuilder.Append("SET Competencia = @Competencia, Faixa = @Faixa, Valor = @Valor, Porcentagem = @Porcentagem ");
-            sqlBuilder.Append("WHERE Id = @Id");
+            sqlBuilder.Append("INSERT INTO INSS(Competencia, Faixa, Valor, Porcentagem) ");
+            sqlBuilder.Append("VALUES(@Competencia, @Faixa, @Valor, @Porcentagem)");
 
             try
             {
@@ -23,7 +22,6 @@ namespace CalculoIRRF.Modelos.Inss
                 crud.AdicionarParamentro("Faixa", inss.Faixa);
                 crud.AdicionarParamentro("Valor", inss.Valor);
                 crud.AdicionarParamentro("Porcentagem", inss.Porcentagem);
-                crud.AdicionarParamentro("Id", inss.Id);
                 crud.Executar(CommandType.Text, sqlBuilder.ToString());
                 return true;
             }

@@ -3,18 +3,17 @@ using System;
 using System.Data;
 using System.Text;
 
-namespace CalculoIRRF.Modelos.Irrf
+namespace CalculoIRRF.Modelo.Irrf
 {
-    public class Alterar
+    public class Gravar
     {
         public bool Item(Objetos.Irrf irrf)
         {
             Crud crud = new Crud();
             StringBuilder sqlBuilder = new StringBuilder();
 
-            sqlBuilder.Append("UPDATE Irrf ");
-            sqlBuilder.Append("SET Competencia = @Competencia, Faixa = @Faixa, Valor = @Valor, Porcentagem = @Porcentagem, Deducao = @Deducao ");
-            sqlBuilder.Append("WHERE Id = @Id");
+            sqlBuilder.Append("INSERT INTO Irrf(Competencia, Faixa, Valor, Porcentagem, Deducao) ");
+            sqlBuilder.Append("VALUES(@Competencia, @Faixa, @Valor, @Porcentagem, @Deducao)");
 
             try
             {
@@ -24,7 +23,6 @@ namespace CalculoIRRF.Modelos.Irrf
                 crud.AdicionarParamentro("Valor", irrf.Valor);
                 crud.AdicionarParamentro("Porcentagem", irrf.Porcentagem);
                 crud.AdicionarParamentro("Deducao", irrf.Deducao);
-                crud.AdicionarParamentro("Id", irrf.Id);
                 crud.Executar(CommandType.Text, sqlBuilder.ToString());
                 return true;
             }

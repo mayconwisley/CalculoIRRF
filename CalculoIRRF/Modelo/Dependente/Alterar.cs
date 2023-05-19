@@ -3,22 +3,25 @@ using System;
 using System.Data;
 using System.Text;
 
-namespace CalculoIRRF.Modelos.Simplificado
+namespace CalculoIRRF.Modelo.Dependente
 {
-    public class Excluir
+    public class Alterar
     {
-        public bool Item(int id)
+        public bool Item(Objetos.Dependente dependente)
         {
             Crud crud = new Crud();
             StringBuilder sqlBuilder = new StringBuilder();
 
-            sqlBuilder.Append("DELETE FROM Simplificado ");
+            sqlBuilder.Append("UPDATE Dependente ");
+            sqlBuilder.Append("SET Competencia = @Competencia, Valor = @Valor ");
             sqlBuilder.Append("WHERE Id = @Id");
 
             try
             {
                 crud.LimparParametro();
-                crud.AdicionarParamentro("Id", id);
+                crud.AdicionarParamentro("Competencia", dependente.Competencia);
+                crud.AdicionarParamentro("Valor", dependente.Valor);
+                crud.AdicionarParamentro("Id", dependente.Id);
                 crud.Executar(CommandType.Text, sqlBuilder.ToString());
                 return true;
             }

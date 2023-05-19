@@ -3,7 +3,7 @@ using System;
 using System.Data;
 using System.Text;
 
-namespace CalculoIRRF.Modelos.DescontoMinimo
+namespace CalculoIRRF.Modelo.DescontoMinimo
 {
     public class Listar
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace CalculoIRRF.Modelos.Calculo
+namespace CalculoIRRF.Modelo.Calculo
 {
     public class Irrf
     {
@@ -19,7 +19,7 @@ namespace CalculoIRRF.Modelos.Calculo
         }
         public decimal Normal()
         {
-            Modelos.Irrf.Listar listar = new Modelos.Irrf.Listar();
+            Modelo.Irrf.Listar listar = new Modelo.Irrf.Listar();
             Dependente.Listar listarDep = new Dependente.Listar();
             decimal valorDependente = listarDep.Valor(_competencia);
 
@@ -35,7 +35,7 @@ namespace CalculoIRRF.Modelos.Calculo
         }
         public string DescricaoCalculoNormal()
         {
-            Modelos.Irrf.Listar listar = new Modelos.Irrf.Listar();
+            Modelo.Irrf.Listar listar = new Modelo.Irrf.Listar();
             Dependente.Listar listarDep = new Dependente.Listar();
             decimal valorDependente = listarDep.Valor(_competencia);
 
@@ -60,7 +60,7 @@ namespace CalculoIRRF.Modelos.Calculo
         }
         public decimal NormalProgressivo()
         {
-            Modelos.Irrf.Listar listar = new Modelos.Irrf.Listar();
+            Modelo.Irrf.Listar listar = new Modelo.Irrf.Listar();
             Dependente.Listar listarDep = new Dependente.Listar();
             decimal valorDependente = listarDep.Valor(_competencia);
 
@@ -96,7 +96,7 @@ namespace CalculoIRRF.Modelos.Calculo
         public string DescricaoCalculoNormalProgrssivo()
         {
             StringBuilder strMensagem = new StringBuilder();
-            Modelos.Irrf.Listar listar = new Modelos.Irrf.Listar();
+            Modelo.Irrf.Listar listar = new Modelo.Irrf.Listar();
             Dependente.Listar listarDep = new Dependente.Listar();
             decimal valorDependente = listarDep.Valor(_competencia);
 
@@ -155,7 +155,7 @@ namespace CalculoIRRF.Modelos.Calculo
             decimal valorDeducao = listar.Valor(_competencia);
             decimal baseInss = _baseInss - valorDeducao;
 
-            Modelos.Irrf.Listar listarIrrf = new Modelos.Irrf.Listar();
+            Modelo.Irrf.Listar listarIrrf = new Modelo.Irrf.Listar();
             int faixaIrrf = listarIrrf.Faixa(baseInss, _competencia);
             decimal porcentagemInss = listarIrrf.Porcentagem(faixaIrrf, _competencia);
             decimal deducaoIrrf = listarIrrf.Deducao(faixaIrrf, _competencia);
@@ -176,7 +176,7 @@ namespace CalculoIRRF.Modelos.Calculo
             decimal valorDeducao = listar.Valor(_competencia);
             decimal baseInss = _baseInss - valorDeducao;
 
-            Modelos.Irrf.Listar listarIrrf = new Modelos.Irrf.Listar();
+            Modelo.Irrf.Listar listarIrrf = new Modelo.Irrf.Listar();
             int faixaIrrf = listarIrrf.Faixa(baseInss, _competencia);
             decimal porcentagemInss = listarIrrf.Porcentagem(faixaIrrf, _competencia);
             decimal deducaoIrrf = listarIrrf.Deducao(faixaIrrf, _competencia);

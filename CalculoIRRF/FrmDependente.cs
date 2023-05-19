@@ -1,4 +1,4 @@
-﻿using CalculoIRRF.Modelos.Validacao;
+﻿using CalculoIRRF.Modelo.Validacao;
 using System;
 using System.Windows.Forms;
 
@@ -15,7 +15,7 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelos.Dependente.Listar listar = new Modelos.Dependente.Listar();
+                Modelo.Dependente.Listar listar = new Modelo.Dependente.Listar();
                 DgvValorDependente.DataSource = listar.TodosItens();
                 LimparCampos();
             }
@@ -36,7 +36,7 @@ namespace CalculoIRRF
                 Objetos.Dependente dependente = new Objetos.Dependente();
                 dependente.Competencia = DateTime.Parse(MktCompetencia.Text.Trim());
                 dependente.Valor = decimal.Parse(TxtValor.Text.Trim());
-                Modelos.Dependente.Gravar gravar = new Modelos.Dependente.Gravar();
+                Modelo.Dependente.Gravar gravar = new Modelo.Dependente.Gravar();
                 gravar.Item(dependente);
                 ListarTabelaDependente();
             }
@@ -53,7 +53,7 @@ namespace CalculoIRRF
                 dependente.Id = idDependente;
                 dependente.Competencia = DateTime.Parse(MktCompetencia.Text.Trim());
                 dependente.Valor = decimal.Parse(TxtValor.Text.Trim());
-                Modelos.Dependente.Alterar alterar = new Modelos.Dependente.Alterar();
+                Modelo.Dependente.Alterar alterar = new Modelo.Dependente.Alterar();
                 alterar.Item(dependente);
                 ListarTabelaDependente();
             }
@@ -66,7 +66,7 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelos.Dependente.Excluir excluir = new Modelos.Dependente.Excluir();
+                Modelo.Dependente.Excluir excluir = new Modelo.Dependente.Excluir();
                 excluir.Item(idDependente);
                 ListarTabelaDependente();
             }

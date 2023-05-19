@@ -1,4 +1,4 @@
-﻿using CalculoIRRF.Modelos.Validacao;
+﻿using CalculoIRRF.Modelo.Validacao;
 using System;
 using System.Windows.Forms;
 
@@ -32,10 +32,10 @@ namespace CalculoIRRF
 
             try
             {
-                Modelos.Calculo.Inss inss = new Modelos.Calculo.Inss(competencia, baseInss);
+                Modelo.Calculo.Inss inss = new Modelo.Calculo.Inss(competencia, baseInss);
                 decimal valorInss = inss.NormalProgressivo();
 
-                Modelos.Calculo.Irrf irrf = new Modelos.Calculo.Irrf(competencia, qtdDependente, valorInss, valorBruto);
+                Modelo.Calculo.Irrf irrf = new Modelo.Calculo.Irrf(competencia, qtdDependente, valorInss, valorBruto);
 
                 string str = irrf.DescricaoCalculoNormal();
                 str += "--------------------------------------------------------------------\n";

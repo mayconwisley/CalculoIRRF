@@ -1,4 +1,4 @@
-﻿using CalculoIRRF.Modelos.Validacao;
+﻿using CalculoIRRF.Modelo.Validacao;
 using System;
 using System.Windows.Forms;
 
@@ -15,7 +15,7 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelos.DescontoMinimo.Listar listar = new Modelos.DescontoMinimo.Listar();
+                Modelo.DescontoMinimo.Listar listar = new Modelo.DescontoMinimo.Listar();
                 DgvValorDescontoMinimo.DataSource = listar.TodosItens();
                 LimparCampos();
             }
@@ -37,7 +37,7 @@ namespace CalculoIRRF
                 Objetos.DescontoMinimo simplificado = new Objetos.DescontoMinimo();
                 simplificado.Competencia = DateTime.Parse(MktCompetencia.Text.Trim());
                 simplificado.Valor = decimal.Parse(TxtValor.Text.Trim());
-                Modelos.DescontoMinimo.Gravar gravar = new Modelos.DescontoMinimo.Gravar();
+                Modelo.DescontoMinimo.Gravar gravar = new Modelo.DescontoMinimo.Gravar();
                 gravar.Item(simplificado);
                 ListarTabelaDescontoMinimo();
             }
@@ -55,7 +55,7 @@ namespace CalculoIRRF
                 simplificado.Id = idDescontoMinimo;
                 simplificado.Competencia = DateTime.Parse(MktCompetencia.Text.Trim());
                 simplificado.Valor = decimal.Parse(TxtValor.Text.Trim());
-                Modelos.DescontoMinimo.Alterar alterar = new Modelos.DescontoMinimo.Alterar();
+                Modelo.DescontoMinimo.Alterar alterar = new Modelo.DescontoMinimo.Alterar();
                 alterar.Item(simplificado);
                 ListarTabelaDescontoMinimo();
             }
@@ -69,7 +69,7 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelos.DescontoMinimo.Excluir excluir = new Modelos.DescontoMinimo.Excluir();
+                Modelo.DescontoMinimo.Excluir excluir = new Modelo.DescontoMinimo.Excluir();
                 excluir.Item(idDescontoMinimo);
                 ListarTabelaDescontoMinimo();
             }

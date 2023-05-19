@@ -3,23 +3,22 @@ using System;
 using System.Data;
 using System.Text;
 
-namespace CalculoIRRF.Modelos.DescontoMinimo
+namespace CalculoIRRF.Modelo.DescontoMinimo
 {
-    public class Gravar
+    public class Excluir
     {
-        public bool Item(Objetos.DescontoMinimo descontoMinimo)
+        public bool Item(int id)
         {
             Crud crud = new Crud();
             StringBuilder sqlBuilder = new StringBuilder();
 
-            sqlBuilder.Append("INSERT INTO DescontoMinimo(Competencia, Valor) ");
-            sqlBuilder.Append("VALUES(@Competencia, @Valor)");
+            sqlBuilder.Append("DELETE FROM DescontoMinimo ");
+            sqlBuilder.Append("WHERE Id = @Id");
 
             try
             {
                 crud.LimparParametro();
-                crud.AdicionarParamentro("Competencia", descontoMinimo.Competencia);
-                crud.AdicionarParamentro("Valor", descontoMinimo.Valor);
+                crud.AdicionarParamentro("Id", id);
                 crud.Executar(CommandType.Text, sqlBuilder.ToString());
                 return true;
             }

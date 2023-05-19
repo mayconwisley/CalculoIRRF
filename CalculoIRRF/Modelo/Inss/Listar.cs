@@ -3,7 +3,7 @@ using System;
 using System.Data;
 using System.Text;
 
-namespace CalculoIRRF.Modelos.Irrf
+namespace CalculoIRRF.Modelo.Inss
 {
     public class Listar
     {
@@ -13,9 +13,9 @@ namespace CalculoIRRF.Modelos.Irrf
             StringBuilder sqlBuilder = new StringBuilder();
 
             sqlBuilder.Append("SELECT MIN(Faixa) AS Faixa ");
-            sqlBuilder.Append("FROM IRRF ");
+            sqlBuilder.Append("FROM INSS ");
             sqlBuilder.Append("WHERE Valor >= @Valor ");
-            sqlBuilder.Append("AND Competencia = (SELECT MAX(Competencia) FROM IRRF WHERE Competencia <= @Competencia)");
+            sqlBuilder.Append("AND Competencia = (SELECT MAX(Competencia) FROM INSS WHERE Competencia <= @Competencia)");
 
             try
             {
@@ -23,6 +23,7 @@ namespace CalculoIRRF.Modelos.Irrf
                 crud.AdicionarParamentro("Valor", baseInss);
                 crud.AdicionarParamentro("Competencia", competencia);
                 string strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString();
+
                 if (strValor == "")
                 {
                     return 0;
@@ -35,7 +36,6 @@ namespace CalculoIRRF.Modelos.Irrf
             }
             catch (Exception ex)
             {
-
                 throw new Exception(ex.Message);
             }
         }
@@ -45,7 +45,7 @@ namespace CalculoIRRF.Modelos.Irrf
             StringBuilder sqlBuilder = new StringBuilder();
 
             sqlBuilder.Append("SELECT MAX(Faixa) AS Faixa ");
-            sqlBuilder.Append("FROM IRRF ");
+            sqlBuilder.Append("FROM INSS ");
             sqlBuilder.Append("WHERE Competencia = @Competencia");
 
             try
@@ -75,56 +75,23 @@ namespace CalculoIRRF.Modelos.Irrf
             StringBuilder sqlBuilder = new StringBuilder();
 
             sqlBuilder.Append("SELECT Porcentagem ");
-            sqlBuilder.Append("FROM IRRF ");
+            sqlBuilder.Append("FROM INSS ");
             sqlBuilder.Append("WHERE Faixa = @Faixa ");
-            sqlBuilder.Append("AND Competencia = (SELECT MAX(Competencia) FROM IRRF WHERE Competencia <= @Competencia)");
+            sqlBuilder.Append("AND Competencia = (SELECT MAX(Competencia) FROM INSS WHERE Competencia <= @Competencia)");
 
             try
             {
                 crud.LimparParametro();
                 crud.AdicionarParamentro("Faixa", faixa);
                 crud.AdicionarParamentro("Competencia", competencia);
-
-                var strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString());
-                if (strValor is null)
+                string strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString();
+                if (strValor == "")
                 {
                     return 0;
                 }
                 else
                 {
-                    return decimal.Parse(strValor.ToString());
-                }
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-        public decimal Deducao(int faixa, DateTime competencia)
-        {
-            Crud crud = new Crud();
-            StringBuilder sqlBuilder = new StringBuilder();
-
-            sqlBuilder.Append("SELECT Deducao ");
-            sqlBuilder.Append("FROM IRRF ");
-            sqlBuilder.Append("WHERE Faixa = @Faixa ");
-            sqlBuilder.Append("AND Competencia = (SELECT MAX(Competencia) FROM IRRF WHERE Competencia <= @Competencia)");
-
-            try
-            {
-                crud.LimparParametro();
-                crud.AdicionarParamentro("Faixa", faixa);
-                crud.AdicionarParamentro("Competencia", competencia);
-                var strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString());
-
-                if (strValor is null)
-                {
-                    return 0;
-                }
-                else
-                {
-                    return decimal.Parse(strValor.ToString());
+                    return decimal.Parse(strValor);
                 }
 
             }
@@ -139,25 +106,52 @@ namespace CalculoIRRF.Modelos.Irrf
             StringBuilder sqlBuilder = new StringBuilder();
 
             sqlBuilder.Append("SELECT Valor ");
-            sqlBuilder.Append("FROM IRRF ");
+            sqlBuilder.Append("FROM INSS ");
             sqlBuilder.Append("WHERE Faixa = @Faixa ");
-            sqlBuilder.Append("AND Competencia = (SELECT MAX(Competencia) FROM IRRF WHERE Competencia <= @Competencia)");
+            sqlBuilder.Append("AND Competencia = (SELECT MAX(Competencia) FROM INSS WHERE Competencia <= @Competencia)");
 
             try
             {
                 crud.LimparParametro();
                 crud.AdicionarParamentro("Faixa", faixa);
                 crud.AdicionarParamentro("Competencia", competencia);
-                var strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString());
-                if (strValor is null)
+                string strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString();
+                if (strValor == "")
                 {
                     return 0;
                 }
                 else
                 {
-                    return decimal.Parse(strValor.ToString());
+                    return decimal.Parse(strValor);
                 }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public decimal Teto(DateTime competencia)
+        {
+            Crud crud = new Crud();
+            StringBuilder sqlBuilder = new StringBuilder();
 
+            sqlBuilder.Append("SELECT MAX(Valor) ");
+            sqlBuilder.Append("FROM INSS ");
+            sqlBuilder.Append("WHERE Competencia = (SELECT MAX(Competencia) FROM INSS WHERE Competencia <= @Competencia) ");
+            try
+            {
+                crud.LimparParametro();
+                crud.AdicionarParamentro("Competencia", competencia);
+                string strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString();
+
+                if (strValor == "")
+                {
+                    return 0;
+                }
+                else
+                {
+                    return decimal.Parse(strValor);
+                }
             }
             catch (Exception ex)
             {
@@ -169,8 +163,8 @@ namespace CalculoIRRF.Modelos.Irrf
             Crud crud = new Crud();
             StringBuilder sqlBuilder = new StringBuilder();
 
-            sqlBuilder.Append("SELECT Id, Competencia, Faixa, Valor, Porcentagem, Deducao ");
-            sqlBuilder.Append("FROM IRRF ");
+            sqlBuilder.Append("SELECT Id, Competencia, Faixa, Valor, Porcentagem ");
+            sqlBuilder.Append("FROM INSS ");
             sqlBuilder.Append("ORDER BY Competencia DESC");
 
             try
@@ -189,9 +183,9 @@ namespace CalculoIRRF.Modelos.Irrf
             Crud crud = new Crud();
             StringBuilder sqlBuilder = new StringBuilder();
 
-            sqlBuilder.Append("SELECT Id, Competencia, Faixa, Valor, Porcentagem, Deducao ");
-            sqlBuilder.Append("FROM IRRF ");
-            sqlBuilder.Append("WHERE Competencia = (SELECT MAX(Competencia) FROM IRRF WHERE Competencia <= @Competencia)");
+            sqlBuilder.Append("SELECT Id, Competencia, Faixa, Valor, Porcentagem ");
+            sqlBuilder.Append("FROM INSS ");
+            sqlBuilder.Append("WHERE Competencia = (SELECT MAX(Competencia) FROM INSS WHERE Competencia <= @Competencia)");
 
             try
             {

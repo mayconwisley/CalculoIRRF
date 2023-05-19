@@ -1,4 +1,4 @@
-﻿using CalculoIRRF.Modelos.Validacao;
+﻿using CalculoIRRF.Modelo.Validacao;
 using System;
 using System.Windows.Forms;
 
@@ -16,7 +16,7 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelos.Irrf.Listar listar = new Modelos.Irrf.Listar();
+                Modelo.Irrf.Listar listar = new Modelo.Irrf.Listar();
                 DgvTabelaIRRF.DataSource = listar.TodosItens();
                 LimparCampos();
             }
@@ -27,7 +27,7 @@ namespace CalculoIRRF
         }
         private void LimparCampos()
         {
-            Modelos.Irrf.Listar listar = new Modelos.Irrf.Listar();
+            Modelo.Irrf.Listar listar = new Modelo.Irrf.Listar();
             DateTime competencia = DateTime.Parse(MktCompetencia.Text);
             TxtFaixa.Text = (listar.UltimaFaixa(competencia) + 1).ToString();
             TxtValor.Text = "0,00";
@@ -47,7 +47,7 @@ namespace CalculoIRRF
                 irrf.Porcentagem = decimal.Parse(TxtPorcentagem.Text.Trim());
                 irrf.Deducao = decimal.Parse(TxtDeducao.Text.Trim());
 
-                Modelos.Irrf.Gravar gravar = new Modelos.Irrf.Gravar();
+                Modelo.Irrf.Gravar gravar = new Modelo.Irrf.Gravar();
                 gravar.Item(irrf);
                 ListarTabelaIrrf();
             }
@@ -69,7 +69,7 @@ namespace CalculoIRRF
                 irrf.Porcentagem = decimal.Parse(TxtPorcentagem.Text.Trim());
                 irrf.Deducao = decimal.Parse(TxtDeducao.Text.Trim());
 
-                Modelos.Irrf.Alterar alterar = new Modelos.Irrf.Alterar();
+                Modelo.Irrf.Alterar alterar = new Modelo.Irrf.Alterar();
                 alterar.Item(irrf);
                 ListarTabelaIrrf();
             }
@@ -83,7 +83,7 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelos.Irrf.Excluir excluir = new Modelos.Irrf.Excluir();
+                Modelo.Irrf.Excluir excluir = new Modelo.Irrf.Excluir();
                 excluir.Item(idIrrf);
                 ListarTabelaIrrf();
             }
@@ -209,7 +209,7 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelos.Irrf.Listar listar = new Modelos.Irrf.Listar();
+                Modelo.Irrf.Listar listar = new Modelo.Irrf.Listar();
                 DateTime competencia = DateTime.Parse(MktCompetencia.Text);
                 int faixa = listar.UltimaFaixa(competencia) + 1;
 
