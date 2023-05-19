@@ -1,12 +1,5 @@
 ﻿using CalculoIRRF.Modelos.Validacao;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CalculoIRRF
@@ -39,6 +32,7 @@ namespace CalculoIRRF
             TxtFaixa.Text = (listar.UltimaFaixa(competencia) + 1).ToString();
             TxtValor.Text = "0,00";
             TxtPorcentagem.Text = "0,00";
+            TxtValor.Focus();
         }
 
         private void FrmTabelaINSS_Load(object sender, EventArgs e)
@@ -188,6 +182,22 @@ namespace CalculoIRRF
             try
             {
                 Modelos.Irrf.Listar listar = new Modelos.Irrf.Listar();
+                DateTime competencia = DateTime.Parse(MktCompetencia.Text);
+                int faixa = listar.UltimaFaixa(competencia) + 1;
+
+                TxtFaixa.Text = faixa.ToString();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void MktCompetencia_Leave_1(object sender, EventArgs e)
+        {
+            try
+            {
+                Modelos.Inss.Listar listar = new Modelos.Inss.Listar();
                 DateTime competencia = DateTime.Parse(MktCompetencia.Text);
                 int faixa = listar.UltimaFaixa(competencia) + 1;
 

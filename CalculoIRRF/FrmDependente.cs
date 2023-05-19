@@ -27,6 +27,7 @@ namespace CalculoIRRF
         private void LimparCampos()
         {
             TxtValor.Text = "0,00";
+            TxtValor.Focus();
         }
         private void BtnGravar_Click(object sender, EventArgs e)
         {

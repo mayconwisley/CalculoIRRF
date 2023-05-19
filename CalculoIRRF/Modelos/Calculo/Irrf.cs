@@ -5,10 +5,10 @@ namespace CalculoIRRF.Modelos.Calculo
 {
     public class Irrf
     {
-        DateTime _competencia;
-        int _qtdDependente = 0;
-        decimal _valorInss = 0;
-        decimal _baseInss = 0;
+        readonly DateTime _competencia;
+        readonly int _qtdDependente = 0;
+        readonly decimal _valorInss = 0;
+        readonly decimal _baseInss = 0;
 
         public Irrf(DateTime competencia, int qtdDependente, decimal valorInss, decimal valorBruto)
         {
@@ -20,7 +20,7 @@ namespace CalculoIRRF.Modelos.Calculo
         public decimal Normal()
         {
             Modelos.Irrf.Listar listar = new Modelos.Irrf.Listar();
-            Modelos.Dependente.Listar listarDep = new Dependente.Listar();
+            Dependente.Listar listarDep = new Dependente.Listar();
             decimal valorDependente = listarDep.Valor(_competencia);
 
             decimal baseInss = _baseInss - _valorInss - (_qtdDependente * valorDependente);
@@ -36,7 +36,7 @@ namespace CalculoIRRF.Modelos.Calculo
         public string DescricaoCalculoNormal()
         {
             Modelos.Irrf.Listar listar = new Modelos.Irrf.Listar();
-            Modelos.Dependente.Listar listarDep = new Dependente.Listar();
+            Dependente.Listar listarDep = new Dependente.Listar();
             decimal valorDependente = listarDep.Valor(_competencia);
 
             decimal baseInss = _baseInss - _valorInss - (_qtdDependente * valorDependente);
@@ -61,7 +61,7 @@ namespace CalculoIRRF.Modelos.Calculo
         public decimal NormalProgressivo()
         {
             Modelos.Irrf.Listar listar = new Modelos.Irrf.Listar();
-            Modelos.Dependente.Listar listarDep = new Dependente.Listar();
+            Dependente.Listar listarDep = new Dependente.Listar();
             decimal valorDependente = listarDep.Valor(_competencia);
 
             decimal baseInss = _baseInss - _valorInss - (_qtdDependente * valorDependente);
@@ -97,7 +97,7 @@ namespace CalculoIRRF.Modelos.Calculo
         {
             StringBuilder strMensagem = new StringBuilder();
             Modelos.Irrf.Listar listar = new Modelos.Irrf.Listar();
-            Modelos.Dependente.Listar listarDep = new Dependente.Listar();
+            Dependente.Listar listarDep = new Dependente.Listar();
             decimal valorDependente = listarDep.Valor(_competencia);
 
             decimal baseInss = _baseInss - _valorInss - (_qtdDependente * valorDependente);
@@ -151,7 +151,7 @@ namespace CalculoIRRF.Modelos.Calculo
                 return 0;
             }
 
-            Modelos.Simplificado.Listar listar = new Simplificado.Listar();
+            Simplificado.Listar listar = new Simplificado.Listar();
             decimal valorDeducao = listar.Valor(_competencia);
             decimal baseInss = _baseInss - valorDeducao;
 
@@ -172,7 +172,7 @@ namespace CalculoIRRF.Modelos.Calculo
                 return "Calculo Simplificado é a partir de 05/2023!\n\n";
             }
 
-            Modelos.Simplificado.Listar listar = new Simplificado.Listar();
+            Simplificado.Listar listar = new Simplificado.Listar();
             decimal valorDeducao = listar.Valor(_competencia);
             decimal baseInss = _baseInss - valorDeducao;
 
@@ -195,9 +195,9 @@ namespace CalculoIRRF.Modelos.Calculo
             return strMensagem.ToString();
 
         }
-        public string Vantagem()
+        public string DescricaoVantagem()
         {
-            Modelos.DescontoMinimo.Listar lista = new DescontoMinimo.Listar();
+            DescontoMinimo.Listar lista = new DescontoMinimo.Listar();
             decimal descontoMinimo = lista.Valor(_competencia);
 
             if (_competencia < DateTime.Parse("01/05/2023"))
@@ -216,7 +216,6 @@ namespace CalculoIRRF.Modelos.Calculo
             if (valorNormal > valorSimplificado)
             {
                 decimal total = valorNormal - valorSimplificado;
-
                 return $"Calculo Simplificado é mais vantajoso!\nDiferença: {total:#,##0.00}\n\n";
             }
             else

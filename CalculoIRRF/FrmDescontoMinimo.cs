@@ -1,13 +1,5 @@
 ﻿using CalculoIRRF.Modelos.Validacao;
-using CalculoIRRF.Objetos;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CalculoIRRF
@@ -35,6 +27,7 @@ namespace CalculoIRRF
         private void LimparCampos()
         {
             TxtValor.Text = "0,00";
+            TxtValor.Focus();
         }
 
         private void BtnGravar_Click(object sender, EventArgs e)
@@ -127,7 +120,6 @@ namespace CalculoIRRF
             {
                 TxtValor.Text = "";
             }
-
         }
     }
 }

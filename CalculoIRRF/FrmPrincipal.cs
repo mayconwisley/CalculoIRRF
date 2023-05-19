@@ -41,7 +41,7 @@ namespace CalculoIRRF
                 str += "--------------------------------------------------------------------\n";
                 str += irrf.DescricaoCalculoSimplificado();
                 str += "--------------------------------------------------------------------\n";
-                str += irrf.Vantagem();
+                str += irrf.DescricaoVantagem();
                 str += "--------------------------------------------------------------------\n";
                 str += irrf.DescricaoCalculoNormalProgrssivo();
                 str += "--------------------------------------------------------------------\n";
@@ -75,6 +75,8 @@ namespace CalculoIRRF
             Validar validar = new Validar();
             TxtValorBruto.Text = validar.Zero(TxtValorBruto.Text);
             TxtValorBruto.Text = validar.Formatar(TxtValorBruto.Text);
+
+            TxtBaseInss.Text = TxtValorBruto.Text;
         }
 
         private void TxtValorBruto_Enter(object sender, EventArgs e)

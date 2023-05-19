@@ -5,8 +5,8 @@ namespace CalculoIRRF.Modelos.Calculo
 {
     public class Inss
     {
-        DateTime _competencia;
-        decimal _baseInss = 0;
+        readonly DateTime _competencia;
+        decimal _baseInss;
 
         public Inss(DateTime competencia, decimal baseInss)
         {
@@ -59,8 +59,6 @@ namespace CalculoIRRF.Modelos.Calculo
             Modelos.Inss.Listar listar = new Modelos.Inss.Listar();
 
             int faixaInss = listar.Faixa(_baseInss, _competencia);
-
-            decimal desconto = 0;
             decimal totalDesconto = 0;
             decimal valorInssAnterior = 0;
 
@@ -83,7 +81,7 @@ namespace CalculoIRRF.Modelos.Calculo
                     baseInssCalculo = _baseInss - valorInssAnterior;
                 }
 
-                desconto = (baseInssCalculo * (porcentagemInss / 100));
+                decimal desconto = (baseInssCalculo * (porcentagemInss / 100));
                 totalDesconto += desconto;
 
                 valorInssAnterior = valorInss;

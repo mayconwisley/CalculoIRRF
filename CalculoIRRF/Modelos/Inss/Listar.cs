@@ -22,11 +22,20 @@ namespace CalculoIRRF.Modelos.Inss
                 crud.LimparParametro();
                 crud.AdicionarParamentro("Valor", baseInss);
                 crud.AdicionarParamentro("Competencia", competencia);
-                return int.Parse(crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString());
+                string strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString();
+
+                if (strValor == "")
+                {
+                    return 0;
+                }
+                else
+                {
+                    return int.Parse(strValor);
+                }
+
             }
             catch (Exception ex)
             {
-
                 throw new Exception(ex.Message);
             }
         }
@@ -75,7 +84,16 @@ namespace CalculoIRRF.Modelos.Inss
                 crud.LimparParametro();
                 crud.AdicionarParamentro("Faixa", faixa);
                 crud.AdicionarParamentro("Competencia", competencia);
-                return decimal.Parse(crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString());
+                string strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString();
+                if (strValor == "")
+                {
+                    return 0;
+                }
+                else
+                {
+                    return decimal.Parse(strValor);
+                }
+
             }
             catch (Exception ex)
             {
@@ -97,14 +115,21 @@ namespace CalculoIRRF.Modelos.Inss
                 crud.LimparParametro();
                 crud.AdicionarParamentro("Faixa", faixa);
                 crud.AdicionarParamentro("Competencia", competencia);
-                return decimal.Parse(crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString());
+                string strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString();
+                if (strValor == "")
+                {
+                    return 0;
+                }
+                else
+                {
+                    return decimal.Parse(strValor);
+                }
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
-
         public decimal Teto(DateTime competencia)
         {
             Crud crud = new Crud();
@@ -117,7 +142,16 @@ namespace CalculoIRRF.Modelos.Inss
             {
                 crud.LimparParametro();
                 crud.AdicionarParamentro("Competencia", competencia);
-                return decimal.Parse(crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString());
+                string strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString();
+
+                if (strValor == "")
+                {
+                    return 0;
+                }
+                else
+                {
+                    return decimal.Parse(strValor);
+                }
             }
             catch (Exception ex)
             {

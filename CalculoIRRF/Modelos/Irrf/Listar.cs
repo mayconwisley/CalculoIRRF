@@ -22,7 +22,16 @@ namespace CalculoIRRF.Modelos.Irrf
                 crud.LimparParametro();
                 crud.AdicionarParamentro("Valor", baseInss);
                 crud.AdicionarParamentro("Competencia", competencia);
-                return int.Parse(crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString());
+                string strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString();
+                if (strValor == "")
+                {
+                    return 0;
+                }
+                else
+                {
+                    return int.Parse(strValor);
+                }
+
             }
             catch (Exception ex)
             {
@@ -75,14 +84,23 @@ namespace CalculoIRRF.Modelos.Irrf
                 crud.LimparParametro();
                 crud.AdicionarParamentro("Faixa", faixa);
                 crud.AdicionarParamentro("Competencia", competencia);
-                return decimal.Parse(crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString());
+
+                var strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString());
+                if (strValor is null)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return decimal.Parse(strValor.ToString());
+                }
+
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
-
         public decimal Deducao(int faixa, DateTime competencia)
         {
             Crud crud = new Crud();
@@ -98,14 +116,23 @@ namespace CalculoIRRF.Modelos.Irrf
                 crud.LimparParametro();
                 crud.AdicionarParamentro("Faixa", faixa);
                 crud.AdicionarParamentro("Competencia", competencia);
-                return decimal.Parse(crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString());
+                var strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString());
+
+                if (strValor is null)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return decimal.Parse(strValor.ToString());
+                }
+
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
-
         public decimal Valor(int faixa, DateTime competencia)
         {
             Crud crud = new Crud();
@@ -121,14 +148,22 @@ namespace CalculoIRRF.Modelos.Irrf
                 crud.LimparParametro();
                 crud.AdicionarParamentro("Faixa", faixa);
                 crud.AdicionarParamentro("Competencia", competencia);
-                return decimal.Parse(crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString());
+                var strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString());
+                if (strValor is null)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return decimal.Parse(strValor.ToString());
+                }
+
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
-
         public DataTable TodosItens()
         {
             Crud crud = new Crud();
@@ -149,7 +184,6 @@ namespace CalculoIRRF.Modelos.Irrf
                 throw new Exception(ex.Message);
             }
         }
-
         public DataTable TodosItensPorCompetencia(DateTime competencia)
         {
             Crud crud = new Crud();

@@ -33,6 +33,7 @@ namespace CalculoIRRF
             TxtValor.Text = "0,00";
             TxtPorcentagem.Text = "0,00";
             TxtDeducao.Text = "0,00";
+            TxtValor.Focus();
 
         }
         private void BtnGravar_Click(object sender, EventArgs e)

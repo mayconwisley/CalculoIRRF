@@ -20,15 +20,15 @@ namespace CalculoIRRF.Modelos.Dependente
             {
                 crud.LimparParametro();
                 crud.AdicionarParamentro("Competencia", competencia);
-                decimal valor;
-                bool v = decimal.TryParse(crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString(), out valor);
-                if (v)
+
+                var strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString());
+                if (strValor is null)
                 {
-                    return valor;
+                    return 0;
                 }
                 else
                 {
-                    return 0;
+                    return decimal.Parse(strValor.ToString());
                 }
             }
             catch (Exception ex)
