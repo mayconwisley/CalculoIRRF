@@ -1,5 +1,6 @@
 ﻿using CalculoIRRF.Modelo.Validacao;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace CalculoIRRF
@@ -29,6 +30,7 @@ namespace CalculoIRRF
             decimal valorBruto = decimal.Parse(TxtValorBruto.Text.Trim());
             decimal baseInss = decimal.Parse(TxtBaseInss.Text.Trim());
             int qtdDependente = int.Parse(TxtQtdDependente.Text.Trim());
+            RTxtResultado.Clear();
 
             try
             {
@@ -37,13 +39,28 @@ namespace CalculoIRRF
 
                 Modelo.Calculo.Irrf irrf = new Modelo.Calculo.Irrf(competencia, qtdDependente, valorInss, valorBruto);
 
+                Color colorIrNormal = Color.Blue;
+                RTxtResultado.SelectionColor = colorIrNormal;
+
                 string str = irrf.DescricaoCalculoNormal();
                 str += "--------------------------------------------------------------------\n";
-                str += irrf.DescricaoCalculoSimplificado();
+                RTxtResultado.SelectedText = str;
+
+                Color colorIrSimplificado = Color.Red;
+                RTxtResultado.SelectionColor = colorIrSimplificado;
+
+                str = irrf.DescricaoCalculoSimplificado();
                 str += "--------------------------------------------------------------------\n";
-                str += irrf.DescricaoVantagem();
+                RTxtResultado.SelectedText = str;
+
+                Color colorVantagem = Color.Green;
+                RTxtResultado.SelectionColor = colorVantagem;
+
+                str = irrf.DescricaoVantagem();
                 str += "--------------------------------------------------------------------\n";
-                str += irrf.DescricaoCalculoNormalProgrssivo();
+                RTxtResultado.SelectedText = str;
+
+                str = irrf.DescricaoCalculoNormalProgrssivo();
                 str += "--------------------------------------------------------------------\n";
                 str += inss.DescricaoCalculoNormalProgressivo();
 
