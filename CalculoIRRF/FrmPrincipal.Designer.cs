@@ -163,18 +163,18 @@
             this.groupBox1.Controls.Add(this.RTxtResultado);
             this.groupBox1.Location = new System.Drawing.Point(11, 99);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(580, 349);
+            this.groupBox1.Size = new System.Drawing.Size(580, 413);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Calculo do IR";
             // 
             // RTxtResultado
             // 
-            this.RTxtResultado.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RTxtResultado.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RTxtResultado.Location = new System.Drawing.Point(6, 12);
             this.RTxtResultado.Name = "RTxtResultado";
             this.RTxtResultado.ReadOnly = true;
-            this.RTxtResultado.Size = new System.Drawing.Size(568, 324);
+            this.RTxtResultado.Size = new System.Drawing.Size(568, 395);
             this.RTxtResultado.TabIndex = 0;
             this.RTxtResultado.Text = "";
             // 
@@ -213,7 +213,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 469);
+            this.label4.Location = new System.Drawing.Point(2, 515);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(173, 13);
             this.label4.TabIndex = 9;
@@ -253,7 +253,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(603, 491);
+            this.ClientSize = new System.Drawing.Size(603, 537);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.MktCompetencia);
             this.Controls.Add(this.label2);
