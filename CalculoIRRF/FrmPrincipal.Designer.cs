@@ -150,9 +150,9 @@
             this.BtnTabelaValSimplificado.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGray;
             this.BtnTabelaValSimplificado.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.BtnTabelaValSimplificado.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnTabelaValSimplificado.Location = new System.Drawing.Point(501, 70);
+            this.BtnTabelaValSimplificado.Location = new System.Drawing.Point(404, 70);
             this.BtnTabelaValSimplificado.Name = "BtnTabelaValSimplificado";
-            this.BtnTabelaValSimplificado.Size = new System.Drawing.Size(90, 23);
+            this.BtnTabelaValSimplificado.Size = new System.Drawing.Size(187, 23);
             this.BtnTabelaValSimplificado.TabIndex = 9;
             this.BtnTabelaValSimplificado.Text = "Valor Simplificado";
             this.BtnTabelaValSimplificado.UseVisualStyleBackColor = true;
@@ -241,7 +241,7 @@
             this.BtnDescMinimo.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGray;
             this.BtnDescMinimo.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.BtnDescMinimo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnDescMinimo.Location = new System.Drawing.Point(405, 41);
+            this.BtnDescMinimo.Location = new System.Drawing.Point(404, 41);
             this.BtnDescMinimo.Name = "BtnDescMinimo";
             this.BtnDescMinimo.Size = new System.Drawing.Size(90, 23);
             this.BtnDescMinimo.TabIndex = 7;

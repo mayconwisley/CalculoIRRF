@@ -47,9 +47,7 @@ namespace CalculoIRRF
                 str += "--------------------------------------------------------------------\n";
                 str += inss.DescricaoCalculoNormalProgressivo();
 
-                RTxtResultado.Text = str;
-
-                irrf.NormalProgressivo();
+                RTxtResultado.SelectedText = str;
             }
             catch (Exception ex)
             {
