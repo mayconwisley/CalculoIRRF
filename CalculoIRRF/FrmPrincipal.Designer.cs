@@ -117,7 +117,7 @@
             this.BtnCalcular.FlatAppearance.BorderColor = System.Drawing.Color.DarkGreen;
             this.BtnCalcular.FlatAppearance.BorderSize = 2;
             this.BtnCalcular.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.BtnCalcular.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Green;
+            this.BtnCalcular.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightGreen;
             this.BtnCalcular.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnCalcular.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnCalcular.Location = new System.Drawing.Point(11, 60);
