@@ -57,7 +57,7 @@ namespace CalculoIRRF.Modelo.Calculo
             strMensagem.Append($"Valor Base do IR: {baseIrrf:#,##0.00}\n");
             strMensagem.Append($"Porcentagem: {porcentagemInss:#,##0.00}% - Dedução: {deducaoIrrf:#,##0.00}\n");
             strMensagem.Append($"Valor do Desconto: {desconto:#,##0.00}\n");
-            strMensagem.Append($"Aliquota Efetiva: {aliquotaEfetiica:#,##0.00}%\n\n");
+            strMensagem.Append($"Alíquota Efetiva: {aliquotaEfetiica:#,##0.00}%\n\n");
 
             return strMensagem.ToString();
         }
@@ -197,7 +197,7 @@ namespace CalculoIRRF.Modelo.Calculo
             strMensagem.Append($"Valor Base do IR: {baseIrrf:#,##0.00}\n");
             strMensagem.Append($"Porcentagem: {porcentagemInss:#,##0.00}% - Dedução: {deducaoIrrf:#,##0.00}\n");
             strMensagem.Append($"Valor do Desconto: {desconto:#,##0.00}\n");
-            strMensagem.Append($"Aliquota Efetiva: {aliquotaEfetiica:#,##0.00}%\n\n");
+            strMensagem.Append($"Alíquota Efetiva: {aliquotaEfetiica:#,##0.00}%\n\n");
             return strMensagem.ToString();
 
         }
