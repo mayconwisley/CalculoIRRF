@@ -45,9 +45,16 @@ namespace CalculoIRRF.Modelo.Calculo
             decimal deducaoIrrf = listar.Deducao(faixaIrrf, _competencia);
             decimal desconto = (baseIrrf * (porcentagemInss / 100)) - deducaoIrrf;
             desconto = Math.Round(desconto, 2);
-
-            decimal aliquotaEfetiica = (desconto / _valorBruto) * 100;
-            aliquotaEfetiica = Math.Truncate(aliquotaEfetiica * 100) / 100;
+            decimal aliquotaEfetiica;
+            try
+            {
+                aliquotaEfetiica = (desconto / _valorBruto) * 100;
+                aliquotaEfetiica = Math.Truncate(aliquotaEfetiica * 100) / 100;
+            }
+            catch
+            {
+                aliquotaEfetiica = 0m;
+            }
 
             StringBuilder strMensagem = new StringBuilder();
             strMensagem.Append("Informações de Calculo do IR Normal\n\n");
@@ -186,9 +193,16 @@ namespace CalculoIRRF.Modelo.Calculo
 
             decimal desconto = (baseIrrf * (porcentagemInss / 100)) - deducaoIrrf;
             desconto = Math.Round(desconto, 2);
-
-            decimal aliquotaEfetiica = (desconto / _valorBruto) * 100;
-            aliquotaEfetiica = Math.Truncate(aliquotaEfetiica * 100) / 100;
+            decimal aliquotaEfetiica;
+            try
+            {
+                aliquotaEfetiica = (desconto / _valorBruto) * 100;
+                aliquotaEfetiica = Math.Truncate(aliquotaEfetiica * 100) / 100;
+            }
+            catch
+            {
+                aliquotaEfetiica = 0m;
+            }
 
             StringBuilder strMensagem = new StringBuilder();
             strMensagem.Append("Informações de Calculo do IR Simplificado\n\n");
