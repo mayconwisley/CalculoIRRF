@@ -46,6 +46,7 @@ namespace CalculoIRRF.Modelo.Calculo
             decimal desconto = (baseIrrf * (porcentagemInss / 100)) - deducaoIrrf;
             desconto = Math.Round(desconto, 2);
             decimal aliquotaEfetiica;
+            /*Se ocorrer divisão por zero, retornar o valor 0(zero)*/
             try
             {
                 aliquotaEfetiica = (desconto / _valorBruto) * 100;
@@ -112,8 +113,6 @@ namespace CalculoIRRF.Modelo.Calculo
 
             decimal baseIrrf = _valorBruto - _valorInss - (_qtdDependente * valorDependente);
             int faixaIrrf = listar.Faixa(baseIrrf, _competencia);
-
-            decimal desconto = 0;
             decimal totalDesconto = 0;
             decimal valorInssAnterior = 0;
 
@@ -140,7 +139,7 @@ namespace CalculoIRRF.Modelo.Calculo
                     baseIrrfCalculo = baseIrrf - valorInssAnterior;
                 }
 
-                desconto = (baseIrrfCalculo * (porcentagemInss / 100));
+                decimal desconto = (baseIrrfCalculo * (porcentagemInss / 100));
                 totalDesconto += desconto;
 
                 valorInssAnterior = valorIrrf;
@@ -194,6 +193,7 @@ namespace CalculoIRRF.Modelo.Calculo
             decimal desconto = (baseIrrf * (porcentagemInss / 100)) - deducaoIrrf;
             desconto = Math.Round(desconto, 2);
             decimal aliquotaEfetiica;
+            /*Se ocorrer divisão por zero, retornar o valor 0(zero)*/
             try
             {
                 aliquotaEfetiica = (desconto / _valorBruto) * 100;
