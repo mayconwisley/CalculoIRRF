@@ -45,16 +45,16 @@ namespace CalculoIRRF.Modelo.Calculo
             decimal deducaoIrrf = listar.Deducao(faixaIrrf, _competencia);
             decimal desconto = (baseIrrf * (porcentagemInss / 100)) - deducaoIrrf;
             desconto = Math.Round(desconto, 2);
-            decimal aliquotaEfetiica;
+            decimal aliquotaEfetiva;
             /*Se ocorrer divisão por zero, retornar o valor 0(zero)*/
             try
             {
-                aliquotaEfetiica = (desconto / _valorBruto) * 100;
-                aliquotaEfetiica = Math.Truncate(aliquotaEfetiica * 100) / 100;
+                aliquotaEfetiva = (desconto / _valorBruto) * 100;
+                aliquotaEfetiva = Math.Truncate(aliquotaEfetiva * 100) / 100;
             }
             catch
             {
-                aliquotaEfetiica = 0m;
+                aliquotaEfetiva = 0m;
             }
 
             StringBuilder strMensagem = new StringBuilder();
@@ -65,7 +65,7 @@ namespace CalculoIRRF.Modelo.Calculo
             strMensagem.Append($"Valor Base do IR: {baseIrrf:#,##0.00}\n");
             strMensagem.Append($"Porcentagem: {porcentagemInss:#,##0.00}% - Dedução: {deducaoIrrf:#,##0.00}\n");
             strMensagem.Append($"Valor do Desconto: {desconto:#,##0.00}\n");
-            strMensagem.Append($"Alíquota Efetiva: {aliquotaEfetiica:#,##0.00}%\n\n");
+            strMensagem.Append($"Alíquota Efetiva: {aliquotaEfetiva:#,##0.00}%\n\n");
 
             return strMensagem.ToString();
         }
