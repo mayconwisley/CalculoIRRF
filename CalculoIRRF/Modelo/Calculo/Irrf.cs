@@ -230,18 +230,21 @@ namespace CalculoIRRF.Modelo.Calculo
 
             if (valorNormal < descontoMinimo || valorSimplificado < descontoMinimo)
             {
-                return $"Não tem desconto de IR\n\nValor abaixo do valor de desconto minimo {descontoMinimo:#,##0.00}\n\n";
+                return $"Não tem desconto de IR\n\n" +
+                       $"Valor abaixo do valor de desconto minimo {descontoMinimo:#,##0.00}\n\n";
             }
 
             if (valorNormal > valorSimplificado)
             {
                 decimal total = valorNormal - valorSimplificado;
-                return $"Calculo Simplificado é mais vantajoso!\nDiferença: {total:#,##0.00}\n\n";
+                return $"Calculo Simplificado é mais vantajoso!\n" +
+                       $"Diferença: {total:#,##0.00}\n\n";
             }
             else
             {
                 decimal total = valorSimplificado - valorNormal;
-                return $"Calculo Normal é mais vantajoso!\nDiferença: {total:#,##0.00}\n\n";
+                return $"Calculo Normal é mais vantajoso!\n" +
+                       $"Diferença: {total:#,##0.00}\n\n";
             }
         }
     }

@@ -36,9 +36,9 @@ namespace CalculoIRRF.Modelo.Validacao
                 }
                 return strValor1.ToString(); ;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
         }
 
@@ -79,9 +79,9 @@ namespace CalculoIRRF.Modelo.Validacao
                 }
                 return strValor1.ToString();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
         }
 

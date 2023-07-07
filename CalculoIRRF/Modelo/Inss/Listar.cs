@@ -32,11 +32,10 @@ namespace CalculoIRRF.Modelo.Inss
                 {
                     return int.Parse(strValor);
                 }
-
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
         }
         public int UltimaFaixa(DateTime competencia)
@@ -64,9 +63,9 @@ namespace CalculoIRRF.Modelo.Inss
                     return int.Parse(faixa);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
         }
         public decimal Porcentagem(int faixa, DateTime competencia)
@@ -95,9 +94,9 @@ namespace CalculoIRRF.Modelo.Inss
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
         }
         public decimal Valor(int faixa, DateTime competencia)
@@ -125,9 +124,9 @@ namespace CalculoIRRF.Modelo.Inss
                     return decimal.Parse(strValor);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
         }
         public decimal Teto(DateTime competencia)
@@ -153,9 +152,9 @@ namespace CalculoIRRF.Modelo.Inss
                     return decimal.Parse(strValor);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
         }
         public DataTable TodosItens()
@@ -173,9 +172,9 @@ namespace CalculoIRRF.Modelo.Inss
                 DataTable dataTable = crud.Consulta(CommandType.Text, sqlBuilder.ToString());
                 return dataTable;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
         }
         public DataTable TodosItensPorCompetencia(DateTime competencia)
@@ -194,9 +193,9 @@ namespace CalculoIRRF.Modelo.Inss
                 DataTable dataTable = crud.Consulta(CommandType.Text, sqlBuilder.ToString());
                 return dataTable;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
         }
     }
