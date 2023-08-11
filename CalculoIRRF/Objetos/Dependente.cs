@@ -18,7 +18,7 @@ namespace CalculoIRRF.Objetos
         {
             VlrDependente(competencia);
         }
-       
+
         public bool Gravar()
         {
             Crud crud = new Crud();

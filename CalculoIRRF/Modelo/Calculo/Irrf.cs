@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace CalculoIRRF.Modelo.Calculo
@@ -174,11 +172,11 @@ namespace CalculoIRRF.Modelo.Calculo
             {
                 return 0;
             }
-            
+
             Objetos.Simplificado simplificado = new Objetos.Simplificado(_competencia);
-            
+
             decimal valorDeducao = simplificado.Valor;
-            
+
             decimal baseIrrf = _valorBruto - valorDeducao;
 
             Objetos.Irrf irrf = new Objetos.Irrf(baseIrrf, _competencia);
