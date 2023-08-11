@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data.Entity.Core.Metadata.Edm;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace CalculoIRRF.Modelo.Calculo
@@ -19,14 +21,17 @@ namespace CalculoIRRF.Modelo.Calculo
         }
         public decimal Normal()
         {
-            Modelo.Irrf.Listar listar = new Modelo.Irrf.Listar();
-            Dependente.Listar listarDep = new Dependente.Listar();
-            decimal valorDependente = listarDep.Valor(_competencia);
+
+            Objetos.Dependente dependente = new Objetos.Dependente(_competencia);
+
+            decimal valorDependente = dependente.ValorDependente;
 
             decimal baseIrrf = _valorBruto - _valorInss - (_qtdDependente * valorDependente);
-            int faixaIrrf = listar.Faixa(baseIrrf, _competencia);
-            decimal porcentagemInss = listar.Porcentagem(faixaIrrf, _competencia);
-            decimal deducaoIrrf = listar.Deducao(faixaIrrf, _competencia);
+            Objetos.Irrf irrf = new Objetos.Irrf(baseIrrf, _competencia);
+
+            int faixaIrrf = irrf.Faixa;
+            decimal porcentagemInss = irrf.PorcentagemIrrf(faixaIrrf, _competencia);
+            decimal deducaoIrrf = irrf.DeducaoIrrf(faixaIrrf, _competencia);
 
             decimal desconto = (baseIrrf * (porcentagemInss / 100)) - deducaoIrrf;
             desconto = Math.Round(desconto, 2);
@@ -35,17 +40,21 @@ namespace CalculoIRRF.Modelo.Calculo
         }
         public string DescricaoCalculoNormal()
         {
-            Modelo.Irrf.Listar listar = new Modelo.Irrf.Listar();
-            Dependente.Listar listarDep = new Dependente.Listar();
-            decimal valorDependente = listarDep.Valor(_competencia);
+            Objetos.Dependente dependente = new Objetos.Dependente(_competencia);
+
+            decimal valorDependente = dependente.ValorDependente;
 
             decimal baseIrrf = _valorBruto - _valorInss - (_qtdDependente * valorDependente);
-            int faixaIrrf = listar.Faixa(baseIrrf, _competencia);
-            decimal porcentagemInss = listar.Porcentagem(faixaIrrf, _competencia);
-            decimal deducaoIrrf = listar.Deducao(faixaIrrf, _competencia);
+
+            Objetos.Irrf irrf = new Objetos.Irrf(baseIrrf, _competencia);
+
+            int faixaIrrf = irrf.Faixa;
+            decimal porcentagemInss = irrf.PorcentagemIrrf(faixaIrrf, _competencia);
+            decimal deducaoIrrf = irrf.DeducaoIrrf(faixaIrrf, _competencia);
             decimal desconto = (baseIrrf * (porcentagemInss / 100)) - deducaoIrrf;
             desconto = Math.Round(desconto, 2);
             decimal aliquotaEfetiva;
+
             /*Se ocorrer divisão por zero, retornar o valor 0(zero)*/
             try
             {
@@ -71,19 +80,21 @@ namespace CalculoIRRF.Modelo.Calculo
         }
         public decimal NormalProgressivo()
         {
-            Modelo.Irrf.Listar listar = new Modelo.Irrf.Listar();
-            Dependente.Listar listarDep = new Dependente.Listar();
-            decimal valorDependente = listarDep.Valor(_competencia);
+            Objetos.Dependente dependente = new Objetos.Dependente(_competencia);
+
+            decimal valorDependente = dependente.ValorDependente;
 
             decimal baseIrrf = _valorBruto - _valorInss - (_qtdDependente * valorDependente);
-            int faixaIrrf = listar.Faixa(baseIrrf, _competencia);
+            Objetos.Irrf irrf = new Objetos.Irrf(baseIrrf, _competencia);
+
+            int faixaIrrf = irrf.Faixa;
 
             decimal desconto = 0;
             decimal valorInssAnterior = 0;
             for (int i = 1; i <= faixaIrrf; i++)
             {
-                decimal porcentagemInss = listar.Porcentagem(i, _competencia);
-                decimal valorIrrf = listar.Valor(i, _competencia);
+                decimal porcentagemInss = irrf.PorcentagemIrrf(i, _competencia);
+                decimal valorIrrf = irrf.ValorIrrf(i, _competencia);
 
                 decimal baseIrrfCalculo = valorIrrf - valorInssAnterior;
 
@@ -107,12 +118,16 @@ namespace CalculoIRRF.Modelo.Calculo
         public string DescricaoCalculoNormalProgrssivo()
         {
             StringBuilder strMensagem = new StringBuilder();
-            Modelo.Irrf.Listar listar = new Modelo.Irrf.Listar();
-            Dependente.Listar listarDep = new Dependente.Listar();
-            decimal valorDependente = listarDep.Valor(_competencia);
+
+            Objetos.Dependente dependente = new Objetos.Dependente(_competencia);
+
+            decimal valorDependente = dependente.ValorDependente;
 
             decimal baseIrrf = _valorBruto - _valorInss - (_qtdDependente * valorDependente);
-            int faixaIrrf = listar.Faixa(baseIrrf, _competencia);
+
+            Objetos.Irrf irrf = new Objetos.Irrf(baseIrrf, _competencia);
+
+            int faixaIrrf = irrf.Faixa;
             decimal totalDesconto = 0;
             decimal valorInssAnterior = 0;
 
@@ -124,8 +139,8 @@ namespace CalculoIRRF.Modelo.Calculo
 
             for (int i = 1; i <= faixaIrrf; i++)
             {
-                decimal porcentagemInss = listar.Porcentagem(i, _competencia);
-                decimal valorIrrf = listar.Valor(i, _competencia);
+                decimal porcentagemInss = irrf.PorcentagemIrrf(i, _competencia);
+                decimal valorIrrf = irrf.ValorIrrf(i, _competencia);
 
                 decimal baseIrrfCalculo = valorIrrf - valorInssAnterior;
 
@@ -159,15 +174,18 @@ namespace CalculoIRRF.Modelo.Calculo
             {
                 return 0;
             }
-
-            Simplificado.Listar listar = new Simplificado.Listar();
-            decimal valorDeducao = listar.Valor(_competencia);
+            
+            Objetos.Simplificado simplificado = new Objetos.Simplificado(_competencia);
+            
+            decimal valorDeducao = simplificado.Valor;
+            
             decimal baseIrrf = _valorBruto - valorDeducao;
 
-            Modelo.Irrf.Listar listarIrrf = new Modelo.Irrf.Listar();
-            int faixaIrrf = listarIrrf.Faixa(baseIrrf, _competencia);
-            decimal porcentagemInss = listarIrrf.Porcentagem(faixaIrrf, _competencia);
-            decimal deducaoIrrf = listarIrrf.Deducao(faixaIrrf, _competencia);
+            Objetos.Irrf irrf = new Objetos.Irrf(baseIrrf, _competencia);
+
+            int faixaIrrf = irrf.Faixa;
+            decimal porcentagemInss = irrf.PorcentagemIrrf(faixaIrrf, _competencia);
+            decimal deducaoIrrf = irrf.DeducaoIrrf(faixaIrrf, _competencia);
 
             decimal desconto = (baseIrrf * (porcentagemInss / 100)) - deducaoIrrf;
             desconto = Math.Round(desconto, 2);
@@ -181,14 +199,16 @@ namespace CalculoIRRF.Modelo.Calculo
                 return "Calculo Simplificado é a partir de 05/2023!\n\n";
             }
 
-            Simplificado.Listar listar = new Simplificado.Listar();
-            decimal valorDeducao = listar.Valor(_competencia);
-            decimal baseIrrf = _valorBruto - valorDeducao;
+            Objetos.Simplificado simplificado = new Objetos.Simplificado(_competencia);
 
-            Modelo.Irrf.Listar listarIrrf = new Modelo.Irrf.Listar();
-            int faixaIrrf = listarIrrf.Faixa(baseIrrf, _competencia);
-            decimal porcentagemInss = listarIrrf.Porcentagem(faixaIrrf, _competencia);
-            decimal deducaoIrrf = listarIrrf.Deducao(faixaIrrf, _competencia);
+            decimal valorDeducao = simplificado.Valor;
+
+            decimal baseIrrf = _valorBruto - valorDeducao;
+            Objetos.Irrf irrf = new Objetos.Irrf(baseIrrf, _competencia);
+
+            int faixaIrrf = irrf.Faixa;
+            decimal porcentagemInss = irrf.PorcentagemIrrf(faixaIrrf, _competencia);
+            decimal deducaoIrrf = irrf.DeducaoIrrf(faixaIrrf, _competencia);
 
             decimal desconto = (baseIrrf * (porcentagemInss / 100)) - deducaoIrrf;
             desconto = Math.Round(desconto, 2);
@@ -217,8 +237,8 @@ namespace CalculoIRRF.Modelo.Calculo
         }
         public string DescricaoVantagem()
         {
-            DescontoMinimo.Listar lista = new DescontoMinimo.Listar();
-            decimal descontoMinimo = lista.Valor(_competencia);
+            Objetos.DescontoMinimo descontoMinimo = new Objetos.DescontoMinimo(_competencia);
+            decimal vlrDescontoMinimo = descontoMinimo.ValorDescontoMinimo;
 
             if (_competencia < DateTime.Parse("01/05/2023"))
             {
@@ -228,10 +248,10 @@ namespace CalculoIRRF.Modelo.Calculo
             decimal valorNormal = Normal();
             decimal valorSimplificado = Simplificado();
 
-            if (valorNormal < descontoMinimo || valorSimplificado < descontoMinimo)
+            if (valorNormal < vlrDescontoMinimo || valorSimplificado < vlrDescontoMinimo)
             {
                 return $"Não tem desconto de IR\n\n" +
-                       $"Valor abaixo do valor de desconto minimo {descontoMinimo:#,##0.00}\n\n";
+                       $"Valor abaixo do valor de desconto minimo {vlrDescontoMinimo:#,##0.00}\n\n";
             }
 
             if (valorNormal > valorSimplificado)

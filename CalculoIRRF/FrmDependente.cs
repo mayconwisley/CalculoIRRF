@@ -15,8 +15,8 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelo.Dependente.Listar listar = new Modelo.Dependente.Listar();
-                DgvValorDependente.DataSource = listar.TodosItens();
+                Objetos.Dependente dependente = new Objetos.Dependente();
+                DgvValorDependente.DataSource = dependente.ListarTodos();
                 LimparCampos();
             }
             catch (Exception ex)
@@ -33,11 +33,12 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.Dependente dependente = new Objetos.Dependente();
-                dependente.Competencia = DateTime.Parse(MktCompetencia.Text.Trim());
-                dependente.Valor = decimal.Parse(TxtValor.Text.Trim());
-                Modelo.Dependente.Gravar gravar = new Modelo.Dependente.Gravar();
-                gravar.Item(dependente);
+                Objetos.Dependente dependente = new Objetos.Dependente
+                {
+                    Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
+                    Valor = decimal.Parse(TxtValor.Text.Trim())
+                };
+                dependente.Gravar();
                 ListarTabelaDependente();
             }
             catch (Exception ex)
@@ -49,12 +50,13 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.Dependente dependente = new Objetos.Dependente();
-                dependente.Id = idDependente;
-                dependente.Competencia = DateTime.Parse(MktCompetencia.Text.Trim());
-                dependente.Valor = decimal.Parse(TxtValor.Text.Trim());
-                Modelo.Dependente.Alterar alterar = new Modelo.Dependente.Alterar();
-                alterar.Item(dependente);
+                Objetos.Dependente dependente = new Objetos.Dependente
+                {
+                    Id = idDependente,
+                    Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
+                    Valor = decimal.Parse(TxtValor.Text.Trim())
+                };
+                dependente.Alterar();
                 ListarTabelaDependente();
             }
             catch (Exception ex)
@@ -66,8 +68,11 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelo.Dependente.Excluir excluir = new Modelo.Dependente.Excluir();
-                excluir.Item(idDependente);
+                Objetos.Dependente dependente = new Objetos.Dependente
+                {
+                    Id = idDependente
+                };
+                dependente.Excluir();
                 ListarTabelaDependente();
             }
             catch (Exception ex)

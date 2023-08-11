@@ -16,8 +16,8 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelo.Irrf.Listar listar = new Modelo.Irrf.Listar();
-                DgvTabelaIRRF.DataSource = listar.TodosItens();
+                Objetos.Irrf irrf = new Objetos.Irrf();
+                DgvTabelaIRRF.DataSource = irrf.ListarTodos();
                 LimparCampos();
             }
             catch (Exception ex)
@@ -27,9 +27,9 @@ namespace CalculoIRRF
         }
         private void LimparCampos()
         {
-            Modelo.Irrf.Listar listar = new Modelo.Irrf.Listar();
             DateTime competencia = DateTime.Parse(MktCompetencia.Text);
-            TxtFaixa.Text = (listar.UltimaFaixa(competencia) + 1).ToString();
+            Objetos.Irrf irrf = new Objetos.Irrf(competencia);
+            TxtFaixa.Text = (irrf.UltimaFaixa + 1).ToString();
             TxtValor.Text = "0,00";
             TxtPorcentagem.Text = "0,00";
             TxtDeducao.Text = "0,00";
@@ -40,15 +40,17 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.Irrf irrf = new Objetos.Irrf();
-                irrf.Competencia = DateTime.Parse(MktCompetencia.Text);
-                irrf.Faixa = int.Parse(TxtFaixa.Text.Trim());
-                irrf.Valor = decimal.Parse(TxtValor.Text.Trim());
-                irrf.Porcentagem = decimal.Parse(TxtPorcentagem.Text.Trim());
-                irrf.Deducao = decimal.Parse(TxtDeducao.Text.Trim());
+                Objetos.Irrf irrf = new Objetos.Irrf
+                {
+                    Competencia = DateTime.Parse(MktCompetencia.Text),
+                    Faixa = int.Parse(TxtFaixa.Text.Trim()),
+                    Valor = decimal.Parse(TxtValor.Text.Trim()),
+                    Porcentagem = decimal.Parse(TxtPorcentagem.Text.Trim()),
+                    Deducao = decimal.Parse(TxtDeducao.Text.Trim())
+                };
 
-                Modelo.Irrf.Gravar gravar = new Modelo.Irrf.Gravar();
-                gravar.Item(irrf);
+                irrf.Gravar();
+
                 ListarTabelaIrrf();
             }
             catch (Exception ex)
@@ -61,16 +63,17 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.Irrf irrf = new Objetos.Irrf();
-                irrf.Id = idIrrf;
-                irrf.Competencia = DateTime.Parse(MktCompetencia.Text);
-                irrf.Faixa = int.Parse(TxtFaixa.Text.Trim());
-                irrf.Valor = decimal.Parse(TxtValor.Text.Trim());
-                irrf.Porcentagem = decimal.Parse(TxtPorcentagem.Text.Trim());
-                irrf.Deducao = decimal.Parse(TxtDeducao.Text.Trim());
+                Objetos.Irrf irrf = new Objetos.Irrf
+                {
+                    Id = idIrrf,
+                    Competencia = DateTime.Parse(MktCompetencia.Text),
+                    Faixa = int.Parse(TxtFaixa.Text.Trim()),
+                    Valor = decimal.Parse(TxtValor.Text.Trim()),
+                    Porcentagem = decimal.Parse(TxtPorcentagem.Text.Trim()),
+                    Deducao = decimal.Parse(TxtDeducao.Text.Trim())
+                };
 
-                Modelo.Irrf.Alterar alterar = new Modelo.Irrf.Alterar();
-                alterar.Item(irrf);
+                irrf.Alterar();
                 ListarTabelaIrrf();
             }
             catch (Exception ex)
@@ -83,8 +86,12 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelo.Irrf.Excluir excluir = new Modelo.Irrf.Excluir();
-                excluir.Item(idIrrf);
+                Objetos.Irrf irrf = new Objetos.Irrf
+                {
+                    Id = idIrrf
+                };
+
+                irrf.Excluir();
                 ListarTabelaIrrf();
             }
             catch (Exception ex)
@@ -209,9 +216,9 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelo.Irrf.Listar listar = new Modelo.Irrf.Listar();
                 DateTime competencia = DateTime.Parse(MktCompetencia.Text);
-                int faixa = listar.UltimaFaixa(competencia) + 1;
+                Objetos.Irrf irrf = new Objetos.Irrf(competencia);
+                int faixa = irrf.UltimaFaixa + 1;
 
                 TxtFaixa.Text = faixa.ToString();
             }

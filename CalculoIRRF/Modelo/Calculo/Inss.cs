@@ -16,23 +16,25 @@ namespace CalculoIRRF.Modelo.Calculo
 
         public decimal NormalProgressivo()
         {
-            Modelo.Inss.Listar listar = new Modelo.Inss.Listar();
+            Objetos.Inss inss = new Objetos.Inss(_competencia);
 
-            decimal teto = listar.Teto(_competencia);
+            decimal teto = inss.Teto;
 
             if (_baseInss > teto)
             {
                 _baseInss = teto;
             }
 
-            int faixaInss = listar.Faixa(_baseInss, _competencia);
+            inss = new Objetos.Inss(_baseInss, _competencia);
+            int faixaInss = inss.Faixa;
 
             decimal desconto = 0;
             decimal valorInssAnterior = 0;
+
             for (int i = 1; i <= faixaInss; i++)
             {
-                decimal porcentagemInss = listar.Porcentagem(i, _competencia);
-                decimal valorInss = listar.Valor(i, _competencia);
+                decimal porcentagemInss = inss.PorcentagemInss(i, _competencia);
+                decimal valorInss = inss.ValorInss(i, _competencia);
 
                 decimal baseInssCalculo = valorInss - valorInssAnterior;
 
@@ -56,18 +58,19 @@ namespace CalculoIRRF.Modelo.Calculo
         public string DescricaoCalculoNormalProgressivo()
         {
             StringBuilder strMensagem = new StringBuilder();
-            Modelo.Inss.Listar listar = new Modelo.Inss.Listar();
+            Objetos.Inss inss = new Objetos.Inss(_baseInss, _competencia);
 
-            int faixaInss = listar.Faixa(_baseInss, _competencia);
+            int faixaInss = inss.Faixa;
             decimal totalDesconto = 0;
             decimal valorInssAnterior = 0;
 
             strMensagem.Append("Informações de Calculo do INSS\n\n");
             strMensagem.Append($"Base INSS: {_baseInss:#,##0.00}\n");
+
             for (int i = 1; i <= faixaInss; i++)
             {
-                decimal porcentagemInss = listar.Porcentagem(i, _competencia);
-                decimal valorInss = listar.Valor(i, _competencia);
+                decimal porcentagemInss = inss.PorcentagemInss(i, _competencia);
+                decimal valorInss = inss.ValorInss(i, _competencia);
 
                 decimal baseInssCalculo = valorInss - valorInssAnterior;
 

@@ -15,8 +15,8 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelo.DescontoMinimo.Listar listar = new Modelo.DescontoMinimo.Listar();
-                DgvValorDescontoMinimo.DataSource = listar.TodosItens();
+                Objetos.DescontoMinimo descontoMinimo = new Objetos.DescontoMinimo();
+                DgvValorDescontoMinimo.DataSource = descontoMinimo.ListarTodos();
                 LimparCampos();
             }
             catch (Exception ex)
@@ -34,11 +34,13 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.DescontoMinimo simplificado = new Objetos.DescontoMinimo();
-                simplificado.Competencia = DateTime.Parse(MktCompetencia.Text.Trim());
-                simplificado.Valor = decimal.Parse(TxtValor.Text.Trim());
-                Modelo.DescontoMinimo.Gravar gravar = new Modelo.DescontoMinimo.Gravar();
-                gravar.Item(simplificado);
+                Objetos.DescontoMinimo descontoMinimo = new Objetos.DescontoMinimo
+                {
+                    Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
+                    Valor = decimal.Parse(TxtValor.Text.Trim())
+                };
+                descontoMinimo.Gravar();
+
                 ListarTabelaDescontoMinimo();
             }
             catch (Exception ex)
@@ -51,12 +53,13 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.DescontoMinimo simplificado = new Objetos.DescontoMinimo();
-                simplificado.Id = idDescontoMinimo;
-                simplificado.Competencia = DateTime.Parse(MktCompetencia.Text.Trim());
-                simplificado.Valor = decimal.Parse(TxtValor.Text.Trim());
-                Modelo.DescontoMinimo.Alterar alterar = new Modelo.DescontoMinimo.Alterar();
-                alterar.Item(simplificado);
+                Objetos.DescontoMinimo descontoMinimo = new Objetos.DescontoMinimo
+                {
+                    Id = idDescontoMinimo,
+                    Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
+                    Valor = decimal.Parse(TxtValor.Text.Trim())
+                };
+                descontoMinimo.Gravar();
                 ListarTabelaDescontoMinimo();
             }
             catch (Exception ex)
@@ -69,8 +72,11 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelo.DescontoMinimo.Excluir excluir = new Modelo.DescontoMinimo.Excluir();
-                excluir.Item(idDescontoMinimo);
+                Objetos.DescontoMinimo descontoMinimo = new Objetos.DescontoMinimo
+                {
+                    Id = idDescontoMinimo
+                };
+                descontoMinimo.Excluir();
                 ListarTabelaDescontoMinimo();
             }
             catch (Exception ex)

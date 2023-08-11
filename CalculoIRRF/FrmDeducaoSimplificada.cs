@@ -16,8 +16,8 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelo.Simplificado.Listar listar = new Modelo.Simplificado.Listar();
-                DgvValorSimplificado.DataSource = listar.TodosItens();
+                Objetos.Simplificado simplificado = new Objetos.Simplificado();
+                DgvValorSimplificado.DataSource = simplificado.ListarTodos();
                 LimparCampos();
             }
             catch (Exception ex)
@@ -34,11 +34,13 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.Simplificado simplificado = new Objetos.Simplificado();
-                simplificado.Competencia = DateTime.Parse(MktCompetencia.Text.Trim());
-                simplificado.Valor = decimal.Parse(TxtValor.Text.Trim());
-                Modelo.Simplificado.Gravar gravar = new Modelo.Simplificado.Gravar();
-                gravar.Item(simplificado);
+                Objetos.Simplificado simplificado = new Objetos.Simplificado
+                {
+                    Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
+                    Valor = decimal.Parse(TxtValor.Text.Trim())
+                };
+                simplificado.Gravar();
+
                 ListarTabelaSimplificado();
             }
             catch (Exception ex)
@@ -51,12 +53,14 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.Simplificado simplificado = new Objetos.Simplificado();
-                simplificado.Id = idSimplificado;
-                simplificado.Competencia = DateTime.Parse(MktCompetencia.Text.Trim());
-                simplificado.Valor = decimal.Parse(TxtValor.Text.Trim());
-                Modelo.Simplificado.Alterar alterar = new Modelo.Simplificado.Alterar();
-                alterar.Item(simplificado);
+                Objetos.Simplificado simplificado = new Objetos.Simplificado
+                {
+                    Id = idSimplificado,
+                    Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
+                    Valor = decimal.Parse(TxtValor.Text.Trim())
+                };
+                simplificado.Alterar();
+
                 ListarTabelaSimplificado();
             }
             catch (Exception ex)
@@ -69,8 +73,13 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelo.Simplificado.Excluir excluir = new Modelo.Simplificado.Excluir();
-                excluir.Item(idSimplificado);
+                Objetos.Simplificado simplificado = new Objetos.Simplificado
+                {
+                    Id = idSimplificado
+                };
+
+                simplificado.Excluir();
+
                 ListarTabelaSimplificado();
             }
             catch (Exception ex)

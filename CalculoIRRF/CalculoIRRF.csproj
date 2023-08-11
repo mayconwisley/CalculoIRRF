@@ -146,26 +146,6 @@
     </Compile>
     <Compile Include="Modelo\Calculo\Inss.cs" />
     <Compile Include="Modelo\Calculo\Irrf.cs" />
-    <Compile Include="Modelo\Dependente\Alterar.cs" />
-    <Compile Include="Modelo\Dependente\Excluir.cs" />
-    <Compile Include="Modelo\Dependente\Gravar.cs" />
-    <Compile Include="Modelo\Dependente\Listar.cs" />
-    <Compile Include="Modelo\DescontoMinimo\Alterar.cs" />
-    <Compile Include="Modelo\DescontoMinimo\Excluir.cs" />
-    <Compile Include="Modelo\DescontoMinimo\Gravar.cs" />
-    <Compile Include="Modelo\DescontoMinimo\Listar.cs" />
-    <Compile Include="Modelo\Inss\Alterar.cs" />
-    <Compile Include="Modelo\Inss\Excluir.cs" />
-    <Compile Include="Modelo\Inss\Gravar.cs" />
-    <Compile Include="Modelo\Inss\Listar.cs" />
-    <Compile Include="Modelo\Irrf\Alterar.cs" />
-    <Compile Include="Modelo\Irrf\Excluir.cs" />
-    <Compile Include="Modelo\Irrf\Gravar.cs" />
-    <Compile Include="Modelo\Irrf\Listar.cs" />
-    <Compile Include="Modelo\Simplificado\Alterar.cs" />
-    <Compile Include="Modelo\Simplificado\Excluir.cs" />
-    <Compile Include="Modelo\Simplificado\Gravar.cs" />
-    <Compile Include="Modelo\Simplificado\Listar.cs" />
     <Compile Include="Modelo\Validacao\Validar.cs" />
     <Compile Include="Objetos\Dependente.cs" />
     <Compile Include="Objetos\DescontoMinimo.cs" />

@@ -16,8 +16,8 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelo.Inss.Listar listar = new Modelo.Inss.Listar();
-                DgvTabelaINSS.DataSource = listar.TodosItens();
+                Objetos.Inss inss = new Objetos.Inss();
+                DgvTabelaINSS.DataSource = inss.ListarTodos();
                 LimparCampos();
             }
             catch (Exception ex)
@@ -27,9 +27,10 @@ namespace CalculoIRRF
         }
         private void LimparCampos()
         {
-            Modelo.Inss.Listar listar = new Modelo.Inss.Listar();
             DateTime competencia = DateTime.Parse(MktCompetencia.Text);
-            TxtFaixa.Text = (listar.UltimaFaixa(competencia) + 1).ToString();
+            Objetos.Inss inss = new Objetos.Inss(competencia);
+
+            TxtFaixa.Text = (inss.UltimaFaixa + 1).ToString();
             TxtValor.Text = "0,00";
             TxtPorcentagem.Text = "0,00";
             TxtValor.Focus();
@@ -45,14 +46,15 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.Inss inss = new Objetos.Inss();
-                inss.Competencia = DateTime.Parse(MktCompetencia.Text);
-                inss.Faixa = int.Parse(TxtFaixa.Text.Trim());
-                inss.Valor = decimal.Parse(TxtValor.Text.Trim());
-                inss.Porcentagem = decimal.Parse(TxtPorcentagem.Text.Trim());
+                Objetos.Inss inss = new Objetos.Inss
+                {
+                    Competencia = DateTime.Parse(MktCompetencia.Text),
+                    Faixa = int.Parse(TxtFaixa.Text.Trim()),
+                    Valor = decimal.Parse(TxtValor.Text.Trim()),
+                    Porcentagem = decimal.Parse(TxtPorcentagem.Text.Trim())
+                };
+                inss.Gravar();
 
-                Modelo.Inss.Gravar gravar = new Modelo.Inss.Gravar();
-                gravar.Item(inss);
                 ListarTabelaInss();
             }
             catch (Exception ex)
@@ -65,15 +67,15 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.Inss inss = new Objetos.Inss();
-                inss.Id = idInss;
-                inss.Competencia = DateTime.Parse(MktCompetencia.Text);
-                inss.Faixa = int.Parse(TxtFaixa.Text.Trim());
-                inss.Valor = decimal.Parse(TxtValor.Text.Trim());
-                inss.Porcentagem = decimal.Parse(TxtPorcentagem.Text.Trim());
-
-                Modelo.Inss.Alterar alterar = new Modelo.Inss.Alterar();
-                alterar.Item(inss);
+                Objetos.Inss inss = new Objetos.Inss
+                {
+                    Id = idInss,
+                    Competencia = DateTime.Parse(MktCompetencia.Text),
+                    Faixa = int.Parse(TxtFaixa.Text.Trim()),
+                    Valor = decimal.Parse(TxtValor.Text.Trim()),
+                    Porcentagem = decimal.Parse(TxtPorcentagem.Text.Trim())
+                };
+                inss.Alterar();
                 ListarTabelaInss();
             }
             catch (Exception ex)
@@ -86,8 +88,11 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelo.Inss.Excluir excluir = new Modelo.Inss.Excluir();
-                excluir.Item(idInss);
+                Objetos.Inss inss = new Objetos.Inss
+                {
+                    Id = idInss
+                };
+                inss.Excluir();
                 ListarTabelaInss();
             }
             catch (Exception ex)
@@ -181,25 +186,9 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelo.Irrf.Listar listar = new Modelo.Irrf.Listar();
                 DateTime competencia = DateTime.Parse(MktCompetencia.Text);
-                int faixa = listar.UltimaFaixa(competencia) + 1;
-
-                TxtFaixa.Text = faixa.ToString();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void MktCompetencia_Leave_1(object sender, EventArgs e)
-        {
-            try
-            {
-                Modelo.Inss.Listar listar = new Modelo.Inss.Listar();
-                DateTime competencia = DateTime.Parse(MktCompetencia.Text);
-                int faixa = listar.UltimaFaixa(competencia) + 1;
+                Objetos.Inss inss = new Objetos.Inss(competencia);
+                int faixa = inss.UltimaFaixa + 1;
 
                 TxtFaixa.Text = faixa.ToString();
             }
