@@ -19,15 +19,14 @@ namespace CalculoIRRF.Modelo.Calculo
         }
         public decimal Normal()
         {
+            Dependente.Cadastro dependente = new Dependente.Cadastro();
 
-            Objetos.Dependente dependente = new Objetos.Dependente(_competencia);
-
-            decimal valorDependente = dependente.ValorDependente;
+            decimal valorDependente = dependente.VlrDependente(_competencia);
 
             decimal baseIrrf = _valorBruto - _valorInss - (_qtdDependente * valorDependente);
-            Objetos.Irrf irrf = new Objetos.Irrf(baseIrrf, _competencia);
+            Modelo.Irrf.Cadastro irrf = new Modelo.Irrf.Cadastro();
 
-            int faixaIrrf = irrf.Faixa;
+            int faixaIrrf = irrf.FaixaIrrf(baseIrrf, _competencia);
             decimal porcentagemInss = irrf.PorcentagemIrrf(faixaIrrf, _competencia);
             decimal deducaoIrrf = irrf.DeducaoIrrf(faixaIrrf, _competencia);
 
@@ -38,15 +37,15 @@ namespace CalculoIRRF.Modelo.Calculo
         }
         public string DescricaoCalculoNormal()
         {
-            Objetos.Dependente dependente = new Objetos.Dependente(_competencia);
+            Dependente.Cadastro dependente = new Dependente.Cadastro();
 
-            decimal valorDependente = dependente.ValorDependente;
+            decimal valorDependente = dependente.VlrDependente(_competencia);
 
             decimal baseIrrf = _valorBruto - _valorInss - (_qtdDependente * valorDependente);
 
-            Objetos.Irrf irrf = new Objetos.Irrf(baseIrrf, _competencia);
+            Modelo.Irrf.Cadastro irrf = new Modelo.Irrf.Cadastro();
 
-            int faixaIrrf = irrf.Faixa;
+            int faixaIrrf = irrf.FaixaIrrf(baseIrrf, _competencia);
             decimal porcentagemInss = irrf.PorcentagemIrrf(faixaIrrf, _competencia);
             decimal deducaoIrrf = irrf.DeducaoIrrf(faixaIrrf, _competencia);
             decimal desconto = (baseIrrf * (porcentagemInss / 100)) - deducaoIrrf;
@@ -78,14 +77,14 @@ namespace CalculoIRRF.Modelo.Calculo
         }
         public decimal NormalProgressivo()
         {
-            Objetos.Dependente dependente = new Objetos.Dependente(_competencia);
+            Dependente.Cadastro dependente = new Dependente.Cadastro();
 
-            decimal valorDependente = dependente.ValorDependente;
+            decimal valorDependente = dependente.VlrDependente(_competencia);
 
             decimal baseIrrf = _valorBruto - _valorInss - (_qtdDependente * valorDependente);
-            Objetos.Irrf irrf = new Objetos.Irrf(baseIrrf, _competencia);
+            Modelo.Irrf.Cadastro irrf = new Modelo.Irrf.Cadastro();
 
-            int faixaIrrf = irrf.Faixa;
+            int faixaIrrf = irrf.FaixaIrrf(baseIrrf, _competencia);
 
             decimal desconto = 0;
             decimal valorInssAnterior = 0;
@@ -117,15 +116,15 @@ namespace CalculoIRRF.Modelo.Calculo
         {
             StringBuilder strMensagem = new StringBuilder();
 
-            Objetos.Dependente dependente = new Objetos.Dependente(_competencia);
+            Dependente.Cadastro dependente = new Dependente.Cadastro();
 
-            decimal valorDependente = dependente.ValorDependente;
+            decimal valorDependente = dependente.VlrDependente(_competencia);
 
             decimal baseIrrf = _valorBruto - _valorInss - (_qtdDependente * valorDependente);
 
-            Objetos.Irrf irrf = new Objetos.Irrf(baseIrrf, _competencia);
+            Modelo.Irrf.Cadastro irrf = new Modelo.Irrf.Cadastro();
 
-            int faixaIrrf = irrf.Faixa;
+            int faixaIrrf = irrf.FaixaIrrf(baseIrrf, _competencia);
             decimal totalDesconto = 0;
             decimal valorInssAnterior = 0;
 
@@ -172,16 +171,15 @@ namespace CalculoIRRF.Modelo.Calculo
             {
                 return 0;
             }
+            Simplificado.Cadastro simplificado = new Modelo.Simplificado.Cadastro();
 
-            Objetos.Simplificado simplificado = new Objetos.Simplificado(_competencia);
-
-            decimal valorDeducao = simplificado.Valor;
+            decimal valorDeducao = simplificado.ValorSimplificado(_competencia);
 
             decimal baseIrrf = _valorBruto - valorDeducao;
 
-            Objetos.Irrf irrf = new Objetos.Irrf(baseIrrf, _competencia);
+            Modelo.Irrf.Cadastro irrf = new Modelo.Irrf.Cadastro();
 
-            int faixaIrrf = irrf.Faixa;
+            int faixaIrrf = irrf.FaixaIrrf(baseIrrf, _competencia);
             decimal porcentagemInss = irrf.PorcentagemIrrf(faixaIrrf, _competencia);
             decimal deducaoIrrf = irrf.DeducaoIrrf(faixaIrrf, _competencia);
 
@@ -197,14 +195,14 @@ namespace CalculoIRRF.Modelo.Calculo
                 return "Calculo Simplificado é a partir de 05/2023!\n\n";
             }
 
-            Objetos.Simplificado simplificado = new Objetos.Simplificado(_competencia);
+            Simplificado.Cadastro simplificado = new Modelo.Simplificado.Cadastro();
 
-            decimal valorDeducao = simplificado.Valor;
+            decimal valorDeducao = simplificado.ValorSimplificado(_competencia);
 
             decimal baseIrrf = _valorBruto - valorDeducao;
-            Objetos.Irrf irrf = new Objetos.Irrf(baseIrrf, _competencia);
+            Modelo.Irrf.Cadastro irrf = new Modelo.Irrf.Cadastro();
 
-            int faixaIrrf = irrf.Faixa;
+            int faixaIrrf = irrf.FaixaIrrf(baseIrrf, _competencia);
             decimal porcentagemInss = irrf.PorcentagemIrrf(faixaIrrf, _competencia);
             decimal deducaoIrrf = irrf.DeducaoIrrf(faixaIrrf, _competencia);
 
@@ -235,8 +233,8 @@ namespace CalculoIRRF.Modelo.Calculo
         }
         public string DescricaoVantagem()
         {
-            Objetos.DescontoMinimo descontoMinimo = new Objetos.DescontoMinimo(_competencia);
-            decimal vlrDescontoMinimo = descontoMinimo.ValorDescontoMinimo;
+            DescontoMinimo.Cadastro descontoMinimo = new DescontoMinimo.Cadastro();
+            decimal vlrDescontoMinimo = descontoMinimo.ValorDescontoMinimo(_competencia);
 
             if (_competencia < DateTime.Parse("01/05/2023"))
             {

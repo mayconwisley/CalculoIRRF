@@ -16,7 +16,7 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.Inss inss = new Objetos.Inss();
+                Modelo.Inss.Cadastro inss = new Modelo.Inss.Cadastro();
                 DgvTabelaINSS.DataSource = inss.ListarTodos();
                 LimparCampos();
             }
@@ -28,9 +28,9 @@ namespace CalculoIRRF
         private void LimparCampos()
         {
             DateTime competencia = DateTime.Parse(MktCompetencia.Text);
-            Objetos.Inss inss = new Objetos.Inss(competencia);
+            Modelo.Inss.Cadastro inss = new Modelo.Inss.Cadastro();
 
-            TxtFaixa.Text = (inss.UltimaFaixa + 1).ToString();
+            TxtFaixa.Text = (inss.UltimaFaixaInss(competencia) + 1).ToString();
             TxtValor.Text = "0,00";
             TxtPorcentagem.Text = "0,00";
             TxtValor.Focus();
@@ -46,14 +46,15 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.Inss inss = new Objetos.Inss
+                Modelo.Inss.Cadastro inss = new Modelo.Inss.Cadastro();
+                Objetos.Inss dados = new Objetos.Inss
                 {
                     Competencia = DateTime.Parse(MktCompetencia.Text),
                     Faixa = int.Parse(TxtFaixa.Text.Trim()),
                     Valor = decimal.Parse(TxtValor.Text.Trim()),
                     Porcentagem = decimal.Parse(TxtPorcentagem.Text.Trim())
                 };
-                inss.Gravar();
+                inss.Gravar(dados);
 
                 ListarTabelaInss();
             }
@@ -67,7 +68,8 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.Inss inss = new Objetos.Inss
+                Modelo.Inss.Cadastro inss = new Modelo.Inss.Cadastro();
+                Objetos.Inss dados = new Objetos.Inss
                 {
                     Id = idInss,
                     Competencia = DateTime.Parse(MktCompetencia.Text),
@@ -75,7 +77,7 @@ namespace CalculoIRRF
                     Valor = decimal.Parse(TxtValor.Text.Trim()),
                     Porcentagem = decimal.Parse(TxtPorcentagem.Text.Trim())
                 };
-                inss.Alterar();
+                inss.Alterar(dados);
                 ListarTabelaInss();
             }
             catch (Exception ex)
@@ -88,11 +90,9 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.Inss inss = new Objetos.Inss
-                {
-                    Id = idInss
-                };
-                inss.Excluir();
+                Modelo.Inss.Cadastro inss = new Modelo.Inss.Cadastro();
+
+                inss.Excluir(idInss);
                 ListarTabelaInss();
             }
             catch (Exception ex)
@@ -187,8 +187,8 @@ namespace CalculoIRRF
             try
             {
                 DateTime competencia = DateTime.Parse(MktCompetencia.Text);
-                Objetos.Inss inss = new Objetos.Inss(competencia);
-                int faixa = inss.UltimaFaixa + 1;
+                Modelo.Inss.Cadastro inss = new Modelo.Inss.Cadastro();
+                int faixa = inss.UltimaFaixaInss(competencia) + 1;
 
                 TxtFaixa.Text = faixa.ToString();
             }

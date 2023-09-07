@@ -15,7 +15,7 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.DescontoMinimo descontoMinimo = new Objetos.DescontoMinimo();
+                Modelo.DescontoMinimo.Cadastro descontoMinimo = new Modelo.DescontoMinimo.Cadastro();
                 DgvValorDescontoMinimo.DataSource = descontoMinimo.ListarTodos();
                 LimparCampos();
             }
@@ -34,12 +34,13 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.DescontoMinimo descontoMinimo = new Objetos.DescontoMinimo
+                Modelo.DescontoMinimo.Cadastro descontoMinimo = new Modelo.DescontoMinimo.Cadastro();
+                Objetos.DescontoMinimo dados = new Objetos.DescontoMinimo
                 {
                     Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
                     Valor = decimal.Parse(TxtValor.Text.Trim())
                 };
-                descontoMinimo.Gravar();
+                descontoMinimo.Gravar(dados);
 
                 ListarTabelaDescontoMinimo();
             }
@@ -53,13 +54,14 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.DescontoMinimo descontoMinimo = new Objetos.DescontoMinimo
+                Modelo.DescontoMinimo.Cadastro descontoMinimo = new Modelo.DescontoMinimo.Cadastro();
+                Objetos.DescontoMinimo dados = new Objetos.DescontoMinimo
                 {
                     Id = idDescontoMinimo,
                     Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
                     Valor = decimal.Parse(TxtValor.Text.Trim())
                 };
-                descontoMinimo.Gravar();
+                descontoMinimo.Gravar(dados);
                 ListarTabelaDescontoMinimo();
             }
             catch (Exception ex)
@@ -72,11 +74,8 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.DescontoMinimo descontoMinimo = new Objetos.DescontoMinimo
-                {
-                    Id = idDescontoMinimo
-                };
-                descontoMinimo.Excluir();
+                Modelo.DescontoMinimo.Cadastro descontoMinimo = new Modelo.DescontoMinimo.Cadastro();
+                descontoMinimo.Excluir(idDescontoMinimo);
                 ListarTabelaDescontoMinimo();
             }
             catch (Exception ex)

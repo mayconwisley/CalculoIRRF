@@ -147,6 +147,11 @@
     </Compile>
     <Compile Include="Modelo\Calculo\Inss.cs" />
     <Compile Include="Modelo\Calculo\Irrf.cs" />
+    <Compile Include="Modelo\Dependente\Cadastro.cs" />
+    <Compile Include="Modelo\DescontoMinimo\Cadastro.cs" />
+    <Compile Include="Modelo\Inss\Cadastro.cs" />
+    <Compile Include="Modelo\Irrf\Cadastro.cs" />
+    <Compile Include="Modelo\Simplificado\Cadastro.cs" />
     <Compile Include="Modelo\Validacao\Validar.cs" />
     <Compile Include="Objetos\Dependente.cs" />
     <Compile Include="Objetos\DescontoMinimo.cs" />

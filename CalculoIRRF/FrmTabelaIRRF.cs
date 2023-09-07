@@ -16,7 +16,7 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.Irrf irrf = new Objetos.Irrf();
+                Modelo.Irrf.Cadastro irrf = new Modelo.Irrf.Cadastro();
                 DgvTabelaIRRF.DataSource = irrf.ListarTodos();
                 LimparCampos();
             }
@@ -28,8 +28,10 @@ namespace CalculoIRRF
         private void LimparCampos()
         {
             DateTime competencia = DateTime.Parse(MktCompetencia.Text);
-            Objetos.Irrf irrf = new Objetos.Irrf(competencia);
-            TxtFaixa.Text = (irrf.UltimaFaixa + 1).ToString();
+
+            Modelo.Irrf.Cadastro irrf = new Modelo.Irrf.Cadastro();
+
+            TxtFaixa.Text = (irrf.UltimaFaixaIrrf(competencia) + 1).ToString();
             TxtValor.Text = "0,00";
             TxtPorcentagem.Text = "0,00";
             TxtDeducao.Text = "0,00";
@@ -40,7 +42,8 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.Irrf irrf = new Objetos.Irrf
+                Modelo.Irrf.Cadastro irrf = new Modelo.Irrf.Cadastro();
+                Objetos.Irrf dados = new Objetos.Irrf
                 {
                     Competencia = DateTime.Parse(MktCompetencia.Text),
                     Faixa = int.Parse(TxtFaixa.Text.Trim()),
@@ -49,7 +52,7 @@ namespace CalculoIRRF
                     Deducao = decimal.Parse(TxtDeducao.Text.Trim())
                 };
 
-                irrf.Gravar();
+                irrf.Gravar(dados);
 
                 ListarTabelaIrrf();
             }
@@ -63,7 +66,8 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.Irrf irrf = new Objetos.Irrf
+                Modelo.Irrf.Cadastro irrf = new Modelo.Irrf.Cadastro();
+                Objetos.Irrf dados = new Objetos.Irrf
                 {
                     Id = idIrrf,
                     Competencia = DateTime.Parse(MktCompetencia.Text),
@@ -73,7 +77,7 @@ namespace CalculoIRRF
                     Deducao = decimal.Parse(TxtDeducao.Text.Trim())
                 };
 
-                irrf.Alterar();
+                irrf.Alterar(dados);
                 ListarTabelaIrrf();
             }
             catch (Exception ex)
@@ -86,12 +90,9 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.Irrf irrf = new Objetos.Irrf
-                {
-                    Id = idIrrf
-                };
+                Modelo.Irrf.Cadastro irrf = new Modelo.Irrf.Cadastro();
 
-                irrf.Excluir();
+                irrf.Excluir(idIrrf);
                 ListarTabelaIrrf();
             }
             catch (Exception ex)
@@ -217,8 +218,8 @@ namespace CalculoIRRF
             try
             {
                 DateTime competencia = DateTime.Parse(MktCompetencia.Text);
-                Objetos.Irrf irrf = new Objetos.Irrf(competencia);
-                int faixa = irrf.UltimaFaixa + 1;
+                Modelo.Irrf.Cadastro irrf = new Modelo.Irrf.Cadastro();
+                int faixa = irrf.UltimaFaixaIrrf(competencia) + 1;
 
                 TxtFaixa.Text = faixa.ToString();
             }

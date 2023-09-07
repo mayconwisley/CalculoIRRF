@@ -1,4 +1,5 @@
 ﻿using CalculoIRRF.Modelo.Validacao;
+using CalculoIRRF.Objetos;
 using System;
 using System.Windows.Forms;
 
@@ -15,7 +16,7 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.Dependente dependente = new Objetos.Dependente();
+                Modelo.Dependente.Cadastro dependente = new Modelo.Dependente.Cadastro();
                 DgvValorDependente.DataSource = dependente.ListarTodos();
                 LimparCampos();
             }
@@ -33,12 +34,15 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.Dependente dependente = new Objetos.Dependente
+                Modelo.Dependente.Cadastro dependente = new Modelo.Dependente.Cadastro();
+
+                Dependente dados = new Dependente
                 {
                     Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
                     Valor = decimal.Parse(TxtValor.Text.Trim())
                 };
-                dependente.Gravar();
+
+                dependente.Gravar(dados);
                 ListarTabelaDependente();
             }
             catch (Exception ex)
@@ -50,13 +54,14 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.Dependente dependente = new Objetos.Dependente
+                Modelo.Dependente.Cadastro dependente = new Modelo.Dependente.Cadastro();
+                Dependente dados = new Dependente
                 {
                     Id = idDependente,
                     Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
                     Valor = decimal.Parse(TxtValor.Text.Trim())
                 };
-                dependente.Alterar();
+                dependente.Alterar(dados);
                 ListarTabelaDependente();
             }
             catch (Exception ex)
@@ -68,11 +73,8 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.Dependente dependente = new Objetos.Dependente
-                {
-                    Id = idDependente
-                };
-                dependente.Excluir();
+                Modelo.Dependente.Cadastro dependente = new Modelo.Dependente.Cadastro();
+                dependente.Excluir(idDependente);
                 ListarTabelaDependente();
             }
             catch (Exception ex)

@@ -16,17 +16,16 @@ namespace CalculoIRRF.Modelo.Calculo
 
         public decimal NormalProgressivo()
         {
-            Objetos.Inss inss = new Objetos.Inss(_competencia);
+            Modelo.Inss.Cadastro inss = new Modelo.Inss.Cadastro();
 
-            decimal teto = inss.Teto;
+            decimal teto = inss.TetoInss(_competencia);
 
             if (_baseInss > teto)
             {
                 _baseInss = teto;
             }
 
-            inss = new Objetos.Inss(_baseInss, _competencia);
-            int faixaInss = inss.Faixa;
+            int faixaInss = inss.FaixaInss(_baseInss, _competencia);
 
             decimal desconto = 0;
             decimal valorInssAnterior = 0;
@@ -58,9 +57,9 @@ namespace CalculoIRRF.Modelo.Calculo
         public string DescricaoCalculoNormalProgressivo()
         {
             StringBuilder strMensagem = new StringBuilder();
-            Objetos.Inss inss = new Objetos.Inss(_baseInss, _competencia);
+            Modelo.Inss.Cadastro inss = new Modelo.Inss.Cadastro(); ;
 
-            int faixaInss = inss.Faixa;
+            int faixaInss = inss.FaixaInss(_baseInss, _competencia);
             decimal totalDesconto = 0;
             decimal valorInssAnterior = 0;
 

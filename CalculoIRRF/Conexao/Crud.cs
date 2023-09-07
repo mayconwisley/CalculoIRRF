@@ -6,7 +6,7 @@ namespace CalculoIRRF.Conexao
 {
     public class Crud : BancoDados
     {
-        SQLiteParameterCollection liteParameterCollection = new SQLiteCommand().Parameters;
+        readonly SQLiteParameterCollection liteParameterCollection = new SQLiteCommand().Parameters;
         SQLiteCommand liteCommand = null;
 
         public void LimparParametro()
@@ -22,7 +22,6 @@ namespace CalculoIRRF.Conexao
         {
             if (Conectar())
             {
-
                 try
                 {
                     liteCommand = liteConnection.CreateCommand();

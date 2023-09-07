@@ -16,7 +16,7 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.Simplificado simplificado = new Objetos.Simplificado();
+                Modelo.Simplificado.Cadastro simplificado = new Modelo.Simplificado.Cadastro();
                 DgvValorSimplificado.DataSource = simplificado.ListarTodos();
                 LimparCampos();
             }
@@ -34,12 +34,13 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.Simplificado simplificado = new Objetos.Simplificado
+                Modelo.Simplificado.Cadastro simplificado = new Modelo.Simplificado.Cadastro();
+                Objetos.Simplificado dados = new Objetos.Simplificado
                 {
                     Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
                     Valor = decimal.Parse(TxtValor.Text.Trim())
                 };
-                simplificado.Gravar();
+                simplificado.Gravar(dados);
 
                 ListarTabelaSimplificado();
             }
@@ -53,13 +54,14 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.Simplificado simplificado = new Objetos.Simplificado
+                Modelo.Simplificado.Cadastro simplificado = new Modelo.Simplificado.Cadastro();
+                Objetos.Simplificado dados = new Objetos.Simplificado
                 {
                     Id = idSimplificado,
                     Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
                     Valor = decimal.Parse(TxtValor.Text.Trim())
                 };
-                simplificado.Alterar();
+                simplificado.Alterar(dados);
 
                 ListarTabelaSimplificado();
             }
@@ -73,12 +75,9 @@ namespace CalculoIRRF
         {
             try
             {
-                Objetos.Simplificado simplificado = new Objetos.Simplificado
-                {
-                    Id = idSimplificado
-                };
+                Modelo.Simplificado.Cadastro simplificado = new Modelo.Simplificado.Cadastro();
 
-                simplificado.Excluir();
+                simplificado.Excluir(idSimplificado);
 
                 ListarTabelaSimplificado();
             }
