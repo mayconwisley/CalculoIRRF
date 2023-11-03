@@ -90,8 +90,28 @@ namespace CalculoIRRF
             Validar validar = new Validar();
             TxtValorBruto.Text = validar.Zero(TxtValorBruto.Text);
             TxtValorBruto.Text = validar.Formatar(TxtValorBruto.Text);
+            Modelo.Inss.Cadastro cadastroInss = new Modelo.Inss.Cadastro();
 
-            TxtBaseInss.Text = TxtValorBruto.Text;
+            decimal tetoInss = 0;
+            decimal valorBruto = decimal.Parse(TxtValorBruto.Text);
+           
+            _ = new DateTime();
+
+            if (DateTime.TryParse(MktCompetencia.Text, out DateTime competencia))
+            {
+                tetoInss = cadastroInss.TetoInss(competencia);
+            }
+
+            if (valorBruto > tetoInss)
+            {
+                TxtBaseInss.Text = tetoInss.ToString();
+            }
+            else
+            {
+                TxtBaseInss.Text = TxtValorBruto.Text;
+            }
+
+
         }
 
         private void TxtValorBruto_Enter(object sender, EventArgs e)
