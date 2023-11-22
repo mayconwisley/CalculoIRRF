@@ -7,7 +7,7 @@ namespace CalculoIRRF.Conexao
     public class BancoDados
     {
         protected SQLiteConnection liteConnection;
-        private string strConexao = @"Data Source=|DataDirectory|BancoDados\calculoIrrf.db";
+        private readonly string strConexao = @"Data Source=|DataDirectory|BancoDados\calculoIrrf.db";
 
         protected bool Conectar()
         {
