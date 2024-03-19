@@ -78,7 +78,7 @@ namespace CalculoIRRF.Modelo.Irrf
                 throw new Exception(ex.Message);
             }
         }
-        public int FaixaIrrf(decimal baseInss, DateTime competencia)
+        public int FaixaIrrf(decimal baseIrrf, DateTime competencia)
         {
             Crud crud = new Crud();
             StringBuilder sqlBuilder = new StringBuilder();
@@ -91,7 +91,7 @@ namespace CalculoIRRF.Modelo.Irrf
             try
             {
                 crud.LimparParametro();
-                crud.AdicionarParamentro("Valor", baseInss);
+                crud.AdicionarParamentro("Valor", baseIrrf);
                 crud.AdicionarParamentro("Competencia", competencia);
                 string strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString();
                 if (strValor == "")
