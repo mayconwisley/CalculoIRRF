@@ -26,6 +26,7 @@ namespace CalculoIRRF
 
         private void BtnCalcular_Click(object sender, EventArgs e)
         {
+
             DateTime competencia = DateTime.Parse(MktCompetencia.Text.Trim());
             decimal valorBruto = decimal.Parse(TxtValorBruto.Text.Trim());
             decimal baseInss = decimal.Parse(TxtBaseInss.Text.Trim());
@@ -36,6 +37,13 @@ namespace CalculoIRRF
             {
                 Modelo.Calculo.Inss inss = new Modelo.Calculo.Inss(competencia, baseInss);
                 decimal valorInss = inss.NormalProgressivo();
+
+                /************Teste Pensão***********************************/
+                decimal porcenPensao = 30M;
+
+                Modelo.Calculo.Pensao pensao = new Modelo.Calculo.Pensao(competencia, qtdDependente, valorInss, valorBruto, porcenPensao);
+                pensao.CalculoJudicialIrrfSimplificado();
+                /***********************************************************/
 
                 Modelo.Calculo.Irrf irrf = new Modelo.Calculo.Irrf(competencia, qtdDependente, valorInss, valorBruto);
 

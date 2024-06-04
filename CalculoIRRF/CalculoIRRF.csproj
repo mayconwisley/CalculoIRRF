@@ -17,6 +17,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -33,7 +34,6 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -147,6 +147,7 @@
     </Compile>
     <Compile Include="Modelo\Calculo\Inss.cs" />
     <Compile Include="Modelo\Calculo\Irrf.cs" />
+    <Compile Include="Modelo\Calculo\Pensao.cs" />
     <Compile Include="Modelo\Dependente\Cadastro.cs" />
     <Compile Include="Modelo\DescontoMinimo\Cadastro.cs" />
     <Compile Include="Modelo\Inss\Cadastro.cs" />
