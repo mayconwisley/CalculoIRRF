@@ -133,6 +133,12 @@
     <Compile Include="FrmDescontoMinimo.Designer.cs">
       <DependentUpon>FrmDescontoMinimo.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmPensao.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmPensao.Designer.cs">
+      <DependentUpon>FrmPensao.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmPrincipal.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -145,6 +151,7 @@
     <Compile Include="FrmTabelaINSS.Designer.cs">
       <DependentUpon>FrmTabelaINSS.cs</DependentUpon>
     </Compile>
+    <Compile Include="Modelo\Calculo\Fgts.cs" />
     <Compile Include="Modelo\Calculo\Inss.cs" />
     <Compile Include="Modelo\Calculo\Irrf.cs" />
     <Compile Include="Modelo\Calculo\Pensao.cs" />
@@ -175,6 +182,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmDescontoMinimo.resx">
       <DependentUpon>FrmDescontoMinimo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmPensao.resx">
+      <DependentUpon>FrmPensao.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmPrincipal.resx">
       <DependentUpon>FrmPrincipal.cs</DependentUpon>

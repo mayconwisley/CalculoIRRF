@@ -38,9 +38,8 @@ namespace CalculoIRRF
                 Modelo.Calculo.Inss inss = new Modelo.Calculo.Inss(competencia, baseInss);
                 decimal valorInss = inss.NormalProgressivo();
 
-
-
                 Modelo.Calculo.Irrf irrf = new Modelo.Calculo.Irrf(competencia, qtdDependente, valorInss, valorBruto);
+                Modelo.Calculo.Fgts fgts = new Modelo.Calculo.Fgts(baseInss);
 
                 Color colorIrNormal = Color.Blue;
                 RTxtResultado.SelectionColor = colorIrNormal;
@@ -66,6 +65,11 @@ namespace CalculoIRRF
                 str = irrf.DescricaoCalculoNormalProgrssivo();
                 str += "--------------------------------------------------------------------\n";
                 str += inss.DescricaoCalculoNormalProgressivo();
+
+                str += "--------------------------------------------------------------------\n";
+                str += "FGTS 8% " + fgts.Normal8().ToString("#,##0.00") + "\n";
+                str += "FGTS 2% " + fgts.Normal2().ToString("#,##0.00");
+
 
                 RTxtResultado.SelectedText = str;
             }
@@ -189,25 +193,11 @@ namespace CalculoIRRF
         private void BtnPensao_Click(object sender, EventArgs e)
         {
             DateTime competencia = DateTime.Parse(MktCompetencia.Text.Trim());
-            decimal valorBruto = decimal.Parse(TxtValorBruto.Text.Trim());
             decimal baseInss = decimal.Parse(TxtBaseInss.Text.Trim());
+            decimal valorBruto = decimal.Parse(TxtValorBruto.Text.Trim());
             int qtdDependente = int.Parse(TxtQtdDependente.Text.Trim());
-            RTxtResultado.Clear();
-
-            Modelo.Calculo.Inss inss = new Modelo.Calculo.Inss(competencia, baseInss);
-            decimal valorInss = inss.NormalProgressivo();
-
-            /************Teste Pensão***********************************/
-            decimal porcenPensao = 30M;
-
-            Modelo.Calculo.Pensao pensao = new Modelo.Calculo.Pensao(competencia, qtdDependente, valorInss, valorBruto, porcenPensao);
-            pensao.CalculoJudicialIrrfSimplificado();
-
-            foreach (var item in pensao.DadosCalculoPensao)
-            {
-                RTxtResultado.AppendText(item);
-            }
-            /***********************************************************/
+            FrmPensao pensao = new FrmPensao(competencia, baseInss, qtdDependente, valorBruto);
+            pensao.ShowDialog();
         }
     }
 }
