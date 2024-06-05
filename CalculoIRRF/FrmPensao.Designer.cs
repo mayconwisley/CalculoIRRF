@@ -53,7 +53,7 @@
             this.TxtValorBruto.Location = new System.Drawing.Point(12, 25);
             this.TxtValorBruto.Name = "TxtValorBruto";
             this.TxtValorBruto.Size = new System.Drawing.Size(83, 20);
-            this.TxtValorBruto.TabIndex = 1;
+            this.TxtValorBruto.TabIndex = 0;
             this.TxtValorBruto.Text = "0,00";
             this.TxtValorBruto.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.TxtValorBruto.TextChanged += new System.EventHandler(this.TxtValorBruto_TextChanged);
@@ -65,7 +65,7 @@
             this.TxtPorcentagem.Location = new System.Drawing.Point(101, 25);
             this.TxtPorcentagem.Name = "TxtPorcentagem";
             this.TxtPorcentagem.Size = new System.Drawing.Size(67, 20);
-            this.TxtPorcentagem.TabIndex = 2;
+            this.TxtPorcentagem.TabIndex = 1;
             this.TxtPorcentagem.Text = "0,00";
             this.TxtPorcentagem.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.TxtPorcentagem.TextChanged += new System.EventHandler(this.TxtPorcentagem_TextChanged);
@@ -108,7 +108,7 @@
             this.BtnCalcular.Location = new System.Drawing.Point(269, 25);
             this.BtnCalcular.Name = "BtnCalcular";
             this.BtnCalcular.Size = new System.Drawing.Size(104, 23);
-            this.BtnCalcular.TabIndex = 4;
+            this.BtnCalcular.TabIndex = 3;
             this.BtnCalcular.Text = "Calcular";
             this.BtnCalcular.UseVisualStyleBackColor = true;
             this.BtnCalcular.Click += new System.EventHandler(this.BtnCalcular_Click);
@@ -129,7 +129,7 @@
             this.BtnDetalhar.Location = new System.Drawing.Point(379, 25);
             this.BtnDetalhar.Name = "BtnDetalhar";
             this.BtnDetalhar.Size = new System.Drawing.Size(75, 23);
-            this.BtnDetalhar.TabIndex = 6;
+            this.BtnDetalhar.TabIndex = 4;
             this.BtnDetalhar.Text = "Detalhar";
             this.BtnDetalhar.UseVisualStyleBackColor = true;
             this.BtnDetalhar.Click += new System.EventHandler(this.BtnDetalhar_Click);

@@ -32,12 +32,10 @@ namespace CalculoIRRF
             decimal valorInss = inss.NormalProgressivo();
 
             /************Teste Pensão***********************************/
-
-
             Modelo.Calculo.Pensao pensao = new Modelo.Calculo.Pensao(_competencia, _qtdDependente, valorInss, (valorBruto - outroDesconto), porcenPensao);
             pensao.CalculoJudicialIrrfSimplificado();
             pensao.CalculoJudicialIrrfNormal();
-
+            pensao.Vantagem();
             foreach (var item in pensao.DadosCalculoPensao)
             {
                 RtxDescricao.AppendText(item);
@@ -128,6 +126,7 @@ namespace CalculoIRRF
             Modelo.Calculo.Pensao pensao = new Modelo.Calculo.Pensao(_competencia, _qtdDependente, valorInss, (valorBruto - outroDesconto), porcenPensao);
             pensao.CalculoJudicialIrrfSimplificadoDetalhe();
             pensao.CalculoJudicialIrrfNormalDetalhe();
+
 
             foreach (var item in pensao.DadosCalculoPensao)
             {
