@@ -1,9 +1,6 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CalculoIRRF.Modelo.Calculo
 {
@@ -14,6 +11,10 @@ namespace CalculoIRRF.Modelo.Calculo
         readonly decimal _valorBruto;
         readonly decimal _valorInss;
         readonly decimal _porcentagemPensao;
+
+        public List<string> DadosCalculoPensao { get; set; } = new List<string>();
+
+
         public Pensao(DateTime competencia, int qtdDependente, decimal valorInss, decimal valorBruto, decimal porcentagemPensao)
         {
             _competencia = competencia;
@@ -25,15 +26,38 @@ namespace CalculoIRRF.Modelo.Calculo
 
         public decimal CalculoJudicialIrrfSimplificado()
         {
-            Modelo.Calculo.Irrf irrf = new Modelo.Calculo.Irrf(_competencia, _qtdDependente, _valorInss, _valorBruto);
+            Modelo.Irrf.Cadastro cadastroIrrf = new Modelo.Irrf.Cadastro();
+            Modelo.Simplificado.Cadastro cadastroSimplificado = new Simplificado.Cadastro();
+            Modelo.Calculo.Irrf calculoIrrf = new Irrf(_competencia, _qtdDependente, _valorInss, _valorBruto);
 
-            decimal baseIrrf = irrf.BaseIrrfNormal();
-            decimal descontoIrrf = irrf.Simplificado();
+            decimal valorSimplificado = cadastroSimplificado.ValorSimplificado(_competencia);
 
-            decimal basePensao = baseIrrf - descontoIrrf;
-            decimal valorPensao = basePensao * (_porcentagemPensao / 100);
+            decimal baseCalculo = calculoIrrf.BaseIrrfNormal();
 
-            return 00;
+            decimal valorPensao = 0m;
+            decimal anteriorP = 0m;
+            int seqCalculo = 0;
+            DadosCalculoPensao.Add("Calculo Pensão Alimentencia - Rendimentos\n");
+
+            do
+            {
+                seqCalculo++;
+
+                anteriorP = valorPensao;
+
+                int faixaIrrf = cadastroIrrf.FaixaIrrf((baseCalculo - anteriorP), _competencia);
+                decimal aliquotaIrrf = cadastroIrrf.PorcentagemIrrf(faixaIrrf, _competencia) / 100;
+                decimal parcelaDeduzirIrrf = cadastroIrrf.DeducaoIrrf(faixaIrrf, _competencia);
+
+                decimal descontoIrrfNormal = calculoIrrf.Normal(valorPensao);
+                decimal descontoIrrfSimplificado = calculoIrrf.Simplificado(valorPensao);
+
+                valorPensao = (baseCalculo - (aliquotaIrrf * (baseCalculo - anteriorP)) + parcelaDeduzirIrrf) * (_porcentagemPensao / 100);
+
+                DadosCalculoPensao.Add($"{seqCalculo}º Calculo: Base {(baseCalculo - anteriorP):#,##0.00}, IR: {descontoIrrfNormal:#,##0.00}, Valor Pensão {valorPensao:#,##0.00}\n");
+            } while (Math.Abs(valorPensao - anteriorP) > 0.01m);
+
+            return valorPensao;
 
         }
     }

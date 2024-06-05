@@ -38,12 +38,7 @@ namespace CalculoIRRF
                 Modelo.Calculo.Inss inss = new Modelo.Calculo.Inss(competencia, baseInss);
                 decimal valorInss = inss.NormalProgressivo();
 
-                /************Teste Pensão***********************************/
-                decimal porcenPensao = 30M;
 
-                Modelo.Calculo.Pensao pensao = new Modelo.Calculo.Pensao(competencia, qtdDependente, valorInss, valorBruto, porcenPensao);
-                pensao.CalculoJudicialIrrfSimplificado();
-                /***********************************************************/
 
                 Modelo.Calculo.Irrf irrf = new Modelo.Calculo.Irrf(competencia, qtdDependente, valorInss, valorBruto);
 
@@ -102,7 +97,7 @@ namespace CalculoIRRF
 
             decimal tetoInss = 0;
             decimal valorBruto = decimal.Parse(TxtValorBruto.Text);
-           
+
             _ = new DateTime();
 
             if (DateTime.TryParse(MktCompetencia.Text, out DateTime competencia))
@@ -189,6 +184,30 @@ namespace CalculoIRRF
         {
             FrmDescontoMinimo descontoMinimo = new FrmDescontoMinimo();
             descontoMinimo.ShowDialog();
+        }
+
+        private void BtnPensao_Click(object sender, EventArgs e)
+        {
+            DateTime competencia = DateTime.Parse(MktCompetencia.Text.Trim());
+            decimal valorBruto = decimal.Parse(TxtValorBruto.Text.Trim());
+            decimal baseInss = decimal.Parse(TxtBaseInss.Text.Trim());
+            int qtdDependente = int.Parse(TxtQtdDependente.Text.Trim());
+            RTxtResultado.Clear();
+
+            Modelo.Calculo.Inss inss = new Modelo.Calculo.Inss(competencia, baseInss);
+            decimal valorInss = inss.NormalProgressivo();
+
+            /************Teste Pensão***********************************/
+            decimal porcenPensao = 30M;
+
+            Modelo.Calculo.Pensao pensao = new Modelo.Calculo.Pensao(competencia, qtdDependente, valorInss, valorBruto, porcenPensao);
+            pensao.CalculoJudicialIrrfSimplificado();
+
+            foreach (var item in pensao.DadosCalculoPensao)
+            {
+                RTxtResultado.AppendText(item);
+            }
+            /***********************************************************/
         }
     }
 }

@@ -46,6 +46,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.BtnTabelaINSS = new System.Windows.Forms.Button();
             this.BtnDescMinimo = new System.Windows.Forms.Button();
+            this.BtnPensao = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -122,7 +123,7 @@
             this.BtnCalcular.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnCalcular.Location = new System.Drawing.Point(11, 60);
             this.BtnCalcular.Name = "BtnCalcular";
-            this.BtnCalcular.Size = new System.Drawing.Size(354, 33);
+            this.BtnCalcular.Size = new System.Drawing.Size(259, 33);
             this.BtnCalcular.TabIndex = 4;
             this.BtnCalcular.Text = "&Calcular";
             this.BtnCalcular.UseVisualStyleBackColor = true;
@@ -249,11 +250,28 @@
             this.BtnDescMinimo.UseVisualStyleBackColor = true;
             this.BtnDescMinimo.Click += new System.EventHandler(this.BtnDescMinimo_Click);
             // 
+            // BtnPensao
+            // 
+            this.BtnPensao.FlatAppearance.BorderColor = System.Drawing.Color.DarkGreen;
+            this.BtnPensao.FlatAppearance.BorderSize = 2;
+            this.BtnPensao.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.BtnPensao.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightGreen;
+            this.BtnPensao.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BtnPensao.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BtnPensao.Location = new System.Drawing.Point(276, 60);
+            this.BtnPensao.Name = "BtnPensao";
+            this.BtnPensao.Size = new System.Drawing.Size(89, 33);
+            this.BtnPensao.TabIndex = 11;
+            this.BtnPensao.Text = "&Pensão";
+            this.BtnPensao.UseVisualStyleBackColor = true;
+            this.BtnPensao.Click += new System.EventHandler(this.BtnPensao_Click);
+            // 
             // FrmPrincipal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(603, 551);
+            this.Controls.Add(this.BtnPensao);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.MktCompetencia);
             this.Controls.Add(this.label2);
@@ -302,6 +320,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button BtnTabelaINSS;
         private System.Windows.Forms.Button BtnDescMinimo;
+        private System.Windows.Forms.Button BtnPensao;
     }
 }
 

@@ -37,9 +37,9 @@ namespace CalculoIRRF.Modelo.Calculo
 
             return baseIrrf;
         }
-        public decimal Normal()
+        public decimal Normal(decimal valorPensao = 0)
         {
-            decimal baseIrrf = BaseIrrfNormal();
+            decimal baseIrrf = BaseIrrfNormal() - valorPensao;
             Modelo.Irrf.Cadastro irrf = new Modelo.Irrf.Cadastro();
 
             int faixaIrrf = irrf.FaixaIrrf(baseIrrf, _competencia);
@@ -176,7 +176,7 @@ namespace CalculoIRRF.Modelo.Calculo
 
             return strMensagem.ToString();
         }
-        public decimal Simplificado()
+        public decimal Simplificado(decimal valorPensao = 0)
         {
             if (_competencia < DateTime.Parse("01/05/2023"))
             {
@@ -186,7 +186,7 @@ namespace CalculoIRRF.Modelo.Calculo
 
             decimal valorDeducao = simplificado.ValorSimplificado(_competencia);
 
-            decimal baseIrrf = BaseIrrfSimplificado();
+            decimal baseIrrf = BaseIrrfSimplificado() - valorPensao;
 
             Modelo.Irrf.Cadastro irrf = new Modelo.Irrf.Cadastro();
 
