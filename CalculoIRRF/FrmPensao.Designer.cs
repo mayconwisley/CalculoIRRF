@@ -66,7 +66,7 @@
             this.TxtPorcentagem.Name = "TxtPorcentagem";
             this.TxtPorcentagem.Size = new System.Drawing.Size(67, 20);
             this.TxtPorcentagem.TabIndex = 1;
-            this.TxtPorcentagem.Text = "0,00";
+            this.TxtPorcentagem.Text = "30,00";
             this.TxtPorcentagem.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.TxtPorcentagem.TextChanged += new System.EventHandler(this.TxtPorcentagem_TextChanged);
             this.TxtPorcentagem.Enter += new System.EventHandler(this.TxtPorcentagem_Enter);

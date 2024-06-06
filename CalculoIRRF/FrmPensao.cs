@@ -30,17 +30,6 @@ namespace CalculoIRRF
 
             Modelo.Calculo.Inss inss = new Modelo.Calculo.Inss(_competencia, _baseInss);
             decimal valorInss = inss.NormalProgressivo();
-
-            /************Teste Pensão***********************************/
-            Modelo.Calculo.Pensao pensao = new Modelo.Calculo.Pensao(_competencia, _qtdDependente, valorInss, (valorBruto - outroDesconto), porcenPensao);
-            pensao.CalculoJudicialIrrfSimplificado();
-            pensao.CalculoJudicialIrrfNormal();
-            pensao.Vantagem();
-            foreach (var item in pensao.DadosCalculoPensao)
-            {
-                RtxDescricao.AppendText(item);
-            }
-            /***********************************************************/
         }
 
         private void TxtValorBruto_TextChanged(object sender, EventArgs e)
@@ -120,19 +109,14 @@ namespace CalculoIRRF
             Modelo.Calculo.Inss inss = new Modelo.Calculo.Inss(_competencia, _baseInss);
             decimal valorInss = inss.NormalProgressivo();
 
-            /************Teste Pensão***********************************/
-
-
             Modelo.Calculo.Pensao pensao = new Modelo.Calculo.Pensao(_competencia, _qtdDependente, valorInss, (valorBruto - outroDesconto), porcenPensao);
-            pensao.CalculoJudicialIrrfSimplificadoDetalhe();
-            pensao.CalculoJudicialIrrfNormalDetalhe();
-
+            pensao.CalculoJudicialIrrfSimplificado(true);
+            pensao.CalculoJudicialIrrfNormal(true);
 
             foreach (var item in pensao.DadosCalculoPensao)
             {
                 RtxDescricao.AppendText(item);
             }
-            /***********************************************************/
         }
     }
 }
