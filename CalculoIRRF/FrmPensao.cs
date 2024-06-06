@@ -30,6 +30,15 @@ namespace CalculoIRRF
 
             Modelo.Calculo.Inss inss = new Modelo.Calculo.Inss(_competencia, _baseInss);
             decimal valorInss = inss.NormalProgressivo();
+
+            Modelo.Calculo.Pensao pensao = new Modelo.Calculo.Pensao(_competencia, _qtdDependente, valorInss, (valorBruto - outroDesconto), porcenPensao);
+            pensao.CalculoJudicialIrrfSimplificado(false);
+            pensao.CalculoJudicialIrrfNormal(false);
+
+            foreach (var item in pensao.DadosCalculoPensao)
+            {
+                RtxDescricao.AppendText(item);
+            }
         }
 
         private void TxtValorBruto_TextChanged(object sender, EventArgs e)
