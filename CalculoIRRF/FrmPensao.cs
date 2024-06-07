@@ -34,6 +34,7 @@ namespace CalculoIRRF
             Modelo.Calculo.Pensao pensao = new Modelo.Calculo.Pensao(_competencia, _qtdDependente, valorInss, (valorBruto - outroDesconto), porcenPensao);
             pensao.CalculoJudicialIrrfSimplificado(false);
             pensao.CalculoJudicialIrrfNormal(false);
+            pensao.Vantagem();
 
             foreach (var item in pensao.DadosCalculoPensao)
             {
