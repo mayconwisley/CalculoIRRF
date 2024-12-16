@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.MktCompetencia = new System.Windows.Forms.MaskedTextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -53,6 +53,7 @@
             this.BtnGravar = new System.Windows.Forms.Button();
             this.BtnAlterar = new System.Windows.Forms.Button();
             this.BtnExcluir = new System.Windows.Forms.Button();
+            this.LblLinkOnline = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.DgvTabelaIRRF)).BeginInit();
             this.SuspendLayout();
             // 
@@ -193,10 +194,10 @@
             // 
             this.Competencia.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.Competencia.DataPropertyName = "Competencia";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle1.Format = "MM/yyyy";
-            dataGridViewCellStyle1.NullValue = null;
-            this.Competencia.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle6.Format = "MM/yyyy";
+            dataGridViewCellStyle6.NullValue = null;
+            this.Competencia.DefaultCellStyle = dataGridViewCellStyle6;
             this.Competencia.HeaderText = "Competência";
             this.Competencia.Name = "Competencia";
             this.Competencia.ReadOnly = true;
@@ -206,10 +207,10 @@
             // 
             this.Faixa.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.Faixa.DataPropertyName = "Faixa";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle2.Format = "N0";
-            dataGridViewCellStyle2.NullValue = null;
-            this.Faixa.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle7.Format = "N0";
+            dataGridViewCellStyle7.NullValue = null;
+            this.Faixa.DefaultCellStyle = dataGridViewCellStyle7;
             this.Faixa.HeaderText = "Faixa";
             this.Faixa.Name = "Faixa";
             this.Faixa.ReadOnly = true;
@@ -219,10 +220,10 @@
             // 
             this.Valor.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.Valor.DataPropertyName = "Valor";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle3.Format = "N2";
-            dataGridViewCellStyle3.NullValue = null;
-            this.Valor.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle8.Format = "N2";
+            dataGridViewCellStyle8.NullValue = null;
+            this.Valor.DefaultCellStyle = dataGridViewCellStyle8;
             this.Valor.HeaderText = "Valor";
             this.Valor.Name = "Valor";
             this.Valor.ReadOnly = true;
@@ -232,10 +233,10 @@
             // 
             this.Porcentagem.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.Porcentagem.DataPropertyName = "Porcentagem";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle4.Format = "N2";
-            dataGridViewCellStyle4.NullValue = null;
-            this.Porcentagem.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle9.Format = "N2";
+            dataGridViewCellStyle9.NullValue = null;
+            this.Porcentagem.DefaultCellStyle = dataGridViewCellStyle9;
             this.Porcentagem.HeaderText = "%";
             this.Porcentagem.Name = "Porcentagem";
             this.Porcentagem.ReadOnly = true;
@@ -245,10 +246,10 @@
             // 
             this.Deducao.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.Deducao.DataPropertyName = "Deducao";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle5.Format = "N2";
-            dataGridViewCellStyle5.NullValue = null;
-            this.Deducao.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle10.Format = "N2";
+            dataGridViewCellStyle10.NullValue = null;
+            this.Deducao.DefaultCellStyle = dataGridViewCellStyle10;
             this.Deducao.HeaderText = "Dedução";
             this.Deducao.Name = "Deducao";
             this.Deducao.ReadOnly = true;
@@ -296,11 +297,23 @@
             this.BtnExcluir.UseVisualStyleBackColor = true;
             this.BtnExcluir.Click += new System.EventHandler(this.BtnExcluir_Click);
             // 
+            // LblLinkOnline
+            // 
+            this.LblLinkOnline.AutoSize = true;
+            this.LblLinkOnline.Location = new System.Drawing.Point(257, 13);
+            this.LblLinkOnline.Name = "LblLinkOnline";
+            this.LblLinkOnline.Size = new System.Drawing.Size(37, 13);
+            this.LblLinkOnline.TabIndex = 9;
+            this.LblLinkOnline.TabStop = true;
+            this.LblLinkOnline.Text = "Online";
+            this.LblLinkOnline.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LblLinkOnline_LinkClicked);
+            // 
             // FrmTabelaIRRF
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(421, 261);
+            this.Controls.Add(this.LblLinkOnline);
             this.Controls.Add(this.BtnExcluir);
             this.Controls.Add(this.BtnAlterar);
             this.Controls.Add(this.BtnGravar);
@@ -350,5 +363,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Valor;
         private System.Windows.Forms.DataGridViewTextBoxColumn Porcentagem;
         private System.Windows.Forms.DataGridViewTextBoxColumn Deducao;
+        private System.Windows.Forms.LinkLabel LblLinkOnline;
     }
 }
