@@ -79,6 +79,8 @@ namespace CalculoIRRF.Modelo.Calculo
             } while (Math.Abs(valorPensao - anteriorP) > 0.01m);
 
             pensaoSimplificado = valorPensao + descontoIrrfSimplificado;
+            DadosCalculoPensao.Add($"\nTotal IR: {descontoIrrfSimplificado:#,##0.00}\n");
+            DadosCalculoPensao.Add($"\nTotal Pensão: {valorPensao:#,##0.00}\n");
             DadosCalculoPensao.Add($"\nTotal: Pensão + IR: {pensaoSimplificado:#,##0.00}\n");
         }
         public void CalculoJudicialIrrfNormal(bool detalhe)
@@ -133,6 +135,8 @@ namespace CalculoIRRF.Modelo.Calculo
             } while (Math.Abs(valorPensao - anteriorP) > 0.01m);
 
             pensaoNormal = valorPensao + descontoIrrfNormal;
+            DadosCalculoPensao.Add($"\nTotal IR: {descontoIrrfNormal:#,##0.00}\n");
+            DadosCalculoPensao.Add($"\nTotal Pensão: {valorPensao:#,##0.00}\n");
             DadosCalculoPensao.Add($"\nTotal: Pensão + IR: {pensaoNormal:#,##0.00}\n");
         }
         public void Vantagem()
