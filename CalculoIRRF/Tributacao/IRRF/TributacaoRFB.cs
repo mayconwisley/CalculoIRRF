@@ -35,10 +35,9 @@ namespace CalculoIRRF.Tributacao.IRRF
                         var cells = row.SelectNodes(".//td");
                         if (cells != null)
                         {
-                            foreach (var cell in cells)
-                            {
-                                var teste = $"{cell.InnerText.Trim()}\t";
-                            }
+                            var baseCalculo = cells[0].InnerText.Trim();
+                            var aliquota = cells[1].InnerText.Trim();
+                            var deducao = cells[2].InnerText.TrimEnd();
                         }
                     }
                 }
