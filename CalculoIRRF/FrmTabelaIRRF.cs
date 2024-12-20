@@ -233,7 +233,7 @@ namespace CalculoIRRF
         private async void LblLinkOnline_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             TributacaoRFB tributacaoRFB = new TributacaoRFB();
-            await tributacaoRFB.BuscarIRRFOnline();
+            await tributacaoRFB.AtualizarOnline();
 
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace CalculoIRRF.Modelo.Validacao
 {
@@ -104,6 +105,38 @@ namespace CalculoIRRF.Modelo.Validacao
                 strValor = "0";
             }
             return strValor;
+        }
+
+        public decimal ExtrairValor(string dados)
+        {
+            var match = Regex.Match(dados, @"[\d,.]+");
+
+            if (match.Success)
+            {
+                return decimal.Parse(match.Value);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        public decimal ExtrairMaiorValor(string dados)
+        {
+            var matches = Regex.Matches(dados, @"[\d,.]+");
+
+            if (matches.Count == 1)
+            {
+                return decimal.Parse(matches[0].Value);
+            }
+
+            if (decimal.Parse(matches[0].Value) > decimal.Parse(matches[1].Value))
+            {
+                return decimal.Parse(matches[0].Value);
+            }
+            else
+            {
+                return decimal.Parse(matches[1].Value);
+            }
         }
     }
 }
