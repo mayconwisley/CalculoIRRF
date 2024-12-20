@@ -1,4 +1,6 @@
-﻿using CalculoIRRF.Modelo.Validacao;
+﻿using CalculoIRRF.Modelo.Irrf;
+using CalculoIRRF.Modelo.Validacao;
+using CalculoIRRF.Objetos.Tributacao;
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
@@ -13,16 +15,38 @@ namespace CalculoIRRF.Tributacao.IRRF
 
         public async Task AtualizarOnline()
         {
+            Cadastro cadastro;
+            IrrfRfb irrfRfb;
             var htmlDocument = await AcessarSite();
 
-
-            var dataPlubicacao = BuscarDataPublicacaoOnline(htmlDocument);
+            var dataPublicacao = BuscarDataPublicacaoOnline(htmlDocument);
             var dataAtualizacao = BuscarDataAtualizacaoOnline(htmlDocument);
 
             var valorDependente = BuscarValorDependenteOnline(htmlDocument);
             var valorDescontoSimplificado = BuscarDescontoSimplicadoOnline(htmlDocument);
 
-            BuscarIRRFOnline(htmlDocument);
+            var tributacaoRFB = BuscarIRRFOnline(htmlDocument);
+
+
+
+            foreach (var item in tributacaoRFB)
+            {
+                cadastro = new Cadastro();
+                irrfRfb = new IrrfRfb
+                {
+                    DataCriacao = dataPublicacao,
+                    DataAtualizacao = dataAtualizacao,
+                    Dependente = valorDependente,
+                    Simplificado = valorDescontoSimplificado,
+                    Sequencia = item.Sequencia,
+                    BaseCaculo = item.BaseCalculo,
+                    Aliquota = item.Aliquota,
+                    Deducao = item.Deducao
+                };
+
+                cadastro.GravarRfbOnline(irrfRfb);
+
+            }
         }
 
         private async Task<HtmlDocument> AcessarSite()
@@ -50,7 +74,7 @@ namespace CalculoIRRF.Tributacao.IRRF
                 if (table != null)
                 {
                     var rows = table.SelectNodes(".//tr");
-
+                    int sequencia = 0;
                     foreach (var row in rows)
                     {
                         var cells = row.SelectNodes(".//td");
@@ -58,14 +82,13 @@ namespace CalculoIRRF.Tributacao.IRRF
                         {
                             listTributacaoRFBObj.Add(new TributacaoRFBObj
                             {
+                                Sequencia = ++sequencia,
                                 BaseCalculo = validar.ExtrairMaiorValor(cells[0].InnerText.Trim()),
                                 Aliquota = validar.ExtrairValor(cells[1].InnerText.Trim()),
                                 Deducao = validar.ExtrairValor(cells[2].InnerText.TrimEnd())
                             });
-
                         }
                     }
-
                     return listTributacaoRFBObj;
                 }
                 else
