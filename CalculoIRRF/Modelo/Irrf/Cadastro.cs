@@ -7,7 +7,6 @@ namespace CalculoIRRF.Modelo.Irrf
 {
     public class Cadastro
     {
-
         public bool Gravar(Objetos.Irrf irrf)
         {
             Crud crud = new Crud();
@@ -37,8 +36,8 @@ namespace CalculoIRRF.Modelo.Irrf
             Crud crud = new Crud();
             StringBuilder sqlBuilder = new StringBuilder();
 
-            sqlBuilder.Append("INSERT INTO IrrfRfbOnline(DataCriacao, DataAtualizacao, Sequencia, BaseCaculo, Aliquota, Deducao, Dependente, Simplificado) ");
-            sqlBuilder.Append("VALUES(@DataCriacao, @DataAtualizacao, @Sequencia, @BaseCaculo, @Aliquota, @Deducao, @Dependente, @Simplificado)");
+            sqlBuilder.Append("INSERT INTO IrrfRfbOnline(DataCriacao, DataAtualizacao, Sequencia, BaseCalculo, Aliquota, Deducao, Dependente, Simplificado) ");
+            sqlBuilder.Append("VALUES(@DataCriacao, @DataAtualizacao, @Sequencia, @BaseCalculo, @Aliquota, @Deducao, @Dependente, @Simplificado)");
 
             try
             {
@@ -46,7 +45,7 @@ namespace CalculoIRRF.Modelo.Irrf
                 crud.AdicionarParamentro("DataCriacao", irrfRfb.DataCriacao);
                 crud.AdicionarParamentro("DataAtualizacao", irrfRfb.DataAtualizacao);
                 crud.AdicionarParamentro("Sequencia", irrfRfb.Sequencia);
-                crud.AdicionarParamentro("BaseCaculo", irrfRfb.BaseCaculo);
+                crud.AdicionarParamentro("BaseCalculo", irrfRfb.BaseCaculo);
                 crud.AdicionarParamentro("Aliquota", irrfRfb.Aliquota);
                 crud.AdicionarParamentro("Deducao", irrfRfb.Deducao);
                 crud.AdicionarParamentro("Dependente", irrfRfb.Dependente);
@@ -59,8 +58,6 @@ namespace CalculoIRRF.Modelo.Irrf
                 throw new Exception(ex.Message);
             }
         }
-
-
         public bool Alterar(Objetos.Irrf irrf)
         {
             Crud crud = new Crud();

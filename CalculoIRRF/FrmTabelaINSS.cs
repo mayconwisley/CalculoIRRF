@@ -1,4 +1,5 @@
 ﻿using CalculoIRRF.Modelo.Validacao;
+using CalculoIRRF.Tributacao.INSS;
 using System;
 using System.Windows.Forms;
 
@@ -196,6 +197,12 @@ namespace CalculoIRRF
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private async void LkLblOnline_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            TributacaoINSS tributacaoINSS = new TributacaoINSS();
+            await tributacaoINSS.AtualizarOnline();
         }
     }
 }

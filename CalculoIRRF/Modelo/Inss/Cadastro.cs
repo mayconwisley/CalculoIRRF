@@ -30,6 +30,30 @@ namespace CalculoIRRF.Modelo.Inss
                 throw new Exception(ex.Message);
             }
         }
+        public bool GravarInssOnline(Objetos.Tributacao.InssGov inssGov)
+        {
+            Crud crud = new Crud();
+            StringBuilder sqlBuilder = new StringBuilder();
+
+            sqlBuilder.Append("INSERT INTO InssGovOnline(DataCriacao, DataAtualizacao, Sequencia, BaseCalculo, Aliquota) ");
+            sqlBuilder.Append("VALUES(@DataCriacao, @DataAtualizacao, @Sequencia, @BaseCalculo, @Aliquota)");
+
+            try
+            {
+                crud.LimparParametro();
+                crud.AdicionarParamentro("DataCriacao", inssGov.DataCriacao);
+                crud.AdicionarParamentro("DataAtualizacao", inssGov.DataAtualizacao);
+                crud.AdicionarParamentro("Sequencia", inssGov.Sequencia);
+                crud.AdicionarParamentro("BaseCalculo", inssGov.BaseCaculo);
+                crud.AdicionarParamentro("Aliquota", inssGov.Aliquota);
+                crud.Executar(CommandType.Text, sqlBuilder.ToString());
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
         public bool Alterar(Objetos.Inss inss)
         {
             Crud crud = new Crud();

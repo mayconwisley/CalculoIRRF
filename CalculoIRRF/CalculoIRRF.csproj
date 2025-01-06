@@ -169,6 +169,7 @@
     <Compile Include="Objetos\Inss.cs" />
     <Compile Include="Objetos\Irrf.cs" />
     <Compile Include="Objetos\Simplificado.cs" />
+    <Compile Include="Objetos\Tributacao\InssGov.cs" />
     <Compile Include="Objetos\Tributacao\IrrfRfb.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -178,6 +179,8 @@
     <Compile Include="FrmTabelaIRRF.Designer.cs">
       <DependentUpon>FrmTabelaIRRF.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tributacao\INSS\TributacaoINSS.cs" />
+    <Compile Include="Tributacao\INSS\TributacaoINSSObj.cs" />
     <Compile Include="Tributacao\IRRF\TributacaoRFB.cs" />
     <Compile Include="Tributacao\IRRF\TributacaoRFBObj.cs" />
     <EmbeddedResource Include="FrmDeducaoSimplificada.resx">
