@@ -51,7 +51,7 @@ namespace CalculoIRRF.Tributacao.IRRF
 
                 if (countItem == item.Sequencia)
                 {
-                    irrfRfb.BaseCaculo = decimal.MaxValue;
+                    irrfRfb.BaseCaculo = decimal.Parse("999999999999999");
                 }
                 cadastro.GravarRfbOnline(irrfRfb);
 
@@ -66,7 +66,7 @@ namespace CalculoIRRF.Tributacao.IRRF
 
                 if (countItem == item.Sequencia)
                 {
-                    irrf.Valor = decimal.MaxValue;
+                    irrf.Valor = decimal.Parse("999999999999999");
                 }
                 cadastro.Gravar(irrf);
 
@@ -78,7 +78,7 @@ namespace CalculoIRRF.Tributacao.IRRF
             try
             {
                 //string urlRfb = $@"https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas/{DateTime.Now:yyyy}";
-                string urlRfb = $@"https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas/2024";
+                string urlRfb = $@"https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas/2014";
                 var htmlClient = new HttpClient();
                 var status = await htmlClient.GetAsync(urlRfb);
 
