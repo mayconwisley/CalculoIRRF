@@ -1,5 +1,6 @@
 ﻿using CalculoIRRF.Modelo.Irrf;
 using CalculoIRRF.Modelo.Validacao;
+using CalculoIRRF.Objetos;
 using CalculoIRRF.Objetos.Tributacao;
 using HtmlAgilityPack;
 using System;
@@ -15,6 +16,8 @@ namespace CalculoIRRF.Tributacao.IRRF
         {
             Cadastro cadastro;
             IrrfRfb irrfRfb;
+            Irrf irrf;
+
             var htmlDocument = await AcessarSite();
 
             if (htmlDocument is null)
@@ -50,9 +53,23 @@ namespace CalculoIRRF.Tributacao.IRRF
                 {
                     irrfRfb.BaseCaculo = decimal.MaxValue;
                 }
-
-
                 cadastro.GravarRfbOnline(irrfRfb);
+
+                irrf = new Irrf
+                {
+                    Competencia = DateTime.Parse(dataAtualizacao.Date.ToString("MM/yyyy")),
+                    Faixa = item.Sequencia,
+                    Valor = item.BaseCalculo,
+                    Porcentagem = item.Aliquota,
+                    Deducao = item.Deducao
+                };
+
+                if (countItem == item.Sequencia)
+                {
+                    irrf.Valor = decimal.MaxValue;
+                }
+                cadastro.Gravar(irrf);
+
             }
         }
 

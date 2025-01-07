@@ -234,6 +234,7 @@ namespace CalculoIRRF
         {
             TributacaoRFB tributacaoRFB = new TributacaoRFB();
             await tributacaoRFB.AtualizarOnline();
+            ListarTabelaIrrf();
 
         }
     }
