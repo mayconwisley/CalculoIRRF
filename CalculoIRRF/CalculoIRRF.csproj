@@ -179,6 +179,7 @@
     <Compile Include="FrmTabelaIRRF.Designer.cs">
       <DependentUpon>FrmTabelaIRRF.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tributacao\AcessarSite\AcessarUrl.cs" />
     <Compile Include="Tributacao\INSS\TributacaoINSS.cs" />
     <Compile Include="Tributacao\INSS\TributacaoINSSObj.cs" />
     <Compile Include="Tributacao\IRRF\TributacaoRFB.cs" />
@@ -247,6 +248,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

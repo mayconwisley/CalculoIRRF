@@ -1,10 +1,10 @@
 ﻿using CalculoIRRF.Modelo.Inss;
 using CalculoIRRF.Modelo.Validacao;
 using CalculoIRRF.Objetos.Tributacao;
+using CalculoIRRF.Tributacao.AcessarSite;
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace CalculoIRRF.Tributacao.INSS
@@ -16,7 +16,9 @@ namespace CalculoIRRF.Tributacao.INSS
             Cadastro cadastro;
             InssGov inssGov;
 
-            var htmlDocument = await AcessarSite();
+            string urlInss = $@"https://www.gov.br/inss/pt-br/direitos-e-deveres/inscricao-e-contribuicao/tabela-de-contribuicao-mensal";
+
+            var htmlDocument = await AcessarUrl.AcessarSite(urlInss);
 
             if (htmlDocument is null)
             {
@@ -40,32 +42,6 @@ namespace CalculoIRRF.Tributacao.INSS
                 };
 
                 cadastro.GravarInssOnline(inssGov);
-            }
-        }
-
-        private async Task<HtmlDocument> AcessarSite()
-        {
-            try
-            {
-                string urlRfb = $@"https://www.gov.br/inss/pt-br/direitos-e-deveres/inscricao-e-contribuicao/tabela-de-contribuicao-mensal";
-                var htmlClient = new HttpClient();
-                var status = await htmlClient.GetAsync(urlRfb);
-
-                if (status.IsSuccessStatusCode)
-                {
-                    string html = await htmlClient.GetStringAsync(urlRfb);
-                    var htmlDoc = new HtmlDocument();
-                    htmlDoc.LoadHtml(html);
-                    return htmlDoc;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (HttpRequestException)
-            {
-                throw;
             }
         }
 

@@ -2,10 +2,10 @@
 using CalculoIRRF.Modelo.Validacao;
 using CalculoIRRF.Objetos;
 using CalculoIRRF.Objetos.Tributacao;
+using CalculoIRRF.Tributacao.AcessarSite;
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace CalculoIRRF.Tributacao.IRRF
@@ -18,7 +18,9 @@ namespace CalculoIRRF.Tributacao.IRRF
             IrrfRfb irrfRfb;
             Irrf irrf;
 
-            var htmlDocument = await AcessarSite();
+            //string urlRfb = $@"https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas/{DateTime.Now:yyyy}";
+            string urlRfb = $@"https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas/2014";
+            var htmlDocument = await AcessarUrl.AcessarSite(urlRfb);
 
             if (htmlDocument is null)
             {
@@ -51,7 +53,7 @@ namespace CalculoIRRF.Tributacao.IRRF
 
                 if (countItem == item.Sequencia)
                 {
-                    irrfRfb.BaseCaculo = decimal.Parse("999999999999999");
+                    irrfRfb.BaseCaculo = decimal.Parse("9999999999999.99");
                 }
                 cadastro.GravarRfbOnline(irrfRfb);
 
@@ -66,40 +68,12 @@ namespace CalculoIRRF.Tributacao.IRRF
 
                 if (countItem == item.Sequencia)
                 {
-                    irrf.Valor = decimal.Parse("999999999999999");
+                    irrf.Valor = decimal.Parse("9999999999999.99");
                 }
                 cadastro.Gravar(irrf);
 
             }
         }
-
-        private async Task<HtmlDocument> AcessarSite()
-        {
-            try
-            {
-                //string urlRfb = $@"https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas/{DateTime.Now:yyyy}";
-                string urlRfb = $@"https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas/2014";
-                var htmlClient = new HttpClient();
-                var status = await htmlClient.GetAsync(urlRfb);
-
-                if (status.IsSuccessStatusCode)
-                {
-                    string html = await htmlClient.GetStringAsync(urlRfb);
-                    var htmlDoc = new HtmlDocument();
-                    htmlDoc.LoadHtml(html);
-                    return htmlDoc;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (HttpRequestException)
-            {
-                throw;
-            }
-        }
-
         private List<TributacaoRFBObj> BuscarIRRFOnline(HtmlDocument htmlDocument)
         {
             Validar validar = new Validar();
@@ -187,7 +161,6 @@ namespace CalculoIRRF.Tributacao.IRRF
                 throw;
             }
         }
-
         private DateTime BuscarDataPublicacaoOnline(HtmlDocument htmlDocument)
         {
             try
@@ -222,6 +195,5 @@ namespace CalculoIRRF.Tributacao.IRRF
                 throw;
             }
         }
-
     }
 }
