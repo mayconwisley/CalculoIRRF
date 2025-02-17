@@ -150,6 +150,10 @@ namespace CalculoIRRF.Tributacao.IRRF
                     br[0] = "<br>";
 
                     var valores = spans[1].InnerHtml.Split(br, StringSplitOptions.None);
+                    if (valores.Length == 1)
+                    {
+                        return 0;
+                    }
                     var deducaoSimplificado = validar.ExtrairValor(valores[1].Trim());
 
                     return deducaoSimplificado;
