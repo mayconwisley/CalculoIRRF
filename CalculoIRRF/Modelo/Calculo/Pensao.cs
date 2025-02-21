@@ -30,13 +30,12 @@ namespace CalculoIRRF.Modelo.Calculo
             Modelo.Calculo.Irrf calculoIrrf = new Irrf(_competencia, _qtdDependente, _valorInss, _valorBruto);
 
             decimal valorSimplificado = cadastroSimplificado.ValorSimplificado(_competencia);
-
             decimal valorPensao = 0m;
             decimal anteriorP = 0m;
             decimal descontoIrrfSimplificado = 0m;
             int seqCalculo = 0;
 
-            DadosCalculoPensao.Add($"Calculo Pensão Alimentencia - Rendimentos {_porcentagemPensao:##0.00}%\n");
+            DadosCalculoPensao.Add($"Calculo Pensão Alimentícia - Rendimentos {_porcentagemPensao:##0.00}%\n");
             DadosCalculoPensao.Add("\n\tSimplificado\n\n");
 
             do
@@ -59,7 +58,7 @@ namespace CalculoIRRF.Modelo.Calculo
                 {
                     DadosCalculoPensao.Add($"\t{seqCalculo}º: Calculo\n" +
                                            $"{_valorBruto:#,##0.00} - {valorSimplificado:#,##0.00} = {baseIrrf:#,##0.00}\n" +
-                                           $"(({baseIrrf:#,##0.00} - {valorPensao}) * {(aliquotaIrrf * 100):#,##0.00}%) - {valorDeducao:#,##0.00} = {descontoIrrfSimplificado:#,##0.00}\n\n" +
+                                           $"(({baseIrrf:#,##0.00} - {anteriorP:#,##0.00}) * {(aliquotaIrrf * 100):#,##0.00}%) - {valorDeducao:#,##0.00} = {descontoIrrfSimplificado:#,##0.00}\n\n" +
                                            $"\tBase Pensão\n" +
                                            $"{_valorBruto:#,##0.00} - {_valorInss:#,##0.00} - {descontoIrrfSimplificado:#,##0.00} = {basePensao:#,##0.00}\n" +
                                            $"{basePensao:#,##0.00} * {_porcentagemPensao:#,##0.00}% = {valorPensao:#,##0.00}\n\n");
@@ -108,13 +107,17 @@ namespace CalculoIRRF.Modelo.Calculo
                 decimal parcelaDeduzirIrrf = cadastroIrrf.DeducaoIrrf(faixaIrrf, _competencia);
                 decimal valorDeducao = cadastroIrrf.DeducaoIrrf(faixaIrrf, _competencia);
                 descontoIrrfNormal = calculoIrrf.Normal(valorPensao);
-                valorPensao = (baseCalculo - (aliquotaIrrf * (baseCalculo - valorDependente - anteriorP)) + parcelaDeduzirIrrf) * (_porcentagemPensao / 100);
+
+                decimal novaBaseCalculo = baseCalculo - anteriorP;
+                decimal calculoAliquotaIrPensao = novaBaseCalculo * aliquotaIrrf;
+
+                valorPensao = (baseCalculo - calculoAliquotaIrPensao + parcelaDeduzirIrrf) * (_porcentagemPensao / 100);
 
                 if (detalhe)
                 {
                     DadosCalculoPensao.Add($"\t{seqCalculo}º: Calculo\n" +
                                            $"{_valorBruto:#,##0.00} - {_valorInss:#,##0.00} = {baseCalculo:#,##0.00}\n" +
-                                           $"{(baseCalculo - anteriorP):#,##0.00} * {(aliquotaIrrf * 100):#,##0.00}% - {valorDeducao:#,##0.00} = {descontoIrrfNormal:#,##0.00}\n\n" +
+                                           $"(({baseCalculo:#,##0.00} - {valorDependente:#,##0.00} - {anteriorP:#,##0.00}) * {(aliquotaIrrf * 100):#,##0.00}%) - {valorDeducao:#,##0.00} = {descontoIrrfNormal:#,##0.00}\n\n" +
                                            $"\tBase Pensão\n" +
                                            $"{_valorBruto:#,##0.00} - {_valorInss:#,##0.00} - {descontoIrrfNormal:#,##0.00} = {(baseCalculo - descontoIrrfNormal):#,##0.00}\n" +
                                            $"{(baseCalculo - descontoIrrfNormal):#,##0.00} * {_porcentagemPensao:#,##0.00}% = {valorPensao:#,##0.00}\n\n");
@@ -130,7 +133,6 @@ namespace CalculoIRRF.Modelo.Calculo
                                            $"Base Pensão: {(baseCalculo - descontoIrrfNormal):#,##0.00} " +
                                            $"Valor Pensão: {valorPensao:#,##0.00}\n");
                 }
-
             } while (Math.Abs(valorPensao - anteriorP) > 0.01m);
 
             pensaoNormal = valorPensao + descontoIrrfNormal;
