@@ -76,6 +76,13 @@
   <ItemGroup>
     <PackageReference Include="EntityFramework" />
     <PackageReference Include="HtmlAgilityPack" />
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="SQLite" />
     <PackageReference Include="System.Data.SQLite.EF6" />
   </ItemGroup>

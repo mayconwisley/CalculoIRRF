@@ -1,4 +1,4 @@
-﻿using CalculoIRRF.Conexao;
+﻿using CalculoIRRF.DataBase;
 using System;
 using System.Data;
 using System.Text;
@@ -8,7 +8,7 @@ namespace CalculoIRRF.Modelo.DescontoMinimo
     public class Cadastro
     {
 
-        public bool Gravar(Objetos.DescontoMinimo descontoMinimo)
+        public bool Gravar(Model.DescontoMinimo descontoMinimo)
         {
             Crud crud = new Crud();
             StringBuilder sqlBuilder = new StringBuilder();
@@ -29,7 +29,7 @@ namespace CalculoIRRF.Modelo.DescontoMinimo
                 throw new Exception(ex.Message);
             }
         }
-        public bool Alterar(Objetos.DescontoMinimo descontoMinimo)
+        public bool Alterar(Model.DescontoMinimo descontoMinimo)
         {
             Crud crud = new Crud();
             StringBuilder sqlBuilder = new StringBuilder();

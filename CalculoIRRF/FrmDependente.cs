@@ -1,5 +1,5 @@
-﻿using CalculoIRRF.Modelo.Validacao;
-using CalculoIRRF.Objetos;
+﻿using CalculoIRRF.Model;
+using CalculoIRRF.Modelo.Validacao;
 using System;
 using System.Windows.Forms;
 

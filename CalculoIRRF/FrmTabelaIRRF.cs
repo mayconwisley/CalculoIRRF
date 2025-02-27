@@ -1,4 +1,5 @@
-﻿using CalculoIRRF.Modelo.Validacao;
+﻿using CalculoIRRF.Model;
+using CalculoIRRF.Modelo.Validacao;
 using CalculoIRRF.Tributacao.IRRF;
 using System;
 using System.Windows.Forms;
@@ -44,7 +45,7 @@ namespace CalculoIRRF
             try
             {
                 Modelo.Irrf.Cadastro irrf = new Modelo.Irrf.Cadastro();
-                Objetos.Irrf dados = new Objetos.Irrf
+                Irrf dados = new Objetos.Irrf
                 {
                     Competencia = DateTime.Parse(MktCompetencia.Text),
                     Faixa = int.Parse(TxtFaixa.Text.Trim()),
@@ -68,7 +69,7 @@ namespace CalculoIRRF
             try
             {
                 Modelo.Irrf.Cadastro irrf = new Modelo.Irrf.Cadastro();
-                Objetos.Irrf dados = new Objetos.Irrf
+                Irrf dados = new Objetos.Irrf
                 {
                     Id = idIrrf,
                     Competencia = DateTime.Parse(MktCompetencia.Text),

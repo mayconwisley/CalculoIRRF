@@ -1,4 +1,5 @@
-﻿using CalculoIRRF.Modelo.Validacao;
+﻿using CalculoIRRF.Model;
+using CalculoIRRF.Modelo.Validacao;
 using System;
 using System.Windows.Forms;
 
@@ -35,7 +36,7 @@ namespace CalculoIRRF
             try
             {
                 Modelo.DescontoMinimo.Cadastro descontoMinimo = new Modelo.DescontoMinimo.Cadastro();
-                Objetos.DescontoMinimo dados = new Objetos.DescontoMinimo
+                DescontoMinimo dados = new Objetos.DescontoMinimo
                 {
                     Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
                     Valor = decimal.Parse(TxtValor.Text.Trim())
@@ -55,7 +56,7 @@ namespace CalculoIRRF
             try
             {
                 Modelo.DescontoMinimo.Cadastro descontoMinimo = new Modelo.DescontoMinimo.Cadastro();
-                Objetos.DescontoMinimo dados = new Objetos.DescontoMinimo
+                DescontoMinimo dados = new Objetos.DescontoMinimo
                 {
                     Id = idDescontoMinimo,
                     Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),

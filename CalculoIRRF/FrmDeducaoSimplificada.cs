@@ -1,4 +1,5 @@
-﻿using CalculoIRRF.Modelo.Validacao;
+﻿using CalculoIRRF.Model;
+using CalculoIRRF.Modelo.Validacao;
 using System;
 using System.Windows.Forms;
 
@@ -35,7 +36,7 @@ namespace CalculoIRRF
             try
             {
                 Modelo.Simplificado.Cadastro simplificado = new Modelo.Simplificado.Cadastro();
-                Objetos.Simplificado dados = new Objetos.Simplificado
+                Simplificado dados = new Objetos.Simplificado
                 {
                     Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
                     Valor = decimal.Parse(TxtValor.Text.Trim())
@@ -55,7 +56,7 @@ namespace CalculoIRRF
             try
             {
                 Modelo.Simplificado.Cadastro simplificado = new Modelo.Simplificado.Cadastro();
-                Objetos.Simplificado dados = new Objetos.Simplificado
+                Simplificado dados = new Objetos.Simplificado
                 {
                     Id = idSimplificado,
                     Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),

@@ -1,4 +1,5 @@
-﻿using CalculoIRRF.Conexao;
+﻿using CalculoIRRF.DataBase;
+using CalculoIRRF.Model;
 using System;
 using System.Data;
 using System.Text;
@@ -7,7 +8,7 @@ namespace CalculoIRRF.Modelo.Inss
 {
     public class Cadastro
     {
-        public bool Gravar(Objetos.Inss inss)
+        public bool Gravar(Model.Inss inss)
         {
             Crud crud = new Crud();
             StringBuilder sqlBuilder = new StringBuilder();
@@ -30,7 +31,7 @@ namespace CalculoIRRF.Modelo.Inss
                 throw new Exception(ex.Message);
             }
         }
-        public bool GravarInssOnline(Objetos.Tributacao.InssGov inssGov)
+        public bool GravarInssOnline(InssGov inssGov)
         {
             Crud crud = new Crud();
             StringBuilder sqlBuilder = new StringBuilder();
@@ -54,7 +55,7 @@ namespace CalculoIRRF.Modelo.Inss
                 throw new Exception(ex.Message);
             }
         }
-        public bool Alterar(Objetos.Inss inss)
+        public bool Alterar(Model.Inss inss)
         {
             Crud crud = new Crud();
             StringBuilder sqlBuilder = new StringBuilder();

@@ -1,7 +1,6 @@
-﻿using CalculoIRRF.Modelo.Irrf;
+﻿using CalculoIRRF.Model;
+using CalculoIRRF.Modelo.Irrf;
 using CalculoIRRF.Modelo.Validacao;
-using CalculoIRRF.Objetos;
-using CalculoIRRF.Objetos.Tributacao;
 using CalculoIRRF.Tributacao.AcessarSite;
 using HtmlAgilityPack;
 using System;

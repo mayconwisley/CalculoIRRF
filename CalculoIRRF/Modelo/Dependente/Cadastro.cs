@@ -1,144 +1,90 @@
-﻿using CalculoIRRF.Conexao;
+﻿using CalculoIRRF.Repository;
 using System;
-using System.Data;
-using System.Text;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace CalculoIRRF.Modelo.Dependente
+namespace CalculoIRRF.Modelo.Dependente;
+
+public class Cadastro
 {
-    public class Cadastro
+    DependenteRepository _dependenteRepository;
+    public Cadastro()
     {
-        public bool Gravar(Objetos.Dependente dependente)
+        _dependenteRepository = new();
+    }
+
+    public async Task<bool> Gravar(Model.Dependente dependente)
+    {
+        try
         {
-            Crud crud = new Crud();
-            StringBuilder sqlBuilder = new StringBuilder();
-
-            sqlBuilder.Append("INSERT INTO Dependente(Competencia, Valor) ");
-            sqlBuilder.Append("VALUES(@Competencia, @Valor)");
-
-            try
-            {
-                crud.LimparParametro();
-                crud.AdicionarParamentro("Competencia", dependente.Competencia);
-                crud.AdicionarParamentro("Valor", dependente.Valor);
-                crud.Executar(CommandType.Text, sqlBuilder.ToString());
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            await _dependenteRepository.Create(dependente);
+            return true;
         }
-        public bool Alterar(Objetos.Dependente dependente)
+        catch (Exception ex)
         {
-            Crud crud = new Crud();
-            StringBuilder sqlBuilder = new StringBuilder();
-
-            sqlBuilder.Append("UPDATE Dependente ");
-            sqlBuilder.Append("SET Competencia = @Competencia, Valor = @Valor ");
-            sqlBuilder.Append("WHERE Id = @Id");
-
-            try
-            {
-                crud.LimparParametro();
-                crud.AdicionarParamentro("Competencia", dependente.Competencia);
-                crud.AdicionarParamentro("Valor", dependente.Valor);
-                crud.AdicionarParamentro("Id", dependente.Id);
-                crud.Executar(CommandType.Text, sqlBuilder.ToString());
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            throw new Exception(ex.Message);
         }
-        public bool Excluir(int id)
+    }
+    public async Task<bool> Alterar(Model.Dependente dependente)
+    {
+
+        try
         {
-            Crud crud = new Crud();
-            StringBuilder sqlBuilder = new StringBuilder();
-
-            sqlBuilder.Append("DELETE FROM Dependente ");
-            sqlBuilder.Append("WHERE Id = @Id");
-
-            try
-            {
-                crud.LimparParametro();
-                crud.AdicionarParamentro("Id", id);
-                crud.Executar(CommandType.Text, sqlBuilder.ToString());
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            await _dependenteRepository.Update(dependente);
+            return true;
         }
-        public decimal VlrDependente(DateTime competencia)
+        catch (Exception ex)
         {
-            Crud crud = new Crud();
-            StringBuilder sqlBuilder = new StringBuilder();
-
-            sqlBuilder.Append("SELECT Valor ");
-            sqlBuilder.Append("FROM Dependente ");
-            sqlBuilder.Append("WHERE Competencia = (SELECT MAX(Competencia) FROM Dependente WHERE Competencia <= @Competencia)");
-
-            try
-            {
-                crud.LimparParametro();
-                crud.AdicionarParamentro("Competencia", competencia);
-
-                var strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString());
-                if (strValor is null)
-                {
-                    return 0;
-                }
-                else
-                {
-                    return decimal.Parse(strValor.ToString());
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            throw new Exception(ex.Message);
         }
-        public DataTable ListarTodos()
+    }
+    public async Task<bool> Excluir(int id)
+    {
+        try
         {
-            Crud crud = new Crud();
-            StringBuilder sqlBuilder = new StringBuilder();
-
-            sqlBuilder.Append("SELECT Id, Competencia, Valor ");
-            sqlBuilder.Append("FROM Dependente");
-
-            try
-            {
-                crud.LimparParametro();
-                DataTable dataTable = crud.Consulta(CommandType.Text, sqlBuilder.ToString());
-                return dataTable;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            await _dependenteRepository.Delete(id);
+            return true;
         }
-        public DataTable ListarTodosPorCompetencia(DateTime competencia)
+        catch (Exception ex)
         {
-            Crud crud = new Crud();
-            StringBuilder sqlBuilder = new StringBuilder();
+            throw new Exception(ex.Message);
+        }
+    }
+    public async Task<decimal> VlrDependente(DateTime competencia)
+    {
+        try
+        {
+            var value = await _dependenteRepository.Value(competencia);
+            return value;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+    public async Task<IEnumerable<Model.Dependente>> ListarTodos()
+    {
+        try
+        {
+            var listDependente = await _dependenteRepository.GetAll();
+            return listDependente;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+    public async Task<IEnumerable<Model.Dependente>> ListarTodosPorCompetencia(DateTime competencia)
+    {
 
-            sqlBuilder.Append("SELECT Id, Competencia, Valor ");
-            sqlBuilder.Append("FROM Dependente ");
-            sqlBuilder.Append("WHERE Competencia = (SELECT MAX(Competencia) FROM Dependente WHERE Competencia <= @Competencia)");
-
-            try
-            {
-                crud.LimparParametro();
-                crud.AdicionarParamentro("Competencia", competencia);
-                DataTable dataTable = crud.Consulta(CommandType.Text, sqlBuilder.ToString());
-                return dataTable;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+        try
+        {
+            var listDependente = await _dependenteRepository.GetByCompetence(competencia);
+            return listDependente;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
         }
     }
 }

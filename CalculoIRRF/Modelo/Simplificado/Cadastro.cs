@@ -1,4 +1,4 @@
-﻿using CalculoIRRF.Conexao;
+﻿using CalculoIRRF.DataBase;
 using System;
 using System.Data;
 using System.Text;
@@ -8,7 +8,7 @@ namespace CalculoIRRF.Modelo.Simplificado
     public class Cadastro
     {
 
-        public bool Gravar(Objetos.Simplificado simplificado)
+        public bool Gravar(Model.Simplificado simplificado)
         {
             Crud crud = new Crud();
             StringBuilder sqlBuilder = new StringBuilder();
@@ -29,7 +29,7 @@ namespace CalculoIRRF.Modelo.Simplificado
                 throw new Exception(ex.Message);
             }
         }
-        public bool Alterar(Objetos.Simplificado simplificado)
+        public bool Alterar(Model.Simplificado simplificado)
         {
             Crud crud = new Crud();
             StringBuilder sqlBuilder = new StringBuilder();

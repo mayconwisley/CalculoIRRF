@@ -1,4 +1,5 @@
-﻿using CalculoIRRF.Conexao;
+﻿using CalculoIRRF.DataBase;
+using CalculoIRRF.Model;
 using System;
 using System.Data;
 using System.Text;
@@ -7,7 +8,7 @@ namespace CalculoIRRF.Modelo.Irrf
 {
     public class Cadastro
     {
-        public bool Gravar(Objetos.Irrf irrf)
+        public bool Gravar(Model.Irrf irrf)
         {
             Crud crud = new Crud();
             StringBuilder sqlBuilder = new StringBuilder();
@@ -31,7 +32,7 @@ namespace CalculoIRRF.Modelo.Irrf
                 throw new Exception(ex.Message);
             }
         }
-        public bool GravarRfbOnline(Objetos.Tributacao.IrrfRfb irrfRfb)
+        public bool GravarRfbOnline(IrrfRfb irrfRfb)
         {
             Crud crud = new Crud();
             StringBuilder sqlBuilder = new StringBuilder();
@@ -58,7 +59,7 @@ namespace CalculoIRRF.Modelo.Irrf
                 throw new Exception(ex.Message);
             }
         }
-        public bool Alterar(Objetos.Irrf irrf)
+        public bool Alterar(Model.Irrf irrf)
         {
             Crud crud = new Crud();
             StringBuilder sqlBuilder = new StringBuilder();
