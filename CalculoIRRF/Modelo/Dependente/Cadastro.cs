@@ -7,7 +7,7 @@ namespace CalculoIRRF.Modelo.Dependente;
 
 public class Cadastro
 {
-    DependenteRepository _dependenteRepository;
+    private readonly DependenteRepository _dependenteRepository;
     public Cadastro()
     {
         _dependenteRepository = new();
@@ -76,7 +76,6 @@ public class Cadastro
     }
     public async Task<IEnumerable<Model.Dependente>> ListarTodosPorCompetencia(DateTime competencia)
     {
-
         try
         {
             var listDependente = await _dependenteRepository.GetByCompetence(competencia);

@@ -1,147 +1,89 @@
-﻿using CalculoIRRF.DataBase;
+﻿using CalculoIRRF.Repository;
 using System;
-using System.Data;
-using System.Text;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace CalculoIRRF.Modelo.DescontoMinimo
+namespace CalculoIRRF.Modelo.DescontoMinimo;
+
+public class Cadastro
 {
-    public class Cadastro
+    private readonly DescontoMinimoRepository _descontoMinimoRepository;
+    public Cadastro()
     {
+        _descontoMinimoRepository = new();
+    }
 
-        public bool Gravar(Model.DescontoMinimo descontoMinimo)
+    public async Task<bool> Gravar(Model.DescontoMinimo descontoMinimo)
+    {
+        try
         {
-            Crud crud = new Crud();
-            StringBuilder sqlBuilder = new StringBuilder();
-
-            sqlBuilder.Append("INSERT INTO DescontoMinimo(Competencia, Valor) ");
-            sqlBuilder.Append("VALUES(@Competencia, @Valor)");
-
-            try
-            {
-                crud.LimparParametro();
-                crud.AdicionarParamentro("Competencia", descontoMinimo.Competencia);
-                crud.AdicionarParamentro("Valor", descontoMinimo.Valor);
-                crud.Executar(CommandType.Text, sqlBuilder.ToString());
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            await _descontoMinimoRepository.Create(descontoMinimo);
+            return true;
         }
-        public bool Alterar(Model.DescontoMinimo descontoMinimo)
+        catch (Exception)
         {
-            Crud crud = new Crud();
-            StringBuilder sqlBuilder = new StringBuilder();
-
-            sqlBuilder.Append("UPDATE DescontoMinimo ");
-            sqlBuilder.Append("SET Competencia = @Competencia, Valor = @Valor ");
-            sqlBuilder.Append("WHERE Id = @Id");
-
-            try
-            {
-                crud.LimparParametro();
-                crud.AdicionarParamentro("Competencia", descontoMinimo.Competencia);
-                crud.AdicionarParamentro("Valor", descontoMinimo.Valor);
-                crud.AdicionarParamentro("Id", descontoMinimo.Id);
-                crud.Executar(CommandType.Text, sqlBuilder.ToString());
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            throw;
         }
-        public bool Excluir(int id)
+    }
+    public async Task<bool> Alterar(Model.DescontoMinimo descontoMinimo)
+    {
+        try
         {
-            Crud crud = new Crud();
-            StringBuilder sqlBuilder = new StringBuilder();
-
-            sqlBuilder.Append("DELETE FROM DescontoMinimo ");
-            sqlBuilder.Append("WHERE Id = @Id");
-
-            try
-            {
-                crud.LimparParametro();
-                crud.AdicionarParamentro("Id", id);
-                crud.Executar(CommandType.Text, sqlBuilder.ToString());
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            await _descontoMinimoRepository.Update(descontoMinimo);
+            return true;
         }
-        public decimal ValorDescontoMinimo(DateTime competencia)
+        catch (Exception)
         {
-            Crud crud = new Crud();
-            StringBuilder sqlBuilder = new StringBuilder();
-
-            sqlBuilder.Append("SELECT Valor ");
-            sqlBuilder.Append("FROM DescontoMinimo ");
-            sqlBuilder.Append("WHERE Competencia = (SELECT MAX(Competencia) FROM DescontoMinimo WHERE Competencia <= @Competencia)");
-
-            try
-            {
-                crud.LimparParametro();
-                crud.AdicionarParamentro("Competencia", competencia);
-
-
-                var strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString());
-                if (strValor == null)
-                {
-                    return 0;
-                }
-                else
-                {
-                    return decimal.Parse(strValor.ToString());
-                }
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            throw;
         }
-        public DataTable ListarTodos()
+    }
+    public async Task<bool> Excluir(int id)
+    {
+        try
         {
-            Crud crud = new Crud();
-            StringBuilder sqlBuilder = new StringBuilder();
-
-            sqlBuilder.Append("SELECT Id, Competencia, Valor ");
-            sqlBuilder.Append("FROM DescontoMinimo");
-
-            try
-            {
-                crud.LimparParametro();
-                DataTable dataTable = crud.Consulta(CommandType.Text, sqlBuilder.ToString());
-                return dataTable;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            await _descontoMinimoRepository.Delete(id);
+            return true;
         }
-        public DataTable ListarTodosPorCompetencia(DateTime competencia)
+        catch (Exception)
         {
-            Crud crud = new Crud();
-            StringBuilder sqlBuilder = new StringBuilder();
+            throw;
+        }
+    }
+    public async Task<decimal> ValorDescontoMinimo(DateTime competencia)
+    {
+        try
+        {
+            var value = await _descontoMinimoRepository.Value(competencia);
+            return value;
 
-            sqlBuilder.Append("SELECT Id, Competencia, Valor ");
-            sqlBuilder.Append("FROM DescontoMinimo ");
-            sqlBuilder.Append("WHERE Competencia = (SELECT MAX(Competencia) FROM DescontoMinimo WHERE Competencia <= @Competencia)");
-
-            try
-            {
-                crud.LimparParametro();
-                crud.AdicionarParamentro("Competencia", competencia);
-                DataTable dataTable = crud.Consulta(CommandType.Text, sqlBuilder.ToString());
-                return dataTable;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+    public async Task<IEnumerable<Model.DescontoMinimo>> ListarTodos()
+    {
+        try
+        {
+            var listDescontoMinimo = await _descontoMinimoRepository.GetAll();
+            return listDescontoMinimo;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+    public async Task<IEnumerable<Model.DescontoMinimo>> ListarTodosPorCompetencia(DateTime competencia)
+    {
+        try
+        {
+            var listDescontoMinimo = await _descontoMinimoRepository.GetByCompetence(competencia);
+            return listDescontoMinimo;
+        }
+        catch (Exception)
+        {
+            throw;
         }
     }
 }

@@ -137,9 +137,14 @@ public class DependenteRepository : IDependenteRepository
     {
         try
         {
+            var maxCompetencia = await _calculoImpostoContext
+                                         .Dependente
+                                         .Where(w => w.Competencia <= competence)
+                                         .MaxAsync(w => w.Competencia);
+
             var value = await _calculoImpostoContext
                               .Dependente
-                              .Where(w => w.Competencia == competence)
+                              .Where(w => w.Competencia == maxCompetencia)
                               .Select(s => s.Valor)
                               .FirstOrDefaultAsync();
             return value;
