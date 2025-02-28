@@ -1,9 +1,9 @@
 ﻿using CalculoIRRF.DataBase;
 using CalculoIRRF.Model;
 using CalculoIRRF.Repository.Interface;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,139 +20,80 @@ public class DescontoMinimoRepository : IDescontoMinimoRepository
 
     public async Task<DescontoMinimo> Create(DescontoMinimo descontoMinimo)
     {
-        try
-        {
-            if (descontoMinimo is not null)
-            {
-                _calculoImpostoContext.DescontoMinimo.Add(descontoMinimo);
-                await _calculoImpostoContext.SaveChangesAsync();
-                return descontoMinimo;
-            }
-            return new();
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+
+        if (descontoMinimo is null)
+            throw new ArgumentException(null, nameof(descontoMinimo));
+
+        _calculoImpostoContext.DescontoMinimo.Add(descontoMinimo);
+        await _calculoImpostoContext.SaveChangesAsync();
+        return descontoMinimo;
+
     }
 
     public async Task<DescontoMinimo> Delete(int id)
     {
-        try
-        {
-            if (id != 0)
-            {
-                var descontoMinimo = await GetById(id);
-                if (descontoMinimo is not null)
-                {
-                    _calculoImpostoContext.DescontoMinimo.Remove(descontoMinimo);
-                    await _calculoImpostoContext.SaveChangesAsync();
-                    return descontoMinimo;
-                }
-            }
-            return new();
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+
+        var descontoMinimo = await GetById(id);
+        if (descontoMinimo is null)
+            return null;
+
+        _calculoImpostoContext.DescontoMinimo.Remove(descontoMinimo);
+        await _calculoImpostoContext.SaveChangesAsync();
+        return descontoMinimo;
+
     }
 
     public async Task<IEnumerable<DescontoMinimo>> GetAll()
     {
-        try
-        {
-            var listDescontoMinimo = await _calculoImpostoContext
-                                           .DescontoMinimo
-                                           .ToListAsync();
-            return listDescontoMinimo ?? [];
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        var listDescontoMinimo = await _calculoImpostoContext.DescontoMinimo
+                                       .ToListAsync();
+        return listDescontoMinimo ?? [];
     }
 
     public async Task<IEnumerable<DescontoMinimo>> GetByCompetence(DateTime competence)
     {
-        try
-        {
-            var maxCompetencia = await _calculoImpostoContext
-                                       .DescontoMinimo
-                                       .Where(w => w.Competencia <= competence)
-                                       .MaxAsync(w => w.Competencia);
-
-            var listDescontoMinimo = await _calculoImpostoContext
-                                           .DescontoMinimo
-                                           .Where(w => w.Competencia == maxCompetencia)
-                                           .ToListAsync();
-            return listDescontoMinimo ?? [];
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        var listDescontoMinimo = await _calculoImpostoContext.DescontoMinimo
+                                       .Where(w => w.Competencia == _calculoImpostoContext.DescontoMinimo
+                                                                    .Where(w => w.Competencia <= competence)
+                                                                    .Max(w => w.Competencia))
+                                       .ToListAsync();
+        return listDescontoMinimo ?? [];
     }
 
     public async Task<DescontoMinimo> GetById(int id)
     {
-        try
-        {
-            if (id != 0)
-            {
-                var descontoMinimo = await _calculoImpostoContext
-                                           .DescontoMinimo
-                                           .Where(w => w.Id == id)
-                                           .FirstOrDefaultAsync();
-                return descontoMinimo;
-            }
-            return new();
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        var descontoMinimo = await _calculoImpostoContext.DescontoMinimo
+                                  .FindAsync(id);
+        return descontoMinimo ?? new();
     }
 
     public async Task<DescontoMinimo> Update(DescontoMinimo descontoMinimo)
     {
-        try
+
+        if (descontoMinimo is null || descontoMinimo.Id <= 0)
         {
-            if (descontoMinimo is not null)
-            {
-                _calculoImpostoContext.DescontoMinimo.Add(descontoMinimo);
-                await _calculoImpostoContext.SaveChangesAsync();
-                return descontoMinimo;
-            }
-            return new();
+            throw new ArgumentException("Objeto inválido para atualização");
         }
-        catch (Exception)
-        {
-            throw;
-        }
+
+
+        DescontoMinimo descontoMinimo1 = await GetById(descontoMinimo.Id);
+
+        _calculoImpostoContext.DescontoMinimo.Entry(descontoMinimo1)
+        .CurrentValues.SetValues(descontoMinimo);
+        await _calculoImpostoContext.SaveChangesAsync();
+
+        return descontoMinimo ?? new();
     }
 
     public async Task<decimal> Value(DateTime competence)
     {
-        try
-        {
-            var competenceMax = await _calculoImpostoContext
-                                      .DescontoMinimo
-                                      .Where(w => w.Competencia == competence)
-                                      .MaxAsync(m => m.Competencia);
-
-
-            var value = await _calculoImpostoContext
-                              .DescontoMinimo
-                              .Where(w => w.Competencia == competenceMax)
-                              .Select(s => s.Valor)
-                              .FirstOrDefaultAsync();
-            return value;
-
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        var value = await _calculoImpostoContext.DescontoMinimo
+                          .Where(w => w.Competencia == _calculoImpostoContext.DescontoMinimo
+                                                       .Where(w => w.Competencia == competence)
+                                                       .Max(m => m.Competencia))
+                          .Select(s => s.Valor)
+                          .DefaultIfEmpty(0)
+                          .FirstOrDefaultAsync();
+        return value;
     }
 }

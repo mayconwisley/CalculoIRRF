@@ -1,295 +1,290 @@
-﻿using CalculoIRRF.DataBase;
-using CalculoIRRF.Model;
+﻿using CalculoIRRF.Model;
+using CalculoIRRF.Repository;
 using System;
 using System.Data;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace CalculoIRRF.Modelo.Inss
+namespace CalculoIRRF.Modelo.Inss;
+
+public class Cadastro
 {
-    public class Cadastro
+    private readonly InssRepository _inssRepository;
+    public Cadastro()
     {
-        public bool Gravar(Model.Inss inss)
+        _inssRepository = new();
+    }
+
+    public async Task<bool> Gravar(Model.Inss inss)
+    {
+        try
         {
-            Crud crud = new Crud();
-            StringBuilder sqlBuilder = new StringBuilder();
+            await _inssRepository.Create(inss);
+            return true;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+    public bool GravarInssOnline(InssGov inssGov)
+    {
+        Crud crud = new Crud();
+        StringBuilder sqlBuilder = new StringBuilder();
 
-            sqlBuilder.Append("INSERT INTO INSS(Competencia, Faixa, Valor, Porcentagem) ");
-            sqlBuilder.Append("VALUES(@Competencia, @Faixa, @Valor, @Porcentagem)");
+        sqlBuilder.Append("INSERT INTO InssGovOnline(DataCriacao, DataAtualizacao, Sequencia, BaseCalculo, Aliquota) ");
+        sqlBuilder.Append("VALUES(@DataCriacao, @DataAtualizacao, @Sequencia, @BaseCalculo, @Aliquota)");
 
-            try
+        try
+        {
+            crud.LimparParametro();
+            crud.AdicionarParamentro("DataCriacao", inssGov.DataCriacao);
+            crud.AdicionarParamentro("DataAtualizacao", inssGov.DataAtualizacao);
+            crud.AdicionarParamentro("Sequencia", inssGov.Sequencia);
+            crud.AdicionarParamentro("BaseCalculo", inssGov.BaseCaculo);
+            crud.AdicionarParamentro("Aliquota", inssGov.Aliquota);
+            crud.Executar(CommandType.Text, sqlBuilder.ToString());
+            return true;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+    public bool Alterar(Model.Inss inss)
+    {
+        Crud crud = new Crud();
+        StringBuilder sqlBuilder = new StringBuilder();
+
+        sqlBuilder.Append("UPDATE INSS ");
+        sqlBuilder.Append("SET Competencia = @Competencia, Faixa = @Faixa, Valor = @Valor, Porcentagem = @Porcentagem ");
+        sqlBuilder.Append("WHERE Id = @Id");
+
+        try
+        {
+            crud.LimparParametro();
+            crud.AdicionarParamentro("Competencia", inss.Competencia);
+            crud.AdicionarParamentro("Faixa", inss.Faixa);
+            crud.AdicionarParamentro("Valor", inss.Valor);
+            crud.AdicionarParamentro("Porcentagem", inss.Porcentagem);
+            crud.AdicionarParamentro("Id", inss.Id);
+            crud.Executar(CommandType.Text, sqlBuilder.ToString());
+            return true;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+    public bool Excluir(int id)
+    {
+        Crud crud = new Crud();
+        StringBuilder sqlBuilder = new StringBuilder();
+
+        sqlBuilder.Append("DELETE FROM INSS ");
+        sqlBuilder.Append("WHERE Id = @Id");
+
+        try
+        {
+            crud.LimparParametro();
+            crud.AdicionarParamentro("Id", id);
+            crud.Executar(CommandType.Text, sqlBuilder.ToString());
+            return true;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+    public int FaixaInss(decimal baseInss, DateTime competencia)
+    {
+        Crud crud = new Crud();
+        StringBuilder sqlBuilder = new StringBuilder();
+
+        sqlBuilder.Append("SELECT MIN(Faixa) AS Faixa ");
+        sqlBuilder.Append("FROM INSS ");
+        sqlBuilder.Append("WHERE Valor >= @Valor ");
+        sqlBuilder.Append("AND Competencia = (SELECT MAX(Competencia) FROM INSS WHERE Competencia <= @Competencia)");
+
+        try
+        {
+            crud.LimparParametro();
+            crud.AdicionarParamentro("Valor", baseInss);
+            crud.AdicionarParamentro("Competencia", competencia);
+            string strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString();
+
+            if (strValor == "")
             {
-                crud.LimparParametro();
-                crud.AdicionarParamentro("Competencia", inss.Competencia);
-                crud.AdicionarParamentro("Faixa", inss.Faixa);
-                crud.AdicionarParamentro("Valor", inss.Valor);
-                crud.AdicionarParamentro("Porcentagem", inss.Porcentagem);
-                crud.Executar(CommandType.Text, sqlBuilder.ToString());
-                return true;
+                return 0;
             }
-            catch (Exception ex)
+            else
             {
-                throw new Exception(ex.Message);
+                return int.Parse(strValor);
             }
         }
-        public bool GravarInssOnline(InssGov inssGov)
+        catch (Exception)
         {
-            Crud crud = new Crud();
-            StringBuilder sqlBuilder = new StringBuilder();
+            throw;
+        }
+    }
+    public int UltimaFaixaInss(DateTime competencia)
+    {
+        Crud crud = new Crud();
+        StringBuilder sqlBuilder = new StringBuilder();
 
-            sqlBuilder.Append("INSERT INTO InssGovOnline(DataCriacao, DataAtualizacao, Sequencia, BaseCalculo, Aliquota) ");
-            sqlBuilder.Append("VALUES(@DataCriacao, @DataAtualizacao, @Sequencia, @BaseCalculo, @Aliquota)");
+        sqlBuilder.Append("SELECT MAX(Faixa) AS Faixa ");
+        sqlBuilder.Append("FROM INSS ");
+        sqlBuilder.Append("WHERE Competencia = @Competencia");
 
-            try
+        try
+        {
+            crud.LimparParametro();
+            crud.AdicionarParamentro("Competencia", competencia);
+
+            string faixa = crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString();
+
+            if (faixa == "")
             {
-                crud.LimparParametro();
-                crud.AdicionarParamentro("DataCriacao", inssGov.DataCriacao);
-                crud.AdicionarParamentro("DataAtualizacao", inssGov.DataAtualizacao);
-                crud.AdicionarParamentro("Sequencia", inssGov.Sequencia);
-                crud.AdicionarParamentro("BaseCalculo", inssGov.BaseCaculo);
-                crud.AdicionarParamentro("Aliquota", inssGov.Aliquota);
-                crud.Executar(CommandType.Text, sqlBuilder.ToString());
-                return true;
+                return 0;
             }
-            catch (Exception ex)
+            else
             {
-                throw new Exception(ex.Message);
+                return int.Parse(faixa);
             }
         }
-        public bool Alterar(Model.Inss inss)
+        catch (Exception)
         {
-            Crud crud = new Crud();
-            StringBuilder sqlBuilder = new StringBuilder();
+            throw;
+        }
+    }
+    public decimal PorcentagemInss(int faixa, DateTime competencia)
+    {
+        Crud crud = new Crud();
+        StringBuilder sqlBuilder = new StringBuilder();
 
-            sqlBuilder.Append("UPDATE INSS ");
-            sqlBuilder.Append("SET Competencia = @Competencia, Faixa = @Faixa, Valor = @Valor, Porcentagem = @Porcentagem ");
-            sqlBuilder.Append("WHERE Id = @Id");
+        sqlBuilder.Append("SELECT Porcentagem ");
+        sqlBuilder.Append("FROM INSS ");
+        sqlBuilder.Append("WHERE Faixa = @Faixa ");
+        sqlBuilder.Append("AND Competencia = (SELECT MAX(Competencia) FROM INSS WHERE Competencia <= @Competencia)");
 
-            try
+        try
+        {
+            crud.LimparParametro();
+            crud.AdicionarParamentro("Faixa", faixa);
+            crud.AdicionarParamentro("Competencia", competencia);
+            string strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString();
+            if (strValor == "")
             {
-                crud.LimparParametro();
-                crud.AdicionarParamentro("Competencia", inss.Competencia);
-                crud.AdicionarParamentro("Faixa", inss.Faixa);
-                crud.AdicionarParamentro("Valor", inss.Valor);
-                crud.AdicionarParamentro("Porcentagem", inss.Porcentagem);
-                crud.AdicionarParamentro("Id", inss.Id);
-                crud.Executar(CommandType.Text, sqlBuilder.ToString());
-                return true;
+                return 0;
             }
-            catch (Exception ex)
+            else
             {
-                throw new Exception(ex.Message);
+                return decimal.Parse(strValor);
+            }
+
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+    public decimal ValorInss(int faixa, DateTime competencia)
+    {
+        Crud crud = new Crud();
+        StringBuilder sqlBuilder = new StringBuilder();
+
+        sqlBuilder.Append("SELECT Valor ");
+        sqlBuilder.Append("FROM INSS ");
+        sqlBuilder.Append("WHERE Faixa = @Faixa ");
+        sqlBuilder.Append("AND Competencia = (SELECT MAX(Competencia) FROM INSS WHERE Competencia <= @Competencia)");
+
+        try
+        {
+            crud.LimparParametro();
+            crud.AdicionarParamentro("Faixa", faixa);
+            crud.AdicionarParamentro("Competencia", competencia);
+            string strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString();
+            if (strValor == "")
+            {
+                return 0;
+            }
+            else
+            {
+                return decimal.Parse(strValor);
             }
         }
-        public bool Excluir(int id)
+        catch (Exception)
         {
-            Crud crud = new Crud();
-            StringBuilder sqlBuilder = new StringBuilder();
+            throw;
+        }
+    }
+    public decimal TetoInss(DateTime competencia)
+    {
+        Crud crud = new Crud();
+        StringBuilder sqlBuilder = new StringBuilder();
 
-            sqlBuilder.Append("DELETE FROM INSS ");
-            sqlBuilder.Append("WHERE Id = @Id");
+        sqlBuilder.Append("SELECT MAX(Valor) ");
+        sqlBuilder.Append("FROM INSS ");
+        sqlBuilder.Append("WHERE Competencia = (SELECT MAX(Competencia) FROM INSS WHERE Competencia <= @Competencia) ");
+        try
+        {
+            crud.LimparParametro();
+            crud.AdicionarParamentro("Competencia", competencia);
+            string strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString();
 
-            try
+            if (strValor == "")
             {
-                crud.LimparParametro();
-                crud.AdicionarParamentro("Id", id);
-                crud.Executar(CommandType.Text, sqlBuilder.ToString());
-                return true;
+                return 0;
             }
-            catch (Exception ex)
+            else
             {
-                throw new Exception(ex.Message);
+                return decimal.Parse(strValor);
             }
         }
-        public int FaixaInss(decimal baseInss, DateTime competencia)
+        catch (Exception)
         {
-            Crud crud = new Crud();
-            StringBuilder sqlBuilder = new StringBuilder();
-
-            sqlBuilder.Append("SELECT MIN(Faixa) AS Faixa ");
-            sqlBuilder.Append("FROM INSS ");
-            sqlBuilder.Append("WHERE Valor >= @Valor ");
-            sqlBuilder.Append("AND Competencia = (SELECT MAX(Competencia) FROM INSS WHERE Competencia <= @Competencia)");
-
-            try
-            {
-                crud.LimparParametro();
-                crud.AdicionarParamentro("Valor", baseInss);
-                crud.AdicionarParamentro("Competencia", competencia);
-                string strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString();
-
-                if (strValor == "")
-                {
-                    return 0;
-                }
-                else
-                {
-                    return int.Parse(strValor);
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            throw;
         }
-        public int UltimaFaixaInss(DateTime competencia)
+    }
+    public DataTable ListarTodos()
+    {
+        Crud crud = new Crud();
+        StringBuilder sqlBuilder = new StringBuilder();
+
+        sqlBuilder.Append("SELECT Id, Competencia, Faixa, Valor, Porcentagem ");
+        sqlBuilder.Append("FROM INSS ");
+        sqlBuilder.Append("ORDER BY Competencia DESC");
+
+        try
         {
-            Crud crud = new Crud();
-            StringBuilder sqlBuilder = new StringBuilder();
-
-            sqlBuilder.Append("SELECT MAX(Faixa) AS Faixa ");
-            sqlBuilder.Append("FROM INSS ");
-            sqlBuilder.Append("WHERE Competencia = @Competencia");
-
-            try
-            {
-                crud.LimparParametro();
-                crud.AdicionarParamentro("Competencia", competencia);
-
-                string faixa = crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString();
-
-                if (faixa == "")
-                {
-                    return 0;
-                }
-                else
-                {
-                    return int.Parse(faixa);
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            crud.LimparParametro();
+            DataTable dataTable = crud.Consulta(CommandType.Text, sqlBuilder.ToString());
+            return dataTable;
         }
-        public decimal PorcentagemInss(int faixa, DateTime competencia)
+        catch (Exception)
         {
-            Crud crud = new Crud();
-            StringBuilder sqlBuilder = new StringBuilder();
-
-            sqlBuilder.Append("SELECT Porcentagem ");
-            sqlBuilder.Append("FROM INSS ");
-            sqlBuilder.Append("WHERE Faixa = @Faixa ");
-            sqlBuilder.Append("AND Competencia = (SELECT MAX(Competencia) FROM INSS WHERE Competencia <= @Competencia)");
-
-            try
-            {
-                crud.LimparParametro();
-                crud.AdicionarParamentro("Faixa", faixa);
-                crud.AdicionarParamentro("Competencia", competencia);
-                string strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString();
-                if (strValor == "")
-                {
-                    return 0;
-                }
-                else
-                {
-                    return decimal.Parse(strValor);
-                }
-
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            throw;
         }
-        public decimal ValorInss(int faixa, DateTime competencia)
+    }
+    public DataTable ListarTodosPorCompetencia(DateTime competencia)
+    {
+        Crud crud = new Crud();
+        StringBuilder sqlBuilder = new StringBuilder();
+
+        sqlBuilder.Append("SELECT Id, Competencia, Faixa, Valor, Porcentagem ");
+        sqlBuilder.Append("FROM INSS ");
+        sqlBuilder.Append("WHERE Competencia = (SELECT MAX(Competencia) FROM INSS WHERE Competencia <= @Competencia)");
+
+        try
         {
-            Crud crud = new Crud();
-            StringBuilder sqlBuilder = new StringBuilder();
-
-            sqlBuilder.Append("SELECT Valor ");
-            sqlBuilder.Append("FROM INSS ");
-            sqlBuilder.Append("WHERE Faixa = @Faixa ");
-            sqlBuilder.Append("AND Competencia = (SELECT MAX(Competencia) FROM INSS WHERE Competencia <= @Competencia)");
-
-            try
-            {
-                crud.LimparParametro();
-                crud.AdicionarParamentro("Faixa", faixa);
-                crud.AdicionarParamentro("Competencia", competencia);
-                string strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString();
-                if (strValor == "")
-                {
-                    return 0;
-                }
-                else
-                {
-                    return decimal.Parse(strValor);
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            crud.LimparParametro();
+            crud.AdicionarParamentro("Competencia", competencia);
+            DataTable dataTable = crud.Consulta(CommandType.Text, sqlBuilder.ToString());
+            return dataTable;
         }
-        public decimal TetoInss(DateTime competencia)
+        catch (Exception)
         {
-            Crud crud = new Crud();
-            StringBuilder sqlBuilder = new StringBuilder();
-
-            sqlBuilder.Append("SELECT MAX(Valor) ");
-            sqlBuilder.Append("FROM INSS ");
-            sqlBuilder.Append("WHERE Competencia = (SELECT MAX(Competencia) FROM INSS WHERE Competencia <= @Competencia) ");
-            try
-            {
-                crud.LimparParametro();
-                crud.AdicionarParamentro("Competencia", competencia);
-                string strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString()).ToString();
-
-                if (strValor == "")
-                {
-                    return 0;
-                }
-                else
-                {
-                    return decimal.Parse(strValor);
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-        public DataTable ListarTodos()
-        {
-            Crud crud = new Crud();
-            StringBuilder sqlBuilder = new StringBuilder();
-
-            sqlBuilder.Append("SELECT Id, Competencia, Faixa, Valor, Porcentagem ");
-            sqlBuilder.Append("FROM INSS ");
-            sqlBuilder.Append("ORDER BY Competencia DESC");
-
-            try
-            {
-                crud.LimparParametro();
-                DataTable dataTable = crud.Consulta(CommandType.Text, sqlBuilder.ToString());
-                return dataTable;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-        public DataTable ListarTodosPorCompetencia(DateTime competencia)
-        {
-            Crud crud = new Crud();
-            StringBuilder sqlBuilder = new StringBuilder();
-
-            sqlBuilder.Append("SELECT Id, Competencia, Faixa, Valor, Porcentagem ");
-            sqlBuilder.Append("FROM INSS ");
-            sqlBuilder.Append("WHERE Competencia = (SELECT MAX(Competencia) FROM INSS WHERE Competencia <= @Competencia)");
-
-            try
-            {
-                crud.LimparParametro();
-                crud.AdicionarParamentro("Competencia", competencia);
-                DataTable dataTable = crud.Consulta(CommandType.Text, sqlBuilder.ToString());
-                return dataTable;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            throw;
         }
     }
 }
