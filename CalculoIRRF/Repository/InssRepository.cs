@@ -68,7 +68,7 @@ public class InssRepository : IInssRepository
                          .Inss
                          .Where(w => w.Id == id)
                          .FirstOrDefaultAsync();
-        return inss ?? new();
+        return inss ?? null;
     }
 
     public async Task<int> LastRange(DateTime competence)
