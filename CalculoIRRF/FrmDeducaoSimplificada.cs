@@ -1,5 +1,5 @@
-﻿using CalculoIRRF.Model;
-using CalculoIRRF.Modelo.Validacao;
+﻿using CalculoIRRF.Services;
+using CalculoIRRF.Services.Validacao;
 using System;
 using System.Windows.Forms;
 
@@ -17,7 +17,7 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelo.Simplificado.Cadastro simplificado = new Modelo.Simplificado.Cadastro();
+                SimplificadoServices simplificado = new Modelo.Simplificado.Cadastro();
                 DgvValorSimplificado.DataSource = simplificado.ListarTodos();
                 LimparCampos();
             }
@@ -35,8 +35,8 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelo.Simplificado.Cadastro simplificado = new Modelo.Simplificado.Cadastro();
-                Simplificado dados = new Objetos.Simplificado
+                SimplificadoServices simplificado = new Modelo.Simplificado.Cadastro();
+                Objetos.Simplificado dados = new Objetos.Simplificado
                 {
                     Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
                     Valor = decimal.Parse(TxtValor.Text.Trim())
@@ -55,8 +55,8 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelo.Simplificado.Cadastro simplificado = new Modelo.Simplificado.Cadastro();
-                Simplificado dados = new Objetos.Simplificado
+                SimplificadoServices simplificado = new Modelo.Simplificado.Cadastro();
+                Objetos.Simplificado dados = new Objetos.Simplificado
                 {
                     Id = idSimplificado,
                     Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
@@ -76,7 +76,7 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelo.Simplificado.Cadastro simplificado = new Modelo.Simplificado.Cadastro();
+                SimplificadoServices simplificado = new Modelo.Simplificado.Cadastro();
 
                 simplificado.Excluir(idSimplificado);
 
@@ -111,15 +111,15 @@ namespace CalculoIRRF
         private void TxtValor_TextChanged(object sender, EventArgs e)
         {
             Validar validar = new Validar();
-            TxtValor.Text = validar.ValidarValor(TxtValor.Text);
+            TxtValor.Text = Validar.ValidarValor(TxtValor.Text);
             TxtValor.Select(TxtValor.Text.Length, 0);
         }
 
         private void TxtValor_Leave(object sender, EventArgs e)
         {
             Validar validar = new Validar();
-            TxtValor.Text = validar.Zero(TxtValor.Text);
-            TxtValor.Text = validar.Formatar(TxtValor.Text);
+            TxtValor.Text = Validar.Zero(TxtValor.Text);
+            TxtValor.Text = Validar.Formatar(TxtValor.Text);
         }
 
         private void TxtValor_Enter(object sender, EventArgs e)

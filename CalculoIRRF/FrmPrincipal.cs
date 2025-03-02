@@ -1,4 +1,6 @@
-﻿using CalculoIRRF.Modelo.Validacao;
+﻿using CalculoIRRF.Services;
+using CalculoIRRF.Services.Calculo;
+using CalculoIRRF.Services.Validacao;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -35,11 +37,11 @@ namespace CalculoIRRF
 
             try
             {
-                Modelo.Calculo.Inss inss = new Modelo.Calculo.Inss(competencia, baseInss);
+                Inss inss = new Modelo.Calculo.Inss(competencia, baseInss);
                 decimal valorInss = inss.NormalProgressivo();
 
-                Modelo.Calculo.Irrf irrf = new Modelo.Calculo.Irrf(competencia, qtdDependente, valorInss, valorBruto);
-                Modelo.Calculo.Fgts fgts = new Modelo.Calculo.Fgts(baseInss);
+                Irrf irrf = new Modelo.Calculo.Irrf(competencia, qtdDependente, valorInss, valorBruto);
+                Fgts fgts = new Modelo.Calculo.Fgts(baseInss);
 
                 Color colorIrNormal = Color.Blue;
                 RTxtResultado.SelectionColor = colorIrNormal;
@@ -88,16 +90,16 @@ namespace CalculoIRRF
         private void TxtValorBruto_TextChanged(object sender, EventArgs e)
         {
             Validar validar = new Validar();
-            TxtValorBruto.Text = validar.ValidarValor(TxtValorBruto.Text);
+            TxtValorBruto.Text = Validar.ValidarValor(TxtValorBruto.Text);
             TxtValorBruto.Select(TxtValorBruto.Text.Length, 0);
         }
 
         private void TxtValorBruto_Leave(object sender, EventArgs e)
         {
             Validar validar = new Validar();
-            TxtValorBruto.Text = validar.Zero(TxtValorBruto.Text);
-            TxtValorBruto.Text = validar.Formatar(TxtValorBruto.Text);
-            Modelo.Inss.Cadastro cadastroInss = new Modelo.Inss.Cadastro();
+            TxtValorBruto.Text = Validar.Zero(TxtValorBruto.Text);
+            TxtValorBruto.Text = Validar.Formatar(TxtValorBruto.Text);
+            InssServices cadastroInss = new Modelo.Inss.Cadastro();
 
             decimal tetoInss = 0;
             decimal valorBruto = decimal.Parse(TxtValorBruto.Text);
@@ -132,15 +134,15 @@ namespace CalculoIRRF
         private void TxtDescInss_TextChanged(object sender, EventArgs e)
         {
             Validar validar = new Validar();
-            TxtBaseInss.Text = validar.ValidarValor(TxtBaseInss.Text);
+            TxtBaseInss.Text = Validar.ValidarValor(TxtBaseInss.Text);
             TxtBaseInss.Select(TxtBaseInss.Text.Length, 0);
         }
 
         private void TxtDescInss_Leave(object sender, EventArgs e)
         {
             Validar validar = new Validar();
-            TxtBaseInss.Text = validar.Zero(TxtBaseInss.Text);
-            TxtBaseInss.Text = validar.Formatar(TxtBaseInss.Text);
+            TxtBaseInss.Text = Validar.Zero(TxtBaseInss.Text);
+            TxtBaseInss.Text = Validar.Formatar(TxtBaseInss.Text);
         }
 
         private void TxtDescInss_Enter(object sender, EventArgs e)
@@ -154,7 +156,7 @@ namespace CalculoIRRF
         private void TxtQtdDependente_TextChanged(object sender, EventArgs e)
         {
             Validar validar = new Validar();
-            TxtQtdDependente.Text = validar.ValidarNumero(TxtQtdDependente.Text);
+            TxtQtdDependente.Text = Validar.ValidarNumero(TxtQtdDependente.Text);
             TxtQtdDependente.Select(TxtQtdDependente.Text.Length, 0);
         }
 
@@ -162,7 +164,7 @@ namespace CalculoIRRF
         {
             Validar validar = new Validar();
             TxtQtdDependente.Text = validar.ZeroNumero(TxtQtdDependente.Text);
-            TxtQtdDependente.Text = validar.FormatarNumero(TxtQtdDependente.Text);
+            TxtQtdDependente.Text = Validar.FormatarNumero(TxtQtdDependente.Text);
         }
 
         private void TxtQtdDependente_Enter(object sender, EventArgs e)

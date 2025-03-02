@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace CalculoIRRF.Modelo.Calculo
+namespace CalculoIRRF.Services.Calculo
 {
     public class Inss
     {
@@ -16,7 +16,7 @@ namespace CalculoIRRF.Modelo.Calculo
 
         public decimal NormalProgressivo()
         {
-            Modelo.Inss.Cadastro inss = new Modelo.Inss.Cadastro();
+            InssServices inss = new Modelo.Inss.Cadastro();
 
             decimal teto = inss.TetoInss(_competencia);
 
@@ -47,7 +47,7 @@ namespace CalculoIRRF.Modelo.Calculo
                     baseInssCalculo = _baseInss - valorInssAnterior;
                 }
 
-                desconto += (baseInssCalculo * (porcentagemInss / 100));
+                desconto += baseInssCalculo * (porcentagemInss / 100);
                 valorInssAnterior = valorInss;
             }
             desconto = Math.Round(desconto, 2);
@@ -57,7 +57,7 @@ namespace CalculoIRRF.Modelo.Calculo
         public string DescricaoCalculoNormalProgressivo()
         {
             StringBuilder strMensagem = new StringBuilder();
-            Modelo.Inss.Cadastro inss = new Modelo.Inss.Cadastro(); ;
+            InssServices inss = new Modelo.Inss.Cadastro(); ;
 
             int faixaInss = inss.FaixaInss(_baseInss, _competencia);
             decimal totalDesconto = 0;
@@ -83,7 +83,7 @@ namespace CalculoIRRF.Modelo.Calculo
                     baseInssCalculo = _baseInss - valorInssAnterior;
                 }
 
-                decimal desconto = (baseInssCalculo * (porcentagemInss / 100));
+                decimal desconto = baseInssCalculo * (porcentagemInss / 100);
                 totalDesconto += desconto;
 
                 valorInssAnterior = valorInss;

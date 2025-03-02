@@ -1,19 +1,20 @@
-﻿using CalculoIRRF.Repository;
+﻿using CalculoIRRF.Model;
+using CalculoIRRF.Repository;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CalculoIRRF.Modelo.Dependente;
+namespace CalculoIRRF.Services;
 
-public class Cadastro
+public class DependenteServices
 {
     private readonly DependenteRepository _dependenteRepository;
-    public Cadastro()
+    public DependenteServices()
     {
         _dependenteRepository = new();
     }
 
-    public async Task<bool> Gravar(Model.Dependente dependente)
+    public async Task<bool> Gravar(Dependente dependente)
     {
         try
         {
@@ -25,7 +26,7 @@ public class Cadastro
             throw new Exception(ex.Message);
         }
     }
-    public async Task<bool> Alterar(Model.Dependente dependente)
+    public async Task<bool> Alterar(Dependente dependente)
     {
 
         try
@@ -62,7 +63,7 @@ public class Cadastro
             throw new Exception(ex.Message);
         }
     }
-    public async Task<IEnumerable<Model.Dependente>> ListarTodos()
+    public async Task<IEnumerable<Dependente>> ListarTodos()
     {
         try
         {
@@ -74,7 +75,7 @@ public class Cadastro
             throw new Exception(ex.Message);
         }
     }
-    public async Task<IEnumerable<Model.Dependente>> ListarTodosPorCompetencia(DateTime competencia)
+    public async Task<IEnumerable<Dependente>> ListarTodosPorCompetencia(DateTime competencia)
     {
         try
         {

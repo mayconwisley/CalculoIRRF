@@ -3,12 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CalculoIRRF.Modelo.Irrf;
+namespace CalculoIRRF.Services;
 
-public class Cadastro
+public class IrrfServices
 {
     private readonly IrrfRepository _irrfRepository;
-    public Cadastro()
+    public IrrfServices()
     {
         _irrfRepository = new();
     }

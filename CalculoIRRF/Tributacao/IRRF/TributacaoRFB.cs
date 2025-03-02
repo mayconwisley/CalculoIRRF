@@ -1,6 +1,7 @@
-﻿using CalculoIRRF.Model;
-using CalculoIRRF.Modelo.Irrf;
-using CalculoIRRF.Modelo.Validacao;
+﻿using CalculoIRRF.Objetos;
+using CalculoIRRF.Objetos.Tributacao;
+using CalculoIRRF.Services;
+using CalculoIRRF.Services.Validacao;
 using CalculoIRRF.Tributacao.AcessarSite;
 using HtmlAgilityPack;
 using System;
@@ -13,7 +14,7 @@ namespace CalculoIRRF.Tributacao.IRRF
     {
         public async Task AtualizarOnline()
         {
-            Cadastro cadastro;
+            IrrfServices cadastro;
             IrrfRfb irrfRfb;
             Irrf irrf;
 
@@ -37,7 +38,7 @@ namespace CalculoIRRF.Tributacao.IRRF
 
             foreach (var item in tributacaoRFB)
             {
-                cadastro = new Cadastro();
+                cadastro = new IrrfServices();
                 irrfRfb = new IrrfRfb
                 {
                     DataCriacao = dataPublicacao,
@@ -93,9 +94,9 @@ namespace CalculoIRRF.Tributacao.IRRF
                             listTributacaoRFBObj.Add(new TributacaoRFBObj
                             {
                                 Sequencia = ++sequencia,
-                                BaseCalculo = validar.ExtrairMaiorValor(cells[0].InnerText.Trim()),
-                                Aliquota = validar.ExtrairValor(cells[1].InnerText.Trim()),
-                                Deducao = validar.ExtrairValor(cells[2].InnerText.TrimEnd())
+                                BaseCalculo = Validar.ExtrairMaiorValor(cells[0].InnerText.Trim()),
+                                Aliquota = Validar.ExtrairValor(cells[1].InnerText.Trim()),
+                                Deducao = Validar.ExtrairValor(cells[2].InnerText.TrimEnd())
                             });
                         }
                     }
@@ -125,7 +126,7 @@ namespace CalculoIRRF.Tributacao.IRRF
                     br[0] = "<br>";
 
                     var valores = spans[1].InnerHtml.Split(br, StringSplitOptions.None);
-                    var deducaoDependente = validar.ExtrairValor(valores[0].Trim());
+                    var deducaoDependente = Validar.ExtrairValor(valores[0].Trim());
                     return deducaoDependente;
                 }
                 return 0;
@@ -153,7 +154,7 @@ namespace CalculoIRRF.Tributacao.IRRF
                     {
                         return 0;
                     }
-                    var deducaoSimplificado = validar.ExtrairValor(valores[1].Trim());
+                    var deducaoSimplificado = Validar.ExtrairValor(valores[1].Trim());
 
                     return deducaoSimplificado;
                 }

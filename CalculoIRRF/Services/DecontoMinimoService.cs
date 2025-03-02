@@ -3,12 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CalculoIRRF.Modelo.DescontoMinimo;
+namespace CalculoIRRF.Services;
 
-public class Cadastro
+public class DecontoMinimoService
 {
     private readonly DescontoMinimoRepository _descontoMinimoRepository;
-    public Cadastro()
+    public DecontoMinimoService()
     {
         _descontoMinimoRepository = new();
     }

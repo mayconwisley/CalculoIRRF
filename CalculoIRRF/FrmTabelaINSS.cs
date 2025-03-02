@@ -1,5 +1,5 @@
-﻿using CalculoIRRF.Model;
-using CalculoIRRF.Modelo.Validacao;
+﻿using CalculoIRRF.Services;
+using CalculoIRRF.Services.Validacao;
 using CalculoIRRF.Tributacao.INSS;
 using System;
 using System.Windows.Forms;
@@ -18,7 +18,7 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelo.Inss.Cadastro inss = new Modelo.Inss.Cadastro();
+                InssServices inss = new Modelo.Inss.Cadastro();
                 DgvTabelaINSS.DataSource = inss.ListarTodos();
                 LimparCampos();
             }
@@ -30,7 +30,7 @@ namespace CalculoIRRF
         private void LimparCampos()
         {
             DateTime competencia = DateTime.Parse(MktCompetencia.Text);
-            Modelo.Inss.Cadastro inss = new Modelo.Inss.Cadastro();
+            InssServices inss = new Modelo.Inss.Cadastro();
 
             TxtFaixa.Text = (inss.UltimaFaixaInss(competencia) + 1).ToString();
             TxtValor.Text = "0,00";
@@ -48,8 +48,8 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelo.Inss.Cadastro inss = new Modelo.Inss.Cadastro();
-                Inss dados = new Objetos.Inss
+                InssServices inss = new Modelo.Inss.Cadastro();
+                Objetos.Inss dados = new Objetos.Inss
                 {
                     Competencia = DateTime.Parse(MktCompetencia.Text),
                     Faixa = int.Parse(TxtFaixa.Text.Trim()),
@@ -70,8 +70,8 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelo.Inss.Cadastro inss = new Modelo.Inss.Cadastro();
-                Inss dados = new Objetos.Inss
+                InssServices inss = new Modelo.Inss.Cadastro();
+                Objetos.Inss dados = new Objetos.Inss
                 {
                     Id = idInss,
                     Competencia = DateTime.Parse(MktCompetencia.Text),
@@ -92,7 +92,7 @@ namespace CalculoIRRF
         {
             try
             {
-                Modelo.Inss.Cadastro inss = new Modelo.Inss.Cadastro();
+                InssServices inss = new Modelo.Inss.Cadastro();
 
                 inss.Excluir(idInss);
                 ListarTabelaInss();
@@ -121,15 +121,15 @@ namespace CalculoIRRF
         private void TxtValor_TextChanged(object sender, EventArgs e)
         {
             Validar validar = new Validar();
-            TxtValor.Text = validar.ValidarValor(TxtValor.Text);
+            TxtValor.Text = Validar.ValidarValor(TxtValor.Text);
             TxtValor.Select(TxtValor.Text.Length, 0);
         }
 
         private void TxtValor_Leave(object sender, EventArgs e)
         {
             Validar validar = new Validar();
-            TxtValor.Text = validar.Zero(TxtValor.Text);
-            TxtValor.Text = validar.Formatar(TxtValor.Text);
+            TxtValor.Text = Validar.Zero(TxtValor.Text);
+            TxtValor.Text = Validar.Formatar(TxtValor.Text);
         }
 
         private void TxtValor_Enter(object sender, EventArgs e)
@@ -143,7 +143,7 @@ namespace CalculoIRRF
         private void TxtFaixa_TextChanged(object sender, EventArgs e)
         {
             Validar validar = new Validar();
-            TxtFaixa.Text = validar.ValidarNumero(TxtFaixa.Text);
+            TxtFaixa.Text = Validar.ValidarNumero(TxtFaixa.Text);
             TxtFaixa.Select(TxtFaixa.Text.Length, 0);
         }
 
@@ -151,7 +151,7 @@ namespace CalculoIRRF
         {
             Validar validar = new Validar();
             TxtFaixa.Text = validar.ZeroNumero(TxtFaixa.Text);
-            TxtFaixa.Text = validar.FormatarNumero(TxtFaixa.Text);
+            TxtFaixa.Text = Validar.FormatarNumero(TxtFaixa.Text);
         }
 
         private void TxtFaixa_Enter(object sender, EventArgs e)
@@ -165,15 +165,15 @@ namespace CalculoIRRF
         private void TxtPorcentagem_TextChanged(object sender, EventArgs e)
         {
             Validar validar = new Validar();
-            TxtPorcentagem.Text = validar.ValidarValor(TxtPorcentagem.Text);
+            TxtPorcentagem.Text = Validar.ValidarValor(TxtPorcentagem.Text);
             TxtPorcentagem.Select(TxtPorcentagem.Text.Length, 0);
         }
 
         private void TxtPorcentagem_Leave(object sender, EventArgs e)
         {
             Validar validar = new Validar();
-            TxtPorcentagem.Text = validar.Zero(TxtPorcentagem.Text);
-            TxtPorcentagem.Text = validar.Formatar(TxtPorcentagem.Text);
+            TxtPorcentagem.Text = Validar.Zero(TxtPorcentagem.Text);
+            TxtPorcentagem.Text = Validar.Formatar(TxtPorcentagem.Text);
         }
 
         private void TxtPorcentagem_Enter(object sender, EventArgs e)
@@ -189,7 +189,7 @@ namespace CalculoIRRF
             try
             {
                 DateTime competencia = DateTime.Parse(MktCompetencia.Text);
-                Modelo.Inss.Cadastro inss = new Modelo.Inss.Cadastro();
+                InssServices inss = new Modelo.Inss.Cadastro();
                 int faixa = inss.UltimaFaixaInss(competencia) + 1;
 
                 TxtFaixa.Text = faixa.ToString();

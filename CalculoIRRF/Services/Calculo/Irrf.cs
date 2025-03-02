@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace CalculoIRRF.Modelo.Calculo
+namespace CalculoIRRF.Services.Calculo
 {
     public class Irrf
     {
@@ -19,17 +19,17 @@ namespace CalculoIRRF.Modelo.Calculo
         }
         public decimal BaseIrrfNormal()
         {
-            Dependente.Cadastro dependente = new Dependente.Cadastro();
+            DependenteServices dependente = new Dependente.DependenteServices();
 
             decimal valorDependente = dependente.VlrDependente(_competencia);
 
-            decimal baseIrrf = _valorBruto - _valorInss - (_qtdDependente * valorDependente);
+            decimal baseIrrf = _valorBruto - _valorInss - _qtdDependente * valorDependente;
 
             return baseIrrf;
         }
         public decimal BaseIrrfSimplificado()
         {
-            Simplificado.Cadastro simplificado = new Modelo.Simplificado.Cadastro();
+            SimplificadoServices simplificado = new Modelo.Simplificado.Cadastro();
 
             decimal valorDeducao = simplificado.ValorSimplificado(_competencia);
 
@@ -40,37 +40,37 @@ namespace CalculoIRRF.Modelo.Calculo
         public decimal Normal(decimal valorPensao = 0)
         {
             decimal baseIrrf = BaseIrrfNormal() - valorPensao;
-            Modelo.Irrf.Cadastro irrf = new Modelo.Irrf.Cadastro();
+            IrrfServices irrf = new Modelo.Irrf.Cadastro();
 
             int faixaIrrf = irrf.FaixaIrrf(baseIrrf, _competencia);
             decimal porcentagemInss = irrf.PorcentagemIrrf(faixaIrrf, _competencia);
             decimal deducaoIrrf = irrf.DeducaoIrrf(faixaIrrf, _competencia);
 
-            decimal desconto = (baseIrrf * (porcentagemInss / 100)) - deducaoIrrf;
+            decimal desconto = baseIrrf * (porcentagemInss / 100) - deducaoIrrf;
             desconto = Math.Round(desconto, 2);
 
             return desconto;
         }
         public string DescricaoCalculoNormal()
         {
-            Dependente.Cadastro dependente = new Dependente.Cadastro();
+            DependenteServices dependente = new Dependente.DependenteServices();
 
             decimal valorDependente = dependente.VlrDependente(_competencia);
             decimal baseIrrf = BaseIrrfNormal();
 
-            Modelo.Irrf.Cadastro irrf = new Modelo.Irrf.Cadastro();
+            IrrfServices irrf = new Modelo.Irrf.Cadastro();
 
             int faixaIrrf = irrf.FaixaIrrf(baseIrrf, _competencia);
             decimal porcentagemInss = irrf.PorcentagemIrrf(faixaIrrf, _competencia);
             decimal deducaoIrrf = irrf.DeducaoIrrf(faixaIrrf, _competencia);
-            decimal desconto = (baseIrrf * (porcentagemInss / 100)) - deducaoIrrf;
+            decimal desconto = baseIrrf * (porcentagemInss / 100) - deducaoIrrf;
             desconto = Math.Round(desconto, 2);
             decimal aliquotaEfetiva;
 
             /*Se ocorrer divisão por zero, retornar o valor 0(zero)*/
             try
             {
-                aliquotaEfetiva = (desconto / _valorBruto) * 100;
+                aliquotaEfetiva = desconto / _valorBruto * 100;
                 aliquotaEfetiva = Math.Truncate(aliquotaEfetiva * 100) / 100;
             }
             catch
@@ -82,7 +82,7 @@ namespace CalculoIRRF.Modelo.Calculo
             strMensagem.Append("Informações de Calculo do IR Normal\n\n");
             strMensagem.Append($"Valor Bruto: {_valorBruto:#,##0.00}\n");
             strMensagem.Append($"Valor INSS: {_valorInss:#,##0.00}\n");
-            strMensagem.Append($"Quantidade Dependente: {_qtdDependente} Valor: {valorDependente:#,##0.00} Total: {(_qtdDependente * valorDependente):#,##0.00}\n");
+            strMensagem.Append($"Quantidade Dependente: {_qtdDependente} Valor: {valorDependente:#,##0.00} Total: {_qtdDependente * valorDependente:#,##0.00}\n");
             strMensagem.Append($"Valor Base do IR: {baseIrrf:#,##0.00}\n");
             strMensagem.Append($"Porcentagem: {porcentagemInss:#,##0.00}% - Dedução: {deducaoIrrf:#,##0.00}\n");
             strMensagem.Append($"Valor do Desconto: {desconto:#,##0.00}\n");
@@ -93,7 +93,7 @@ namespace CalculoIRRF.Modelo.Calculo
         public decimal NormalProgressivo()
         {
             decimal baseIrrf = BaseIrrfNormal();
-            Modelo.Irrf.Cadastro irrf = new Modelo.Irrf.Cadastro();
+            IrrfServices irrf = new Modelo.Irrf.Cadastro();
 
             int faixaIrrf = irrf.FaixaIrrf(baseIrrf, _competencia);
 
@@ -116,7 +116,7 @@ namespace CalculoIRRF.Modelo.Calculo
                     baseIrrfCalculo = baseIrrf - valorInssAnterior;
                 }
 
-                desconto += (baseIrrfCalculo * (porcentagemInss / 100));
+                desconto += baseIrrfCalculo * (porcentagemInss / 100);
                 valorInssAnterior = valorIrrf;
             }
             desconto = Math.Round(desconto, 2);
@@ -127,13 +127,13 @@ namespace CalculoIRRF.Modelo.Calculo
         {
             StringBuilder strMensagem = new StringBuilder();
 
-            Dependente.Cadastro dependente = new Dependente.Cadastro();
+            DependenteServices dependente = new Dependente.DependenteServices();
 
             decimal valorDependente = dependente.VlrDependente(_competencia);
 
             decimal baseIrrf = BaseIrrfNormal();
 
-            Modelo.Irrf.Cadastro irrf = new Modelo.Irrf.Cadastro();
+            IrrfServices irrf = new Modelo.Irrf.Cadastro();
 
             int faixaIrrf = irrf.FaixaIrrf(baseIrrf, _competencia);
             decimal totalDesconto = 0;
@@ -142,7 +142,7 @@ namespace CalculoIRRF.Modelo.Calculo
             strMensagem.Append("Informações de Calculo do IR Normal Progressivo\n\n");
             strMensagem.Append($"Valor Bruto: {_valorBruto:#,##0.00}\n");
             strMensagem.Append($"Valor INSS: {_valorInss:#,##0.00}\n");
-            strMensagem.Append($"Quantidade Dependente: {_qtdDependente} Valor: {valorDependente:#,##0.00} Total: {(_qtdDependente * valorDependente):#,##0.00}\n");
+            strMensagem.Append($"Quantidade Dependente: {_qtdDependente} Valor: {valorDependente:#,##0.00} Total: {_qtdDependente * valorDependente:#,##0.00}\n");
             strMensagem.Append($"Base de IR: {baseIrrf:#,##0.00}\n");
 
             for (int i = 1; i <= faixaIrrf; i++)
@@ -162,7 +162,7 @@ namespace CalculoIRRF.Modelo.Calculo
                     baseIrrfCalculo = baseIrrf - valorInssAnterior;
                 }
 
-                decimal desconto = (baseIrrfCalculo * (porcentagemInss / 100));
+                decimal desconto = baseIrrfCalculo * (porcentagemInss / 100);
                 totalDesconto += desconto;
 
                 valorInssAnterior = valorIrrf;
@@ -182,19 +182,19 @@ namespace CalculoIRRF.Modelo.Calculo
             {
                 return 0;
             }
-            Simplificado.Cadastro simplificado = new Modelo.Simplificado.Cadastro();
+            SimplificadoServices simplificado = new Modelo.Simplificado.Cadastro();
 
             decimal valorDeducao = simplificado.ValorSimplificado(_competencia);
 
             decimal baseIrrf = BaseIrrfSimplificado() - valorPensao;
 
-            Modelo.Irrf.Cadastro irrf = new Modelo.Irrf.Cadastro();
+            IrrfServices irrf = new Modelo.Irrf.Cadastro();
 
             int faixaIrrf = irrf.FaixaIrrf(baseIrrf, _competencia);
             decimal porcentagemInss = irrf.PorcentagemIrrf(faixaIrrf, _competencia);
             decimal deducaoIrrf = irrf.DeducaoIrrf(faixaIrrf, _competencia);
 
-            decimal desconto = (baseIrrf * (porcentagemInss / 100)) - deducaoIrrf;
+            decimal desconto = baseIrrf * (porcentagemInss / 100) - deducaoIrrf;
             desconto = Math.Round(desconto, 2);
 
             return desconto;
@@ -205,24 +205,24 @@ namespace CalculoIRRF.Modelo.Calculo
             {
                 return "Calculo Simplificado é a partir de 05/2023!\n\n";
             }
-            Simplificado.Cadastro simplificado = new Modelo.Simplificado.Cadastro();
+            SimplificadoServices simplificado = new Modelo.Simplificado.Cadastro();
 
             decimal valorDeducao = simplificado.ValorSimplificado(_competencia);
 
             decimal baseIrrf = BaseIrrfSimplificado();
-            Modelo.Irrf.Cadastro irrf = new Modelo.Irrf.Cadastro();
+            IrrfServices irrf = new Modelo.Irrf.Cadastro();
 
             int faixaIrrf = irrf.FaixaIrrf(baseIrrf, _competencia);
             decimal porcentagemInss = irrf.PorcentagemIrrf(faixaIrrf, _competencia);
             decimal deducaoIrrf = irrf.DeducaoIrrf(faixaIrrf, _competencia);
 
-            decimal desconto = (baseIrrf * (porcentagemInss / 100)) - deducaoIrrf;
+            decimal desconto = baseIrrf * (porcentagemInss / 100) - deducaoIrrf;
             desconto = Math.Round(desconto, 2);
             decimal aliquotaEfetiica;
             /*Se ocorrer divisão por zero, retornar o valor 0(zero)*/
             try
             {
-                aliquotaEfetiica = (desconto / _valorBruto) * 100;
+                aliquotaEfetiica = desconto / _valorBruto * 100;
                 aliquotaEfetiica = Math.Truncate(aliquotaEfetiica * 100) / 100;
             }
             catch
@@ -243,7 +243,7 @@ namespace CalculoIRRF.Modelo.Calculo
         }
         public string DescricaoVantagem()
         {
-            DescontoMinimo.Cadastro descontoMinimo = new DescontoMinimo.Cadastro();
+            DecontoMinimoService descontoMinimo = new DescontoMinimo.DecontoMinimoService();
             decimal vlrDescontoMinimo = descontoMinimo.ValorDescontoMinimo(_competencia);
 
             if (_competencia < DateTime.Parse("01/05/2023"))

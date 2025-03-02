@@ -1,124 +1,124 @@
-﻿using CalculoIRRF.Model;
-using CalculoIRRF.Modelo.Validacao;
+﻿using CalculoIRRF.Objetos;
+using CalculoIRRF.Services;
+using CalculoIRRF.Services.Validacao;
 using System;
-using System.Runtime.Versioning;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CalculoIRRF;
-[SupportedOSPlatform("windows")]
-public partial class FrmDependente : Form
+namespace CalculoIRRF
 {
-    public FrmDependente()
+    public partial class FrmDependente : Form
     {
-        InitializeComponent();
-    }
-    int idDependente = 0;
-    private async Task ListarTabelaDependente()
-    {
-        try
+        public FrmDependente()
         {
-            Modelo.Dependente.Cadastro dependente = new();
-            DgvValorDependente.DataSource = await dependente.ListarTodos();
-            LimparCampos();
+            InitializeComponent();
         }
-        catch (Exception ex)
+        int idDependente = 0;
+        private void ListarTabelaDependente()
         {
-            MessageBox.Show(ex.Message);
-        }
-    }
-    private void LimparCampos()
-    {
-        TxtValor.Text = "0,00";
-        TxtValor.Focus();
-    }
-    private async void BtnGravar_Click(object sender, EventArgs e)
-    {
-        try
-        {
-            Modelo.Dependente.Cadastro dependente = new();
-
-            Dependente dados = new()
+            try
             {
-                Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
-                Valor = decimal.Parse(TxtValor.Text.Trim())
-            };
-
-            await dependente.Gravar(dados);
-            await ListarTabelaDependente();
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(ex.Message);
-        }
-    }
-    private async void BtnAlterar_Click(object sender, EventArgs e)
-    {
-        try
-        {
-            Modelo.Dependente.Cadastro dependente = new();
-            Dependente dados = new()
+                DependenteServices dependente = new Modelo.Dependente.Cadastro();
+                DgvValorDependente.DataSource = dependente.ListarTodos();
+                LimparCampos();
+            }
+            catch (Exception ex)
             {
-                Id = idDependente,
-                Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
-                Valor = decimal.Parse(TxtValor.Text.Trim())
-            };
-            await dependente.Alterar(dados);
-            await ListarTabelaDependente();
+                MessageBox.Show(ex.Message);
+            }
         }
-        catch (Exception ex)
+        private void LimparCampos()
         {
-            MessageBox.Show(ex.Message);
+            TxtValor.Text = "0,00";
+            TxtValor.Focus();
         }
-    }
-    private async void BtnExcluir_Click(object sender, EventArgs e)
-    {
-        try
+        private void BtnGravar_Click(object sender, EventArgs e)
         {
-            Modelo.Dependente.Cadastro dependente = new();
-            await dependente.Excluir(idDependente);
-            await ListarTabelaDependente();
+            try
+            {
+                DependenteServices dependente = new Modelo.Dependente.Cadastro();
+
+                Dependente dados = new Dependente
+                {
+                    Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
+                    Valor = decimal.Parse(TxtValor.Text.Trim())
+                };
+
+                dependente.Gravar(dados);
+                ListarTabelaDependente();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
-        catch (Exception ex)
+        private void BtnAlterar_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(ex.Message);
+            try
+            {
+                DependenteServices dependente = new Modelo.Dependente.Cadastro();
+                Dependente dados = new Dependente
+                {
+                    Id = idDependente,
+                    Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
+                    Valor = decimal.Parse(TxtValor.Text.Trim())
+                };
+                dependente.Alterar(dados);
+                ListarTabelaDependente();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
-    }
-    private void DgvValorSimplificado_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-    {
-        try
+        private void BtnExcluir_Click(object sender, EventArgs e)
         {
-            idDependente = int.Parse(DgvValorDependente.Rows[e.RowIndex].Cells["Id"].Value.ToString());
-            MktCompetencia.Text = DateTime.Parse(DgvValorDependente.Rows[e.RowIndex].Cells["Competencia"].Value.ToString()).ToString("MM/yyyy");
-            TxtValor.Text = decimal.Parse(DgvValorDependente.Rows[e.RowIndex].Cells["Valor"].Value.ToString()).ToString("#,##0.00");
+            try
+            {
+                DependenteServices dependente = new Modelo.Dependente.Cadastro();
+                dependente.Excluir(idDependente);
+                ListarTabelaDependente();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
-        catch (Exception ex)
+        private void DgvValorSimplificado_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            MessageBox.Show(ex.Message);
+            try
+            {
+                idDependente = int.Parse(DgvValorDependente.Rows[e.RowIndex].Cells["Id"].Value.ToString());
+                MktCompetencia.Text = DateTime.Parse(DgvValorDependente.Rows[e.RowIndex].Cells["Competencia"].Value.ToString()).ToString("MM/yyyy");
+                TxtValor.Text = decimal.Parse(DgvValorDependente.Rows[e.RowIndex].Cells["Valor"].Value.ToString()).ToString("#,##0.00");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
-    }
-    private async void FrmDependente_Load(object sender, EventArgs e)
-    {
-        MktCompetencia.Text = DateTime.Now.ToString("MM/yyyy");
-        await ListarTabelaDependente();
-    }
-    private void TxtValor_TextChanged(object sender, EventArgs e)
-    {
-        Validar validar = new();
-        TxtValor.Text = validar.ValidarValor(TxtValor.Text);
-        TxtValor.Select(TxtValor.Text.Length, 0);
-    }
-    private void TxtValor_Leave(object sender, EventArgs e)
-    {
-        Validar validar = new();
-        TxtValor.Text = validar.Zero(TxtValor.Text);
-        TxtValor.Text = validar.Formatar(TxtValor.Text);
-    }
-    private void TxtValor_Enter(object sender, EventArgs e)
-    {
-        if (TxtValor.Text == "0,00")
+        private void FrmDependente_Load(object sender, EventArgs e)
         {
-            TxtValor.Text = "";
+            MktCompetencia.Text = DateTime.Now.ToString("MM/yyyy");
+            ListarTabelaDependente();
+        }
+        private void TxtValor_TextChanged(object sender, EventArgs e)
+        {
+            Validar validar = new Validar();
+            TxtValor.Text = Validar.ValidarValor(TxtValor.Text);
+            TxtValor.Select(TxtValor.Text.Length, 0);
+        }
+        private void TxtValor_Leave(object sender, EventArgs e)
+        {
+            Validar validar = new Validar();
+            TxtValor.Text = Validar.Zero(TxtValor.Text);
+            TxtValor.Text = Validar.Formatar(TxtValor.Text);
+        }
+        private void TxtValor_Enter(object sender, EventArgs e)
+        {
+            if (TxtValor.Text == "0,00")
+            {
+                TxtValor.Text = "";
+            }
         }
     }
 }

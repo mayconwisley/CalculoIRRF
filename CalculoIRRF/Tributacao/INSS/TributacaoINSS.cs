@@ -1,6 +1,6 @@
-﻿using CalculoIRRF.Model;
-using CalculoIRRF.Modelo.Inss;
-using CalculoIRRF.Modelo.Validacao;
+﻿using CalculoIRRF.Objetos.Tributacao;
+using CalculoIRRF.Services;
+using CalculoIRRF.Services.Validacao;
 using CalculoIRRF.Tributacao.AcessarSite;
 using HtmlAgilityPack;
 using System;
@@ -13,7 +13,7 @@ namespace CalculoIRRF.Tributacao.INSS
     {
         public async Task AtualizarOnline()
         {
-            Cadastro cadastro;
+            InssServices cadastro;
             InssGov inssGov;
 
             string urlInss = $@"https://www.gov.br/inss/pt-br/direitos-e-deveres/inscricao-e-contribuicao/tabela-de-contribuicao-mensal";
@@ -31,7 +31,7 @@ namespace CalculoIRRF.Tributacao.INSS
 
             foreach (var item in tributacaoINSS)
             {
-                cadastro = new Cadastro();
+                cadastro = new InssServices();
                 inssGov = new InssGov
                 {
                     DataCriacao = dataPublicacao,
@@ -60,7 +60,7 @@ namespace CalculoIRRF.Tributacao.INSS
                     foreach (var row in rows)
                     {
 
-                        if (validar.ExtrairValor(row.InnerText) == 0)
+                        if (Validar.ExtrairValor(row.InnerText) == 0)
                         {
                             continue;
                         }
@@ -72,8 +72,8 @@ namespace CalculoIRRF.Tributacao.INSS
                             listTributacaoRFBObj.Add(new TributacaoINSSObj
                             {
                                 Sequencia = ++sequencia,
-                                BaseCalculo = validar.ExtrairMaiorValor(cells[0].InnerText.Trim()),
-                                Aliquota = validar.ExtrairValor(cells[1].InnerText.Trim()),
+                                BaseCalculo = Validar.ExtrairMaiorValor(cells[0].InnerText.Trim()),
+                                Aliquota = Validar.ExtrairValor(cells[1].InnerText.Trim()),
 
                             });
                         }

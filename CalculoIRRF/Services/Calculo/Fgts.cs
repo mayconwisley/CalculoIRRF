@@ -1,4 +1,4 @@
-﻿namespace CalculoIRRF.Modelo.Calculo
+﻿namespace CalculoIRRF.Services.Calculo
 {
     public class Fgts
     {
