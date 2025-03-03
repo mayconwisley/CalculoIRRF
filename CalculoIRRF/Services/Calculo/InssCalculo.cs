@@ -1,31 +1,30 @@
-﻿using System;
+﻿using CalculoIRRF.Services.Interface;
+using System;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CalculoIRRF.Services.Calculo;
 
-public class InssCalculo(DateTime _competencia, decimal _baseInss)
+public class InssCalculo(DateTime _competencia, decimal _baseInss, IInssServices _inssServices)
 {
     public async Task<decimal> NormalProgressivo()
     {
-        InssServices inss = new();
-
-        decimal teto = await inss.TetoInss(_competencia);
+        decimal teto = await _inssServices.TetoInss(_competencia);
 
         if (_baseInss > teto)
         {
             _baseInss = teto;
         }
 
-        int faixaInss = await inss.FaixaInss(_baseInss, _competencia);
+        int faixaInss = await _inssServices.FaixaInss(_baseInss, _competencia);
 
         decimal desconto = 0;
         decimal valorInssAnterior = 0;
 
         for (int i = 1; i <= faixaInss; i++)
         {
-            decimal porcentagemInss = await inss.PorcentagemInss(i, _competencia);
-            decimal valorInss = await inss.ValorInss(i, _competencia);
+            decimal porcentagemInss = await _inssServices.PorcentagemInss(i, _competencia);
+            decimal valorInss = await _inssServices.ValorInss(i, _competencia);
 
             decimal baseInssCalculo = valorInss - valorInssAnterior;
 
@@ -49,9 +48,8 @@ public class InssCalculo(DateTime _competencia, decimal _baseInss)
     public async Task<string> DescricaoCalculoNormalProgressivo()
     {
         StringBuilder strMensagem = new();
-        InssServices inss = new();
 
-        int faixaInss = await inss.FaixaInss(_baseInss, _competencia);
+        int faixaInss = await _inssServices.FaixaInss(_baseInss, _competencia);
         decimal totalDesconto = 0;
         decimal valorInssAnterior = 0;
 
@@ -60,8 +58,8 @@ public class InssCalculo(DateTime _competencia, decimal _baseInss)
 
         for (int i = 1; i <= faixaInss; i++)
         {
-            decimal porcentagemInss = await inss.PorcentagemInss(i, _competencia);
-            decimal valorInss = await inss.ValorInss(i, _competencia);
+            decimal porcentagemInss = await _inssServices.PorcentagemInss(i, _competencia);
+            decimal valorInss = await _inssServices.ValorInss(i, _competencia);
 
             decimal baseInssCalculo = valorInss - valorInssAnterior;
 

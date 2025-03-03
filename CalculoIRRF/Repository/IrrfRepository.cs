@@ -9,14 +9,8 @@ using System.Threading.Tasks;
 
 namespace CalculoIRRF.Repository;
 
-public class IrrfRepository : IIrrfRepository
+public class IrrfRepository(CalculoImpostoContext _calculoImpostoContext) : IIrrfRepository
 {
-    private readonly CalculoImpostoContext _calculoImpostoContext;
-    public IrrfRepository()
-    {
-        _calculoImpostoContext = new();
-    }
-
     public async Task<Irrf> Create(Irrf irrf)
     {
         _calculoImpostoContext.Irrf.Add(irrf);

@@ -1,7 +1,6 @@
 ﻿using CalculoIRRF.Model;
-using CalculoIRRF.Services;
+using CalculoIRRF.Services.Interface;
 using CalculoIRRF.Services.Validacao;
-using CalculoIRRF.Tributacao.INSS;
 using System;
 using System.Runtime.Versioning;
 using System.Threading.Tasks;
@@ -12,9 +11,11 @@ namespace CalculoIRRF;
 [SupportedOSPlatform("windows")]
 public partial class FrmTabelaINSS : Form
 {
-    public FrmTabelaINSS()
+    private readonly IInssServices _inssServices;
+    public FrmTabelaINSS(IInssServices inssServices)
     {
         InitializeComponent();
+        _inssServices = inssServices;
     }
 
     int idInss = 0;
@@ -23,8 +24,7 @@ public partial class FrmTabelaINSS : Form
     {
         try
         {
-            InssServices inss = new();
-            DgvTabelaINSS.DataSource = await inss.ListarTodos();
+            DgvTabelaINSS.DataSource = await _inssServices.ListarTodos();
             await LimparCampos();
         }
         catch (Exception ex)
@@ -35,9 +35,8 @@ public partial class FrmTabelaINSS : Form
     private async Task LimparCampos()
     {
         DateTime competencia = DateTime.Parse(MktCompetencia.Text);
-        InssServices inss = new();
 
-        TxtFaixa.Text = (await inss.UltimaFaixaInss(competencia) + 1).ToString();
+        TxtFaixa.Text = (await _inssServices.UltimaFaixaInss(competencia) + 1).ToString();
         TxtValor.Text = "0,00";
         TxtPorcentagem.Text = "0,00";
         TxtValor.Focus();
@@ -53,7 +52,6 @@ public partial class FrmTabelaINSS : Form
     {
         try
         {
-            InssServices inss = new();
             Inss dados = new()
             {
                 Competencia = DateTime.Parse(MktCompetencia.Text),
@@ -61,7 +59,7 @@ public partial class FrmTabelaINSS : Form
                 Valor = decimal.Parse(TxtValor.Text.Trim()),
                 Porcentagem = decimal.Parse(TxtPorcentagem.Text.Trim())
             };
-            await inss.Gravar(dados);
+            await _inssServices.Gravar(dados);
             await ListarTabelaInss();
         }
         catch (Exception ex)
@@ -74,7 +72,6 @@ public partial class FrmTabelaINSS : Form
     {
         try
         {
-            InssServices inss = new();
             Inss dados = new()
             {
                 Id = idInss,
@@ -83,7 +80,7 @@ public partial class FrmTabelaINSS : Form
                 Valor = decimal.Parse(TxtValor.Text.Trim()),
                 Porcentagem = decimal.Parse(TxtPorcentagem.Text.Trim())
             };
-            await inss.Alterar(dados);
+            await _inssServices.Alterar(dados);
             await ListarTabelaInss();
         }
         catch (Exception ex)
@@ -96,9 +93,7 @@ public partial class FrmTabelaINSS : Form
     {
         try
         {
-            InssServices inss = new();
-
-            await inss.Excluir(idInss);
+            await _inssServices.Excluir(idInss);
             await ListarTabelaInss();
         }
         catch (Exception ex)
@@ -187,8 +182,7 @@ public partial class FrmTabelaINSS : Form
         try
         {
             DateTime competencia = DateTime.Parse(MktCompetencia.Text);
-            InssServices inss = new();
-            int faixa = await inss.UltimaFaixaInss(competencia) + 1;
+            int faixa = await _inssServices.UltimaFaixaInss(competencia) + 1;
 
             TxtFaixa.Text = faixa.ToString();
         }
@@ -200,7 +194,7 @@ public partial class FrmTabelaINSS : Form
 
     private async void LkLblOnline_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
     {
-        TributacaoINSS tributacaoINSS = new();
-        await tributacaoINSS.AtualizarOnline();
+        //TributacaoINSS tributacaoINSS = new();
+        //await tributacaoINSS.AtualizarOnline();
     }
 }

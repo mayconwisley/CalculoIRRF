@@ -9,15 +9,8 @@ using System.Threading.Tasks;
 
 namespace CalculoIRRF.Repository;
 
-public class SimplificadoRepository : ISimplificadoRepository
+public class SimplificadoRepository(CalculoImpostoContext _calculoImpostoContext) : ISimplificadoRepository
 {
-    private readonly CalculoImpostoContext _calculoImpostoContext;
-
-    public SimplificadoRepository()
-    {
-        _calculoImpostoContext = new();
-    }
-
     public async Task<Simplificado> Create(Simplificado simplificado)
     {
         if (simplificado is null)

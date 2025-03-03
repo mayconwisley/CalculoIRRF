@@ -1,6 +1,7 @@
-﻿using CalculoIRRF.Services;
-using CalculoIRRF.Services.Calculo;
+﻿using CalculoIRRF.Services.Calculo;
+using CalculoIRRF.Services.Interface;
 using CalculoIRRF.Services.Validacao;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Drawing;
 using System.Runtime.Versioning;
@@ -11,20 +12,22 @@ namespace CalculoIRRF;
 [SupportedOSPlatform("windows")]
 public partial class FrmPrincipal : Form
 {
-    public FrmPrincipal()
+    readonly IServiceProvider _serviceProvider;
+    public FrmPrincipal(IServiceProvider serviceProvider)
     {
         InitializeComponent();
+        _serviceProvider = serviceProvider;
     }
 
     private void BtnTabelaIRRF_Click(object sender, EventArgs e)
     {
-        FrmTabelaIRRF tabelaIRRF = new FrmTabelaIRRF();
+        FrmTabelaIRRF tabelaIRRF = new(_serviceProvider.GetRequiredService<IIrrfServices>());
         tabelaIRRF.ShowDialog();
     }
 
     private void BtnTabelaValSimplificado_Click(object sender, EventArgs e)
     {
-        FrmDeducaoSimplificada deducaoSimplificada = new FrmDeducaoSimplificada();
+        FrmDeducaoSimplificada deducaoSimplificada = new(_serviceProvider.GetRequiredService<ISimplificadoServices>());
         deducaoSimplificada.ShowDialog();
     }
 
@@ -39,10 +42,15 @@ public partial class FrmPrincipal : Form
 
         try
         {
-            InssCalculo inssCalculo = new(competencia, baseInss);
+            InssCalculo inssCalculo = new(competencia, baseInss, _serviceProvider.GetRequiredService<IInssServices>());
             decimal valorInss = await inssCalculo.NormalProgressivo();
 
-            IrrfCalculo irrfCalculo = new(competencia, qtdDependente, valorInss, valorBruto);
+            IrrfCalculo irrfCalculo = new(competencia, qtdDependente, valorInss, valorBruto,
+                                          _serviceProvider.GetRequiredService<ISimplificadoServices>(),
+                                          _serviceProvider.GetRequiredService<IDescontoMinimoServices>(),
+                                          _serviceProvider.GetRequiredService<IIrrfServices>(),
+                                          _serviceProvider.GetRequiredService<IDependenteServices>());
+
             FgtsCalculo fgtsCalculo = new(baseInss);
 
             Color colorIrNormal = Color.Blue;
@@ -85,7 +93,7 @@ public partial class FrmPrincipal : Form
 
     private void BtnDependente_Click(object sender, EventArgs e)
     {
-        FrmDependente dependente = new FrmDependente();
+        FrmDependente dependente = new(_serviceProvider.GetRequiredService<IDependenteServices>());
         dependente.ShowDialog();
     }
 
@@ -99,7 +107,7 @@ public partial class FrmPrincipal : Form
     {
         TxtValorBruto.Text = Validar.Zero(TxtValorBruto.Text);
         TxtValorBruto.Text = Validar.Formatar(TxtValorBruto.Text);
-        InssServices cadastroInss = new();
+        var cadastroInss = _serviceProvider.GetRequiredService<IInssServices>();
 
         decimal tetoInss = 0;
         decimal valorBruto = decimal.Parse(TxtValorBruto.Text);
@@ -176,13 +184,13 @@ public partial class FrmPrincipal : Form
 
     private void BtnTabelaINSS_Click(object sender, EventArgs e)
     {
-        FrmTabelaINSS tabelaINSS = new();
+        FrmTabelaINSS tabelaINSS = new(_serviceProvider.GetRequiredService<IInssServices>());
         tabelaINSS.ShowDialog();
     }
 
     private void BtnDescMinimo_Click(object sender, EventArgs e)
     {
-        FrmDescontoMinimo descontoMinimo = new();
+        FrmDescontoMinimo descontoMinimo = new(_serviceProvider.GetRequiredService<IDescontoMinimoServices>());
         descontoMinimo.ShowDialog();
     }
 
@@ -192,7 +200,12 @@ public partial class FrmPrincipal : Form
         decimal baseInss = decimal.Parse(TxtBaseInss.Text.Trim());
         decimal valorBruto = decimal.Parse(TxtValorBruto.Text.Trim());
         int qtdDependente = int.Parse(TxtQtdDependente.Text.Trim());
-        FrmPensao pensao = new(competencia, baseInss, qtdDependente, valorBruto);
+        FrmPensao pensao = new(competencia, baseInss, qtdDependente, valorBruto,
+                               _serviceProvider.GetRequiredService<IInssServices>(),
+                               _serviceProvider.GetRequiredService<IIrrfServices>(),
+                               _serviceProvider.GetRequiredService<ISimplificadoServices>(),
+                               _serviceProvider.GetRequiredService<IDependenteServices>(),
+                               _serviceProvider.GetRequiredService<IDescontoMinimoServices>());
         pensao.ShowDialog();
     }
 }

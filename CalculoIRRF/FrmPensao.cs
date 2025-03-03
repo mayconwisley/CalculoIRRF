@@ -1,4 +1,5 @@
 ﻿using CalculoIRRF.Services.Calculo;
+using CalculoIRRF.Services.Interface;
 using CalculoIRRF.Services.Validacao;
 using System;
 using System.Runtime.Versioning;
@@ -13,14 +14,27 @@ public partial class FrmPensao : Form
     readonly decimal _baseInss;
     readonly decimal _valorBruto;
     readonly int _qtdDependente;
+    readonly IInssServices _inssServices;
+    readonly IIrrfServices _irrfServices;
+    readonly ISimplificadoServices _simplificadoServices;
+    readonly IDependenteServices _dependenteServices;
+    readonly IDescontoMinimoServices _descontoMinimoServices;
 
-    public FrmPensao(DateTime competencia, decimal baseInss, int qtdDependente, decimal valorBruto)
+
+    public FrmPensao(DateTime competencia, decimal baseInss, int qtdDependente, decimal valorBruto,
+                     IInssServices inssServices, IIrrfServices irrfServices, ISimplificadoServices simplificadoServices,
+                     IDependenteServices dependenteServices, IDescontoMinimoServices descontoMinimoServices)
     {
         InitializeComponent();
         _competencia = competencia;
         _baseInss = baseInss;
         _qtdDependente = qtdDependente;
         _valorBruto = valorBruto;
+        _inssServices = inssServices;
+        _irrfServices = irrfServices;
+        _simplificadoServices = simplificadoServices;
+        _dependenteServices = dependenteServices;
+        _descontoMinimoServices = descontoMinimoServices;
         TxtValorBruto.Text = valorBruto.ToString();
     }
 
@@ -31,10 +45,12 @@ public partial class FrmPensao : Form
         decimal porcenPensao = decimal.Parse(TxtPorcentagem.Text.Trim());
         decimal outroDesconto = decimal.Parse(TxtOutrosDescontos.Text.Trim());
 
-        InssCalculo inssCalculo = new(_competencia, _baseInss);
+        InssCalculo inssCalculo = new(_competencia, _baseInss, _inssServices);
         decimal valorInss = await inssCalculo.NormalProgressivo();
 
-        PensaoCalculo pensaoCalculo = new(_competencia, _qtdDependente, valorInss, (valorBruto - outroDesconto), porcenPensao);
+        PensaoCalculo pensaoCalculo = new(_competencia, _qtdDependente, valorInss, (valorBruto - outroDesconto), porcenPensao,
+                                          _irrfServices, _simplificadoServices, _dependenteServices, _descontoMinimoServices);
+
         await pensaoCalculo.CalculoJudicialIrrfSimplificado(false);
         await pensaoCalculo.CalculoJudicialIrrfNormal(false);
         pensaoCalculo.Vantagem();
@@ -113,10 +129,11 @@ public partial class FrmPensao : Form
         decimal porcenPensao = decimal.Parse(TxtPorcentagem.Text.Trim());
         decimal outroDesconto = decimal.Parse(TxtOutrosDescontos.Text.Trim());
 
-        InssCalculo inssCalculo = new(_competencia, _baseInss);
+        InssCalculo inssCalculo = new(_competencia, _baseInss, _inssServices);
         decimal valorInss = await inssCalculo.NormalProgressivo();
 
-        PensaoCalculo pensaoCalculo = new(_competencia, _qtdDependente, valorInss, (valorBruto - outroDesconto), porcenPensao);
+        PensaoCalculo pensaoCalculo = new(_competencia, _qtdDependente, valorInss, (valorBruto - outroDesconto), porcenPensao,
+                                          _irrfServices, _simplificadoServices, _dependenteServices, _descontoMinimoServices);
         await pensaoCalculo.CalculoJudicialIrrfSimplificado(true);
         await pensaoCalculo.CalculoJudicialIrrfNormal(true);
 

@@ -1,19 +1,14 @@
 ﻿using CalculoIRRF.Model;
-using CalculoIRRF.Repository;
+using CalculoIRRF.Repository.Interface;
+using CalculoIRRF.Services.Interface;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CalculoIRRF.Services;
 
-public class DependenteServices
+public class DependenteServices(IDependenteRepository _dependenteRepository) : IDependenteServices
 {
-    private readonly DependenteRepository _dependenteRepository;
-    public DependenteServices()
-    {
-        _dependenteRepository = new();
-    }
-
     public async Task<bool> Gravar(Dependente dependente)
     {
         try
@@ -85,6 +80,18 @@ public class DependenteServices
         catch (Exception ex)
         {
             throw new Exception(ex.Message);
+        }
+    }
+    public async Task<Dependente> ListarPorId(int id)
+    {
+        try
+        {
+            var dependente = await _dependenteRepository.GetById(id);
+            return dependente;
+        }
+        catch (Exception)
+        {
+            throw;
         }
     }
 }

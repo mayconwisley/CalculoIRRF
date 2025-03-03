@@ -1,5 +1,5 @@
 ﻿using CalculoIRRF.Model;
-using CalculoIRRF.Services;
+using CalculoIRRF.Services.Interface;
 using CalculoIRRF.Services.Validacao;
 using System;
 using System.Runtime.Versioning;
@@ -10,17 +10,18 @@ namespace CalculoIRRF;
 [SupportedOSPlatform("windows")]
 public partial class FrmDescontoMinimo : Form
 {
-    public FrmDescontoMinimo()
+    private readonly IDescontoMinimoServices _descontoMinimoServices;
+    public FrmDescontoMinimo(IDescontoMinimoServices descontoMinimoServices)
     {
         InitializeComponent();
+        _descontoMinimoServices = descontoMinimoServices;
     }
     int idDescontoMinimo = 0;
     private async Task ListarTabelaDescontoMinimo()
     {
         try
         {
-            DecontoMinimoService descontoMinimoServices = new();
-            DgvValorDescontoMinimo.DataSource = await descontoMinimoServices.ListarTodos();
+            DgvValorDescontoMinimo.DataSource = await _descontoMinimoServices.ListarTodos();
             LimparCampos();
         }
         catch (Exception ex)
@@ -38,13 +39,12 @@ public partial class FrmDescontoMinimo : Form
     {
         try
         {
-            DecontoMinimoService descontoMinimoServices = new();
             DescontoMinimo dados = new()
             {
                 Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
                 Valor = decimal.Parse(TxtValor.Text.Trim())
             };
-            await descontoMinimoServices.Gravar(dados);
+            await _descontoMinimoServices.Gravar(dados);
 
             await ListarTabelaDescontoMinimo();
         }
@@ -58,14 +58,13 @@ public partial class FrmDescontoMinimo : Form
     {
         try
         {
-            DecontoMinimoService descontoMinimoServices = new();
             DescontoMinimo dados = new()
             {
                 Id = idDescontoMinimo,
                 Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
                 Valor = decimal.Parse(TxtValor.Text.Trim())
             };
-            await descontoMinimoServices.Gravar(dados);
+            await _descontoMinimoServices.Gravar(dados);
             await ListarTabelaDescontoMinimo();
         }
         catch (Exception ex)
@@ -78,8 +77,7 @@ public partial class FrmDescontoMinimo : Form
     {
         try
         {
-            DecontoMinimoService descontoMinimoServices = new();
-            await descontoMinimoServices.Excluir(idDescontoMinimo);
+            await _descontoMinimoServices.Excluir(idDescontoMinimo);
             await ListarTabelaDescontoMinimo();
         }
         catch (Exception ex)

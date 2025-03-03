@@ -9,15 +9,8 @@ using System.Threading.Tasks;
 
 namespace CalculoIRRF.Repository;
 
-public class DescontoMinimoRepository : IDescontoMinimoRepository
+public class DescontoMinimoRepository(CalculoImpostoContext _calculoImpostoContext) : IDescontoMinimoRepository
 {
-    private readonly CalculoImpostoContext _calculoImpostoContext;
-
-    public DescontoMinimoRepository()
-    {
-        _calculoImpostoContext = new CalculoImpostoContext();
-    }
-
     public async Task<DescontoMinimo> Create(DescontoMinimo descontoMinimo)
     {
 

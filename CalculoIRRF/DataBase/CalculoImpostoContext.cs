@@ -3,8 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CalculoIRRF.DataBase;
 
-public class CalculoImpostoContext : DbContext
+public class CalculoImpostoContext(DbContextOptions<CalculoImpostoContext> options) : DbContext(options)
 {
+
+
 
     public DbSet<InssGov> InssGov { get; set; }
     public DbSet<Inss> Inss { get; set; }
@@ -14,9 +16,9 @@ public class CalculoImpostoContext : DbContext
     public DbSet<Dependente> Dependente { get; set; }
     public DbSet<DescontoMinimo> DescontoMinimo { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseSqlite(@"Data Source = BancoDados/calculoIrrf.db");
-    }
+    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //{
+    //    optionsBuilder.UseSqlite(@"Data Source = BancoDados/calculoIrrf.db");
+    //}
 
 }

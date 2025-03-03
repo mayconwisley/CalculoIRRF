@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CalculoIRRF.Repository.Interface;
 
-interface IDescontoMinimoRepository
+public interface IDescontoMinimoRepository
 {
     Task<IEnumerable<DescontoMinimo>> GetAll();
     Task<IEnumerable<DescontoMinimo>> GetByCompetence(DateTime competence);

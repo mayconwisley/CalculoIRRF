@@ -1,7 +1,6 @@
 ﻿using CalculoIRRF.Model;
-using CalculoIRRF.Services;
+using CalculoIRRF.Services.Interface;
 using CalculoIRRF.Services.Validacao;
-using CalculoIRRF.Tributacao.IRRF;
 using System;
 using System.Runtime.Versioning;
 using System.Threading.Tasks;
@@ -12,9 +11,11 @@ namespace CalculoIRRF;
 [SupportedOSPlatform("windows")]
 public partial class FrmTabelaIRRF : Form
 {
-    public FrmTabelaIRRF()
+    private readonly IIrrfServices _irrfServices;
+    public FrmTabelaIRRF(IIrrfServices irrfServices)
     {
         InitializeComponent();
+        _irrfServices = irrfServices;
     }
     int idIrrf = 0;
 
@@ -22,8 +23,7 @@ public partial class FrmTabelaIRRF : Form
     {
         try
         {
-            IrrfServices irrf = new();
-            DgvTabelaIRRF.DataSource = await irrf.ListarTodos();
+            DgvTabelaIRRF.DataSource = await _irrfServices.ListarTodos();
             await LimparCampos();
         }
         catch (Exception ex)
@@ -35,9 +35,7 @@ public partial class FrmTabelaIRRF : Form
     {
         DateTime competencia = DateTime.Parse(MktCompetencia.Text);
 
-        IrrfServices irrf = new();
-
-        TxtFaixa.Text = (await irrf.UltimaFaixaIrrf(competencia) + 1).ToString();
+        TxtFaixa.Text = (await _irrfServices.UltimaFaixaIrrf(competencia) + 1).ToString();
         TxtValor.Text = "0,00";
         TxtPorcentagem.Text = "0,00";
         TxtDeducao.Text = "0,00";
@@ -48,7 +46,6 @@ public partial class FrmTabelaIRRF : Form
     {
         try
         {
-            IrrfServices irrf = new();
             Irrf dados = new()
             {
                 Competencia = DateTime.Parse(MktCompetencia.Text),
@@ -58,7 +55,7 @@ public partial class FrmTabelaIRRF : Form
                 Deducao = decimal.Parse(TxtDeducao.Text.Trim())
             };
 
-            await irrf.Gravar(dados);
+            await _irrfServices.Gravar(dados);
 
             await ListarTabelaIrrf();
         }
@@ -72,7 +69,6 @@ public partial class FrmTabelaIRRF : Form
     {
         try
         {
-            IrrfServices irrf = new();
             Irrf dados = new()
             {
                 Id = idIrrf,
@@ -83,7 +79,7 @@ public partial class FrmTabelaIRRF : Form
                 Deducao = decimal.Parse(TxtDeducao.Text.Trim())
             };
 
-            await irrf.Alterar(dados);
+            await _irrfServices.Alterar(dados);
             await ListarTabelaIrrf();
         }
         catch (Exception ex)
@@ -96,9 +92,7 @@ public partial class FrmTabelaIRRF : Form
     {
         try
         {
-            IrrfServices irrf = new();
-
-            await irrf.Excluir(idIrrf);
+            await _irrfServices.Excluir(idIrrf);
             await ListarTabelaIrrf();
         }
         catch (Exception ex)
@@ -216,8 +210,7 @@ public partial class FrmTabelaIRRF : Form
         try
         {
             DateTime competencia = DateTime.Parse(MktCompetencia.Text);
-            IrrfServices irrf = new();
-            int faixa = await irrf.UltimaFaixaIrrf(competencia) + 1;
+            int faixa = await _irrfServices.UltimaFaixaIrrf(competencia) + 1;
 
             TxtFaixa.Text = faixa.ToString();
         }
@@ -229,8 +222,8 @@ public partial class FrmTabelaIRRF : Form
 
     private async void LblLinkOnline_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
     {
-        TributacaoRFB tributacaoRFB = new();
-        await tributacaoRFB.AtualizarOnline();
-        await ListarTabelaIrrf();
+        //TributacaoRFB tributacaoRFB = new();
+        //await tributacaoRFB.AtualizarOnline();
+        //await ListarTabelaIrrf();
     }
 }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CalculoIRRF.Repository.Interface;
 
-interface ISimplificadoRepository
+public interface ISimplificadoRepository
 {
     Task<IEnumerable<Simplificado>> GetAll();
     Task<IEnumerable<Simplificado>> GetByCompetence(DateTime competence);

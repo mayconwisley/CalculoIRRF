@@ -83,4 +83,9 @@
   <ItemGroup>
     <Folder Include="BancoDados\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="BancoDados\calculoIrrf.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

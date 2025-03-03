@@ -9,15 +9,8 @@ using System.Threading.Tasks;
 
 namespace CalculoIRRF.Repository;
 
-public class DependenteRepository : IDependenteRepository
+public class DependenteRepository(CalculoImpostoContext _calculoImpostoContext) : IDependenteRepository
 {
-    private readonly CalculoImpostoContext _calculoImpostoContext;
-
-    public DependenteRepository()
-    {
-        _calculoImpostoContext = new CalculoImpostoContext();
-    }
-
     public async Task<Dependente> Create(Dependente dependente)
     {
         if (dependente is null)

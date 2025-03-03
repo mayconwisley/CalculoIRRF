@@ -1,19 +1,15 @@
-﻿using CalculoIRRF.Repository;
+﻿using CalculoIRRF.Model;
+using CalculoIRRF.Repository.Interface;
+using CalculoIRRF.Services.Interface;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CalculoIRRF.Services;
 
-public class IrrfServices
+public class IrrfServices(IIrrfRepository _irrfRepository) : IIrrfServices
 {
-    private readonly IrrfRepository _irrfRepository;
-    public IrrfServices()
-    {
-        _irrfRepository = new();
-    }
-
-    public async Task<bool> Gravar(Model.Irrf irrf)
+    public async Task<bool> Gravar(Irrf irrf)
     {
         try
         {
@@ -25,7 +21,7 @@ public class IrrfServices
             throw;
         }
     }
-    public async Task<bool> Alterar(Model.Irrf irrf)
+    public async Task<bool> Alterar(Irrf irrf)
     {
         try
         {
@@ -106,7 +102,7 @@ public class IrrfServices
             throw;
         }
     }
-    public async Task<IEnumerable<Model.Irrf>> ListarTodos()
+    public async Task<IEnumerable<Irrf>> ListarTodos()
     {
         try
         {
@@ -117,11 +113,23 @@ public class IrrfServices
             throw;
         }
     }
-    public async Task<IEnumerable<Model.Irrf>> ListarTodosPorCompetencia(DateTime competencia)
+    public async Task<IEnumerable<Irrf>> ListarTodosPorCompetencia(DateTime competencia)
     {
         try
         {
             return await _irrfRepository.GetByCompetence(competencia);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+    public async Task<Irrf> ListarPorId(int id)
+    {
+        try
+        {
+            var irrf = await _irrfRepository.GetById(id);
+            return irrf;
         }
         catch (Exception)
         {

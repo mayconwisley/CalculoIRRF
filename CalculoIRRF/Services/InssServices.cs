@@ -1,19 +1,15 @@
-﻿using CalculoIRRF.Repository;
+﻿using CalculoIRRF.Model;
+using CalculoIRRF.Repository.Interface;
+using CalculoIRRF.Services.Interface;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CalculoIRRF.Services;
 
-public class InssServices
+public class InssServices(IInssRepository _inssRepository) : IInssServices
 {
-    private readonly InssRepository _inssRepository;
-    public InssServices()
-    {
-        _inssRepository = new();
-    }
-
-    public async Task<bool> Gravar(Model.Inss inss)
+    public async Task<bool> Gravar(Inss inss)
     {
         try
         {
@@ -25,7 +21,7 @@ public class InssServices
             throw;
         }
     }
-    public async Task<bool> Alterar(Model.Inss inss)
+    public async Task<bool> Alterar(Inss inss)
     {
         try
         {
@@ -110,7 +106,7 @@ public class InssServices
             throw;
         }
     }
-    public async Task<IEnumerable<Model.Inss>> ListarTodos()
+    public async Task<IEnumerable<Inss>> ListarTodos()
     {
         try
         {
@@ -122,12 +118,25 @@ public class InssServices
             throw;
         }
     }
-    public async Task<IEnumerable<Model.Inss>> ListarTodosPorCompetencia(DateTime competencia)
+    public async Task<IEnumerable<Inss>> ListarTodosPorCompetencia(DateTime competencia)
     {
         try
         {
             var listInss = await _inssRepository.GetByCompetence(competencia);
             return listInss;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public async Task<Inss> ListarPorId(int id)
+    {
+        try
+        {
+            var inss = await _inssRepository.GetById(id);
+            return inss;
         }
         catch (Exception)
         {

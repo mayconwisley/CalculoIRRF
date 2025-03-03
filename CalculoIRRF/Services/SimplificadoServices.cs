@@ -1,19 +1,14 @@
 ﻿using CalculoIRRF.Model;
-using CalculoIRRF.Repository;
+using CalculoIRRF.Repository.Interface;
+using CalculoIRRF.Services.Interface;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CalculoIRRF.Services;
 
-public class SimplificadoServices
+public class SimplificadoServices(ISimplificadoRepository _simplificadoRepository) : ISimplificadoServices
 {
-    private readonly SimplificadoRepository _simplificadoRepository;
-    public SimplificadoServices()
-    {
-        _simplificadoRepository = new();
-    }
-
     public async Task<bool> Gravar(Simplificado simplificado)
     {
         try
@@ -78,6 +73,18 @@ public class SimplificadoServices
         try
         {
             return await _simplificadoRepository.GetByCompetence(competencia);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+    public async Task<Simplificado> ListarPorId(int id)
+    {
+        try
+        {
+            var simplificado = await _simplificadoRepository.GetById(id);
+            return simplificado;
         }
         catch (Exception)
         {

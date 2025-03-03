@@ -1,19 +1,15 @@
-﻿using CalculoIRRF.Repository;
+﻿using CalculoIRRF.Model;
+using CalculoIRRF.Repository.Interface;
+using CalculoIRRF.Services.Interface;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CalculoIRRF.Services;
 
-public class DecontoMinimoService
+public class DescontoMinimoServices(IDescontoMinimoRepository _descontoMinimoRepository) : IDescontoMinimoServices
 {
-    private readonly DescontoMinimoRepository _descontoMinimoRepository;
-    public DecontoMinimoService()
-    {
-        _descontoMinimoRepository = new();
-    }
-
-    public async Task<bool> Gravar(Model.DescontoMinimo descontoMinimo)
+    public async Task<bool> Gravar(DescontoMinimo descontoMinimo)
     {
         try
         {
@@ -25,7 +21,7 @@ public class DecontoMinimoService
             throw;
         }
     }
-    public async Task<bool> Alterar(Model.DescontoMinimo descontoMinimo)
+    public async Task<bool> Alterar(DescontoMinimo descontoMinimo)
     {
         try
         {
@@ -62,7 +58,7 @@ public class DecontoMinimoService
             throw;
         }
     }
-    public async Task<IEnumerable<Model.DescontoMinimo>> ListarTodos()
+    public async Task<IEnumerable<DescontoMinimo>> ListarTodos()
     {
         try
         {
@@ -74,12 +70,24 @@ public class DecontoMinimoService
             throw;
         }
     }
-    public async Task<IEnumerable<Model.DescontoMinimo>> ListarTodosPorCompetencia(DateTime competencia)
+    public async Task<IEnumerable<DescontoMinimo>> ListarTodosPorCompetencia(DateTime competencia)
     {
         try
         {
             var listDescontoMinimo = await _descontoMinimoRepository.GetByCompetence(competencia);
             return listDescontoMinimo;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+    public async Task<DescontoMinimo> ListarPorId(int id)
+    {
+        try
+        {
+            var descontoMinimo = await _descontoMinimoRepository.GetById(id);
+            return descontoMinimo;
         }
         catch (Exception)
         {

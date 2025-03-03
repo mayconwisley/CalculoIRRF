@@ -1,5 +1,5 @@
 ﻿using CalculoIRRF.Model;
-using CalculoIRRF.Services;
+using CalculoIRRF.Services.Interface;
 using CalculoIRRF.Services.Validacao;
 using System;
 using System.Runtime.Versioning;
@@ -11,17 +11,18 @@ namespace CalculoIRRF;
 [SupportedOSPlatform("windows")]
 public partial class FrmDependente : Form
 {
-    public FrmDependente()
+    private readonly IDependenteServices _dependenteServices;
+    public FrmDependente(IDependenteServices dependenteServices)
     {
         InitializeComponent();
+        _dependenteServices = dependenteServices;
     }
     int idDependente = 0;
     private async Task ListarTabelaDependente()
     {
         try
         {
-            DependenteServices dependente = new();
-            DgvValorDependente.DataSource = await dependente.ListarTodos();
+            DgvValorDependente.DataSource = await _dependenteServices.ListarTodos();
             LimparCampos();
         }
         catch (Exception ex)
@@ -38,15 +39,13 @@ public partial class FrmDependente : Form
     {
         try
         {
-            DependenteServices dependente = new();
-
             Dependente dados = new()
             {
                 Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
                 Valor = decimal.Parse(TxtValor.Text.Trim())
             };
 
-            await dependente.Gravar(dados);
+            await _dependenteServices.Gravar(dados);
             await ListarTabelaDependente();
         }
         catch (Exception ex)
@@ -58,14 +57,13 @@ public partial class FrmDependente : Form
     {
         try
         {
-            DependenteServices dependente = new();
             Dependente dados = new()
             {
                 Id = idDependente,
                 Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
                 Valor = decimal.Parse(TxtValor.Text.Trim())
             };
-            await dependente.Alterar(dados);
+            await _dependenteServices.Alterar(dados);
             await ListarTabelaDependente();
         }
         catch (Exception ex)
@@ -77,8 +75,7 @@ public partial class FrmDependente : Form
     {
         try
         {
-            DependenteServices dependente = new();
-            await dependente.Excluir(idDependente);
+            await _dependenteServices.Excluir(idDependente);
             await ListarTabelaDependente();
         }
         catch (Exception ex)

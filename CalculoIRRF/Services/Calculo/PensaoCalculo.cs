@@ -1,10 +1,14 @@
-﻿using System;
+﻿using CalculoIRRF.Services.Interface;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CalculoIRRF.Services.Calculo;
 
-public class PensaoCalculo(DateTime _competencia, int _qtdDependente, decimal _valorInss, decimal _valorBruto, decimal _porcentagemPensao)
+public class PensaoCalculo(DateTime _competencia, int _qtdDependente, decimal _valorInss,
+                           decimal _valorBruto, decimal _porcentagemPensao,
+                           IIrrfServices _irrfServices, ISimplificadoServices _simplificadoServices,
+                           IDependenteServices _dependenteServices, IDescontoMinimoServices _descontoMinimoServices)
 {
     decimal pensaoSimplificado;
     decimal pensaoNormal;
@@ -13,11 +17,10 @@ public class PensaoCalculo(DateTime _competencia, int _qtdDependente, decimal _v
 
     public async Task CalculoJudicialIrrfSimplificado(bool detalhe)
     {
-        IrrfServices irrfServices = new();
-        SimplificadoServices simplificadoServices = new();
-        IrrfCalculo irrfCalculo = new(_competencia, _qtdDependente, _valorInss, _valorBruto);
+        IrrfCalculo irrfCalculo = new(_competencia, _qtdDependente, _valorInss, _valorBruto,
+                                  _simplificadoServices, _descontoMinimoServices, _irrfServices, _dependenteServices);
 
-        decimal valorSimplificado = await simplificadoServices.ValorSimplificado(_competencia);
+        decimal valorSimplificado = await _simplificadoServices.ValorSimplificado(_competencia);
         decimal valorPensao = 0m;
         decimal anteriorP = 0m;
         decimal descontoIrrfSimplificado = 0m;
@@ -34,9 +37,9 @@ public class PensaoCalculo(DateTime _competencia, int _qtdDependente, decimal _v
 
             anteriorP = valorPensao;
 
-            int faixaIrrf = await irrfServices.FaixaIrrf(basePensao - anteriorP, _competencia);
-            decimal aliquotaIrrf = await irrfServices.PorcentagemIrrf(faixaIrrf, _competencia) / 100;
-            decimal valorDeducao = await irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
+            int faixaIrrf = await _irrfServices.FaixaIrrf(basePensao - anteriorP, _competencia);
+            decimal aliquotaIrrf = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia) / 100;
+            decimal valorDeducao = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
 
             descontoIrrfSimplificado = await irrfCalculo.Simplificado(valorPensao);
             basePensao = basePensao - descontoIrrfSimplificado;
@@ -71,12 +74,13 @@ public class PensaoCalculo(DateTime _competencia, int _qtdDependente, decimal _v
     }
     public async Task CalculoJudicialIrrfNormal(bool detalhe)
     {
-        IrrfServices irrfServices = new();
-        IrrfCalculo irrfCalculo = new(_competencia, _qtdDependente, _valorInss, _valorBruto);
-        DependenteServices dependenteServices = new();
+
+        IrrfCalculo irrfCalculo = new(_competencia, _qtdDependente, _valorInss, _valorBruto,
+                                      _simplificadoServices, _descontoMinimoServices, _irrfServices, _dependenteServices);
+
 
         decimal baseCalculo = await irrfCalculo.BaseIrrfNormal();
-        decimal valorDependente = await dependenteServices.VlrDependente(_competencia) * _qtdDependente;
+        decimal valorDependente = await _dependenteServices.VlrDependente(_competencia) * _qtdDependente;
 
         decimal valorPensao = 0m;
         decimal anteriorP = 0m;
@@ -90,10 +94,10 @@ public class PensaoCalculo(DateTime _competencia, int _qtdDependente, decimal _v
 
             anteriorP = valorPensao;
 
-            int faixaIrrf = await irrfServices.FaixaIrrf(baseCalculo - anteriorP, _competencia);
-            decimal aliquotaIrrf = await irrfServices.PorcentagemIrrf(faixaIrrf, _competencia) / 100;
-            decimal parcelaDeduzirIrrf = await irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
-            decimal valorDeducao = await irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
+            int faixaIrrf = await _irrfServices.FaixaIrrf(baseCalculo - anteriorP, _competencia);
+            decimal aliquotaIrrf = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia) / 100;
+            decimal parcelaDeduzirIrrf = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
+            decimal valorDeducao = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
             descontoIrrfNormal = await irrfCalculo.Normal(valorPensao);
 
             decimal novaBaseCalculo = baseCalculo - anteriorP;

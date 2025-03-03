@@ -1,5 +1,5 @@
 ﻿using CalculoIRRF.Model;
-using CalculoIRRF.Services;
+using CalculoIRRF.Services.Interface;
 using CalculoIRRF.Services.Validacao;
 using System;
 using System.Runtime.Versioning;
@@ -7,12 +7,15 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CalculoIRRF;
+
 [SupportedOSPlatform("windows")]
 public partial class FrmDeducaoSimplificada : Form
 {
-    public FrmDeducaoSimplificada()
+    private readonly ISimplificadoServices _simplificadoServices;
+    public FrmDeducaoSimplificada(ISimplificadoServices simplificadoServices)
     {
         InitializeComponent();
+        _simplificadoServices = simplificadoServices;
     }
 
     int idSimplificado = 0;
@@ -20,8 +23,7 @@ public partial class FrmDeducaoSimplificada : Form
     {
         try
         {
-            SimplificadoServices simplificado = new();
-            DgvValorSimplificado.DataSource = await simplificado.ListarTodos();
+            DgvValorSimplificado.DataSource = await _simplificadoServices.ListarTodos();
             LimparCampos();
         }
         catch (Exception ex)
@@ -38,14 +40,12 @@ public partial class FrmDeducaoSimplificada : Form
     {
         try
         {
-            SimplificadoServices simplificado = new();
             Simplificado dados = new()
             {
                 Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
                 Valor = decimal.Parse(TxtValor.Text.Trim())
             };
-            await simplificado.Gravar(dados);
-
+            await _simplificadoServices.Gravar(dados);
             await ListarTabelaSimplificado();
         }
         catch (Exception ex)
@@ -58,15 +58,13 @@ public partial class FrmDeducaoSimplificada : Form
     {
         try
         {
-            SimplificadoServices simplificado = new();
             Simplificado dados = new()
             {
                 Id = idSimplificado,
                 Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
                 Valor = decimal.Parse(TxtValor.Text.Trim())
             };
-            await simplificado.Alterar(dados);
-
+            await _simplificadoServices.Alterar(dados);
             await ListarTabelaSimplificado();
         }
         catch (Exception ex)
@@ -79,10 +77,7 @@ public partial class FrmDeducaoSimplificada : Form
     {
         try
         {
-            SimplificadoServices simplificado = new();
-
-            await simplificado.Excluir(idSimplificado);
-
+            await _simplificadoServices.Excluir(idSimplificado);
             await ListarTabelaSimplificado();
         }
         catch (Exception ex)

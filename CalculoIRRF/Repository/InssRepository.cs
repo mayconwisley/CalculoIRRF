@@ -9,15 +9,8 @@ using System.Threading.Tasks;
 
 namespace CalculoIRRF.Repository;
 
-public class InssRepository : IInssRepository
+public class InssRepository(CalculoImpostoContext _calculoImpostoContext) : IInssRepository
 {
-    private readonly CalculoImpostoContext _calculoImpostoContext;
-
-    public InssRepository()
-    {
-        _calculoImpostoContext = new();
-    }
-
     public async Task<Inss> Create(Inss inss)
     {
         if (inss is not null)
