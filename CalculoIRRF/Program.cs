@@ -36,7 +36,6 @@ internal static class Program
         .AddSingleton<FrmPensao>()
         .AddSingleton<FrmTabelaINSS>()
         .AddSingleton<FrmTabelaIRRF>()
-        .AddSingleton<CalculoImpostoContext>()
         .AddScoped<IDependenteRepository, DependenteRepository>()
         .AddScoped<IDescontoMinimoRepository, DescontoMinimoRepository>()
         .AddScoped<IInssRepository, InssRepository>()

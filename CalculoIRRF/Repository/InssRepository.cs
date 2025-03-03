@@ -36,8 +36,8 @@ public class InssRepository(CalculoImpostoContext _calculoImpostoContext) : IIns
 
     public async Task<IEnumerable<Inss>> GetAll()
     {
-        var listInss = await _calculoImpostoContext
-                            .Inss
+        var listInss = await _calculoImpostoContext.Inss
+                            .OrderByDescending(o => o.Competencia)
                             .ToListAsync();
         return listInss ?? [];
     }
@@ -57,8 +57,7 @@ public class InssRepository(CalculoImpostoContext _calculoImpostoContext) : IIns
 
     public async Task<Inss> GetById(int id)
     {
-        var inss = await _calculoImpostoContext
-                         .Inss
+        var inss = await _calculoImpostoContext.Inss
                          .Where(w => w.Id == id)
                          .FirstOrDefaultAsync();
         return inss ?? null;
@@ -66,17 +65,17 @@ public class InssRepository(CalculoImpostoContext _calculoImpostoContext) : IIns
 
     public async Task<int> LastRange(DateTime competence)
     {
-        var lastRange = await _calculoImpostoContext
-                              .Inss
-                              .Where(w => w.Competencia == competence)
-                              .MinAsync(m => m.Faixa);
+        var query = _calculoImpostoContext.Inss
+                    .Where(w => w.Competencia == competence);
+
+        var lastRange = await query.AnyAsync() ? await query.MinAsync(m => m.Faixa) : 0;
+
         return lastRange;
     }
 
     public async Task<decimal> Percent(int range, DateTime competence)
     {
-        var percent = await _calculoImpostoContext
-                            .Inss
+        var percent = await _calculoImpostoContext.Inss
                             .Where(w => w.Faixa == range &&
                                         w.Competencia == _calculoImpostoContext
                                                         .Inss
