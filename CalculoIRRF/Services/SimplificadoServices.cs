@@ -1,145 +1,87 @@
-﻿using System;
-using System.Data;
-using System.Text;
+﻿using CalculoIRRF.Model;
+using CalculoIRRF.Repository;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CalculoIRRF.Services;
 
 public class SimplificadoServices
 {
-
-    public bool Gravar(Model.Simplificado simplificado)
+    private readonly SimplificadoRepository _simplificadoRepository;
+    public SimplificadoServices()
     {
-        Crud crud = new Crud();
-        StringBuilder sqlBuilder = new StringBuilder();
+        _simplificadoRepository = new();
+    }
 
-        sqlBuilder.Append("INSERT INTO Simplificado(Competencia, Valor) ");
-        sqlBuilder.Append("VALUES(@Competencia, @Valor)");
-
+    public async Task<bool> Gravar(Simplificado simplificado)
+    {
         try
         {
-            crud.LimparParametro();
-            crud.AdicionarParamentro("Competencia", simplificado.Competencia);
-            crud.AdicionarParamentro("Valor", simplificado.Valor);
-            crud.Executar(CommandType.Text, sqlBuilder.ToString());
+            await _simplificadoRepository.Create(simplificado);
             return true;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            throw new Exception(ex.Message);
+            throw;
         }
     }
-    public bool Alterar(Model.Simplificado simplificado)
+    public async Task<bool> Alterar(Simplificado simplificado)
     {
-        Crud crud = new Crud();
-        StringBuilder sqlBuilder = new StringBuilder();
-
-        sqlBuilder.Append("UPDATE Simplificado ");
-        sqlBuilder.Append("SET Competencia = @Competencia, Valor = @Valor ");
-        sqlBuilder.Append("WHERE Id = @Id");
-
         try
         {
-            crud.LimparParametro();
-            crud.AdicionarParamentro("Competencia", simplificado.Competencia);
-            crud.AdicionarParamentro("Valor", simplificado.Valor);
-            crud.AdicionarParamentro("Id", simplificado.Id);
-            crud.Executar(CommandType.Text, sqlBuilder.ToString());
+            await _simplificadoRepository.Update(simplificado);
             return true;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            throw new Exception(ex.Message);
+            throw;
         }
     }
-    public bool Excluir(int id)
+    public async Task<bool> Excluir(int id)
     {
-        Crud crud = new Crud();
-        StringBuilder sqlBuilder = new StringBuilder();
-
-        sqlBuilder.Append("DELETE FROM Simplificado ");
-        sqlBuilder.Append("WHERE Id = @Id");
-
         try
         {
-            crud.LimparParametro();
-            crud.AdicionarParamentro("Id", id);
-            crud.Executar(CommandType.Text, sqlBuilder.ToString());
+            await _simplificadoRepository.Delete(id);
             return true;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            throw new Exception(ex.Message);
+            throw;
         }
     }
-    public decimal ValorSimplificado(DateTime competencia)
+    public async Task<decimal> ValorSimplificado(DateTime competencia)
     {
-        Crud crud = new Crud();
-        StringBuilder sqlBuilder = new StringBuilder();
-
-        sqlBuilder.Append("SELECT Valor ");
-        sqlBuilder.Append("FROM Simplificado ");
-        sqlBuilder.Append("WHERE Competencia = (SELECT MAX(Competencia) FROM Simplificado WHERE Competencia <= @Competencia)");
+        try
+        {
+            return await _simplificadoRepository.Value(competencia);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+    public async Task<IEnumerable<Simplificado>> ListarTodos()
+    {
 
         try
         {
-            crud.LimparParametro();
-            crud.AdicionarParamentro("Competencia", competencia);
-
-
-            var strValor = crud.Executar(CommandType.Text, sqlBuilder.ToString());
-            if (strValor == null)
-            {
-                return 0;
-            }
-            else
-            {
-                return decimal.Parse(strValor.ToString());
-            }
-
+            return await _simplificadoRepository.GetAll();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            throw new Exception(ex.Message);
+            throw;
         }
     }
-    public DataTable ListarTodos()
+    public async Task<IEnumerable<Simplificado>> ListarTodosPorCompetencia(DateTime competencia)
     {
-        Crud crud = new Crud();
-        StringBuilder sqlBuilder = new StringBuilder();
-
-        sqlBuilder.Append("SELECT Id, Competencia, Valor ");
-        sqlBuilder.Append("FROM Simplificado");
-
         try
         {
-            crud.LimparParametro();
-            DataTable dataTable = crud.Consulta(CommandType.Text, sqlBuilder.ToString());
-            return dataTable;
+            return await _simplificadoRepository.GetByCompetence(competencia);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            throw new Exception(ex.Message);
-        }
-    }
-    public DataTable ListarTodosPorCompetencia(DateTime competencia)
-    {
-        Crud crud = new Crud();
-        StringBuilder sqlBuilder = new StringBuilder();
-
-        sqlBuilder.Append("SELECT Id, Competencia, Valor ");
-        sqlBuilder.Append("FROM Simplificado ");
-        sqlBuilder.Append("WHERE Competencia = (SELECT MAX(Competencia) FROM Simplificado WHERE Competencia <= @Competencia)");
-
-        try
-        {
-            crud.LimparParametro();
-            crud.AdicionarParamentro("Competencia", competencia);
-            DataTable dataTable = crud.Consulta(CommandType.Text, sqlBuilder.ToString());
-            return dataTable;
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message);
+            throw;
         }
     }
 }

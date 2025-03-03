@@ -1,12 +1,17 @@
-﻿using System;
+﻿using CalculoIRRF.Model;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace CalculoIRRF.Repository.Interface
+namespace CalculoIRRF.Repository.Interface;
+
+interface ISimplificadoRepository
 {
-    interface ISimplificadoRepository
-    {
-    }
+    Task<IEnumerable<Simplificado>> GetAll();
+    Task<IEnumerable<Simplificado>> GetByCompetence(DateTime competence);
+    Task<Simplificado> GetById(int id);
+    Task<Simplificado> Create(Simplificado simplificado);
+    Task<Simplificado> Update(Simplificado simplificado);
+    Task<Simplificado> Delete(int id);
+    Task<decimal> Value(DateTime competence);
 }
