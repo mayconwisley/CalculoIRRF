@@ -51,11 +51,6 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <None Update="BancoDados\calculoIrrf.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="calculator.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -74,7 +69,6 @@
     <PackageReference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="EntityFramework" />
     <PackageReference Include="HtmlAgilityPack" />
     <PackageReference Include="Microsoft.Data.Sqlite.Core" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
@@ -85,5 +79,8 @@
     </PackageReference>
     <PackageReference Include="SQLite" />
     <PackageReference Include="System.Data.SQLite.EF6" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="BancoDados\" />
   </ItemGroup>
 </Project>

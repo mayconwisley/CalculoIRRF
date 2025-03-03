@@ -1,9 +1,9 @@
 ﻿using CalculoIRRF.DataBase;
 using CalculoIRRF.Model;
 using CalculoIRRF.Repository.Interface;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 

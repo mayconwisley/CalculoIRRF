@@ -95,7 +95,7 @@ public class Validar
         return strValor;
     }
 
-    public string ZeroNumero(string valor)
+    public static string ZeroNumero(string valor)
     {
         var strValor = valor;
         if (valor == "")

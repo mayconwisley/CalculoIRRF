@@ -1,131 +1,131 @@
-﻿using CalculoIRRF.Services;
+﻿using CalculoIRRF.Model;
+using CalculoIRRF.Services;
 using CalculoIRRF.Services.Validacao;
 using System;
+using System.Runtime.Versioning;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CalculoIRRF
+namespace CalculoIRRF;
+[SupportedOSPlatform("windows")]
+public partial class FrmDescontoMinimo : Form
 {
-    public partial class FrmDescontoMinimo : Form
+    public FrmDescontoMinimo()
     {
-        public FrmDescontoMinimo()
+        InitializeComponent();
+    }
+    int idDescontoMinimo = 0;
+    private async Task ListarTabelaDescontoMinimo()
+    {
+        try
         {
-            InitializeComponent();
+            DecontoMinimoService descontoMinimoServices = new();
+            DgvValorDescontoMinimo.DataSource = await descontoMinimoServices.ListarTodos();
+            LimparCampos();
         }
-        int idDescontoMinimo = 0;
-        private void ListarTabelaDescontoMinimo()
+        catch (Exception ex)
         {
-            try
-            {
-                DecontoMinimoService descontoMinimo = new Modelo.DescontoMinimo.Cadastro();
-                DgvValorDescontoMinimo.DataSource = descontoMinimo.ListarTodos();
-                LimparCampos();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            MessageBox.Show(ex.Message);
         }
-        private void LimparCampos()
+    }
+    private void LimparCampos()
+    {
+        TxtValor.Text = "0,00";
+        TxtValor.Focus();
+    }
+
+    private async void BtnGravar_Click(object sender, EventArgs e)
+    {
+        try
         {
-            TxtValor.Text = "0,00";
-            TxtValor.Focus();
+            DecontoMinimoService descontoMinimoServices = new();
+            DescontoMinimo dados = new()
+            {
+                Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
+                Valor = decimal.Parse(TxtValor.Text.Trim())
+            };
+            await descontoMinimoServices.Gravar(dados);
+
+            await ListarTabelaDescontoMinimo();
         }
-
-        private void BtnGravar_Click(object sender, EventArgs e)
+        catch (Exception ex)
         {
-            try
-            {
-                DecontoMinimoService descontoMinimo = new Modelo.DescontoMinimo.Cadastro();
-                Objetos.DescontoMinimo dados = new Objetos.DescontoMinimo
-                {
-                    Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
-                    Valor = decimal.Parse(TxtValor.Text.Trim())
-                };
-                descontoMinimo.Gravar(dados);
-
-                ListarTabelaDescontoMinimo();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            MessageBox.Show(ex.Message);
         }
+    }
 
-        private void BtnAlterar_Click(object sender, EventArgs e)
+    private async void BtnAlterar_Click(object sender, EventArgs e)
+    {
+        try
         {
-            try
+            DecontoMinimoService descontoMinimoServices = new();
+            DescontoMinimo dados = new()
             {
-                DecontoMinimoService descontoMinimo = new Modelo.DescontoMinimo.Cadastro();
-                Objetos.DescontoMinimo dados = new Objetos.DescontoMinimo
-                {
-                    Id = idDescontoMinimo,
-                    Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
-                    Valor = decimal.Parse(TxtValor.Text.Trim())
-                };
-                descontoMinimo.Gravar(dados);
-                ListarTabelaDescontoMinimo();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+                Id = idDescontoMinimo,
+                Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
+                Valor = decimal.Parse(TxtValor.Text.Trim())
+            };
+            await descontoMinimoServices.Gravar(dados);
+            await ListarTabelaDescontoMinimo();
         }
-
-        private void BtnExcluir_Click(object sender, EventArgs e)
+        catch (Exception ex)
         {
-            try
-            {
-                DecontoMinimoService descontoMinimo = new Modelo.DescontoMinimo.Cadastro();
-                descontoMinimo.Excluir(idDescontoMinimo);
-                ListarTabelaDescontoMinimo();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            MessageBox.Show(ex.Message);
         }
+    }
 
-        private void FrmDescontoMinimo_Load(object sender, EventArgs e)
+    private async void BtnExcluir_Click(object sender, EventArgs e)
+    {
+        try
         {
-
-            MktCompetencia.Text = DateTime.Now.ToString("MM/yyyy");
-            ListarTabelaDescontoMinimo();
+            DecontoMinimoService descontoMinimoServices = new();
+            await descontoMinimoServices.Excluir(idDescontoMinimo);
+            await ListarTabelaDescontoMinimo();
         }
-
-        private void DgvValorDescontoMinimo_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        catch (Exception ex)
         {
-            try
-            {
-                idDescontoMinimo = int.Parse(DgvValorDescontoMinimo.Rows[e.RowIndex].Cells["Id"].Value.ToString());
-                MktCompetencia.Text = DateTime.Parse(DgvValorDescontoMinimo.Rows[e.RowIndex].Cells["Competencia"].Value.ToString()).ToString("MM/yyyy");
-                TxtValor.Text = decimal.Parse(DgvValorDescontoMinimo.Rows[e.RowIndex].Cells["Valor"].Value.ToString()).ToString("#,##0.00");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            MessageBox.Show(ex.Message);
         }
+    }
 
-        private void TxtValor_TextChanged(object sender, EventArgs e)
+    private async void FrmDescontoMinimo_Load(object sender, EventArgs e)
+    {
+
+        MktCompetencia.Text = DateTime.Now.ToString("MM/yyyy");
+        await ListarTabelaDescontoMinimo();
+    }
+
+    private void DgvValorDescontoMinimo_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+    {
+        try
         {
-            Validar validar = new Validar();
-            TxtValor.Text = Validar.ValidarValor(TxtValor.Text);
-            TxtValor.Select(TxtValor.Text.Length, 0);
+            idDescontoMinimo = int.Parse(DgvValorDescontoMinimo.Rows[e.RowIndex].Cells["Id"].Value.ToString());
+            MktCompetencia.Text = DateTime.Parse(DgvValorDescontoMinimo.Rows[e.RowIndex].Cells["Competencia"].Value.ToString()).ToString("MM/yyyy");
+            TxtValor.Text = decimal.Parse(DgvValorDescontoMinimo.Rows[e.RowIndex].Cells["Valor"].Value.ToString()).ToString("#,##0.00");
         }
-
-        private void TxtValor_Leave(object sender, EventArgs e)
+        catch (Exception ex)
         {
-            Validar validar = new Validar();
-            TxtValor.Text = Validar.Zero(TxtValor.Text);
-            TxtValor.Text = Validar.Formatar(TxtValor.Text);
+            MessageBox.Show(ex.Message);
         }
+    }
 
-        private void TxtValor_Enter(object sender, EventArgs e)
+    private void TxtValor_TextChanged(object sender, EventArgs e)
+    {
+        TxtValor.Text = Validar.ValidarValor(TxtValor.Text);
+        TxtValor.Select(TxtValor.Text.Length, 0);
+    }
+
+    private void TxtValor_Leave(object sender, EventArgs e)
+    {
+        TxtValor.Text = Validar.Zero(TxtValor.Text);
+        TxtValor.Text = Validar.Formatar(TxtValor.Text);
+    }
+
+    private void TxtValor_Enter(object sender, EventArgs e)
+    {
+        if (TxtValor.Text == "0,00")
         {
-            if (TxtValor.Text == "0,00")
-            {
-                TxtValor.Text = "";
-            }
+            TxtValor.Text = "";
         }
     }
 }

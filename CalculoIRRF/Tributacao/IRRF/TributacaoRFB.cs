@@ -1,5 +1,4 @@
-﻿using CalculoIRRF.Objetos;
-using CalculoIRRF.Objetos.Tributacao;
+﻿using CalculoIRRF.Model;
 using CalculoIRRF.Services;
 using CalculoIRRF.Services.Validacao;
 using CalculoIRRF.Tributacao.AcessarSite;
@@ -55,7 +54,7 @@ namespace CalculoIRRF.Tributacao.IRRF
                 {
                     irrfRfb.BaseCaculo = decimal.Parse("9999999999999.99");
                 }
-                cadastro.GravarRfbOnline(irrfRfb);
+                //  cadastro.GravarRfbOnline(irrfRfb);
 
                 irrf = new Irrf
                 {
@@ -70,7 +69,7 @@ namespace CalculoIRRF.Tributacao.IRRF
                 {
                     irrf.Valor = decimal.Parse("9999999999999.99");
                 }
-                cadastro.Gravar(irrf);
+                await cadastro.Gravar(irrf);
 
             }
         }
