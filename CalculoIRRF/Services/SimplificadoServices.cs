@@ -45,7 +45,7 @@ public class SimplificadoServices(ISimplificadoRepository _simplificadoRepositor
             throw;
         }
     }
-    public async Task<decimal> ValorSimplificado(DateTime competencia)
+    public async Task<double> ValorSimplificado(DateTime competencia)
     {
         try
         {

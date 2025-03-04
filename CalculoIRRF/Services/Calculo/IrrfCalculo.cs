@@ -5,45 +5,45 @@ using System.Threading.Tasks;
 
 namespace CalculoIRRF.Services.Calculo;
 
-public class IrrfCalculo(DateTime _competencia, int _qtdDependente, decimal _valorInss, decimal _valorBruto,
+public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valorInss, double _valorBruto,
                          ISimplificadoServices _simplificadoServices, IDescontoMinimoServices _descontoMinimoServices,
                          IIrrfServices _irrfServices, IDependenteServices _dependenteServices)
 {
-    public async Task<decimal> BaseIrrfNormal()
+    public async Task<double> BaseIrrfNormal()
     {
-        decimal valorDependente = await _dependenteServices.VlrDependente(_competencia);
-        decimal baseIrrf = _valorBruto - _valorInss - _qtdDependente * valorDependente;
+        double valorDependente = await _dependenteServices.VlrDependente(_competencia);
+        double baseIrrf = _valorBruto - _valorInss - _qtdDependente * valorDependente;
 
         return baseIrrf;
     }
-    public async Task<decimal> BaseIrrfSimplificado()
+    public async Task<double> BaseIrrfSimplificado()
     {
-        decimal valorDeducao = await _simplificadoServices.ValorSimplificado(_competencia);
-        decimal baseIrrf = _valorBruto - valorDeducao;
+        double valorDeducao = await _simplificadoServices.ValorSimplificado(_competencia);
+        double baseIrrf = _valorBruto - valorDeducao;
 
         return baseIrrf;
     }
-    public async Task<decimal> Normal(decimal valorPensao = 0)
+    public async Task<double> Normal(double valorPensao = 0)
     {
-        decimal baseIrrf = await BaseIrrfNormal() - valorPensao;
+        double baseIrrf = await BaseIrrfNormal() - valorPensao;
         int faixaIrrf = await _irrfServices.FaixaIrrf(baseIrrf, _competencia);
-        decimal porcentagemInss = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia);
-        decimal deducaoIrrf = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
-        decimal desconto = baseIrrf * (porcentagemInss / 100) - deducaoIrrf;
+        double porcentagemInss = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia);
+        double deducaoIrrf = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
+        double desconto = baseIrrf * (porcentagemInss / 100) - deducaoIrrf;
         desconto = Math.Round(desconto, 2);
 
         return desconto;
     }
     public async Task<string> DescricaoCalculoNormal()
     {
-        decimal valorDependente = await _dependenteServices.VlrDependente(_competencia);
-        decimal baseIrrf = await BaseIrrfNormal();
+        double valorDependente = await _dependenteServices.VlrDependente(_competencia);
+        double baseIrrf = await BaseIrrfNormal();
         int faixaIrrf = await _irrfServices.FaixaIrrf(baseIrrf, _competencia);
-        decimal porcentagemInss = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia);
-        decimal deducaoIrrf = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
-        decimal desconto = baseIrrf * (porcentagemInss / 100) - deducaoIrrf;
+        double porcentagemInss = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia);
+        double deducaoIrrf = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
+        double desconto = baseIrrf * (porcentagemInss / 100) - deducaoIrrf;
         desconto = Math.Round(desconto, 2);
-        decimal aliquotaEfetiva;
+        double aliquotaEfetiva;
 
         /*Se ocorrer divisão por zero, retornar o valor 0(zero)*/
         try
@@ -53,7 +53,7 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, decimal _val
         }
         catch
         {
-            aliquotaEfetiva = 0m;
+            aliquotaEfetiva = 0d;
         }
 
         StringBuilder strMensagem = new StringBuilder();
@@ -68,17 +68,17 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, decimal _val
 
         return strMensagem.ToString();
     }
-    public async Task<decimal> NormalProgressivo()
+    public async Task<double> NormalProgressivo()
     {
-        decimal baseIrrf = await BaseIrrfNormal();
+        double baseIrrf = await BaseIrrfNormal();
         int faixaIrrf = await _irrfServices.FaixaIrrf(baseIrrf, _competencia);
-        decimal desconto = 0;
-        decimal valorInssAnterior = 0;
+        double desconto = 0;
+        double valorInssAnterior = 0;
         for (int i = 1; i <= faixaIrrf; i++)
         {
-            decimal porcentagemInss = await _irrfServices.PorcentagemIrrf(i, _competencia);
-            decimal valorIrrf = await _irrfServices.ValorIrrf(i, _competencia);
-            decimal baseIrrfCalculo = valorIrrf - valorInssAnterior;
+            double porcentagemInss = await _irrfServices.PorcentagemIrrf(i, _competencia);
+            double valorIrrf = await _irrfServices.ValorIrrf(i, _competencia);
+            double baseIrrfCalculo = valorIrrf - valorInssAnterior;
 
             if (valorIrrf > baseIrrf)
             {
@@ -101,11 +101,11 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, decimal _val
     {
         StringBuilder strMensagem = new();
 
-        decimal valorDependente = await _dependenteServices.VlrDependente(_competencia);
-        decimal baseIrrf = await BaseIrrfNormal();
+        double valorDependente = await _dependenteServices.VlrDependente(_competencia);
+        double baseIrrf = await BaseIrrfNormal();
         int faixaIrrf = await _irrfServices.FaixaIrrf(baseIrrf, _competencia);
-        decimal totalDesconto = 0;
-        decimal valorInssAnterior = 0;
+        double totalDesconto = 0;
+        double valorInssAnterior = 0;
 
         strMensagem.Append("Informações de Calculo do IR Normal Progressivo\n\n");
         strMensagem.Append($"Valor Bruto: {_valorBruto:#,##0.00}\n");
@@ -115,9 +115,9 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, decimal _val
 
         for (int i = 1; i <= faixaIrrf; i++)
         {
-            decimal porcentagemInss = await _irrfServices.PorcentagemIrrf(i, _competencia);
-            decimal valorIrrf = await _irrfServices.ValorIrrf(i, _competencia);
-            decimal baseIrrfCalculo = valorIrrf - valorInssAnterior;
+            double porcentagemInss = await _irrfServices.PorcentagemIrrf(i, _competencia);
+            double valorIrrf = await _irrfServices.ValorIrrf(i, _competencia);
+            double baseIrrfCalculo = valorIrrf - valorInssAnterior;
 
             if (valorIrrf > baseIrrf)
             {
@@ -129,7 +129,7 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, decimal _val
                 baseIrrfCalculo = baseIrrf - valorInssAnterior;
             }
 
-            decimal desconto = baseIrrfCalculo * (porcentagemInss / 100);
+            double desconto = baseIrrfCalculo * (porcentagemInss / 100);
             totalDesconto += desconto;
 
             valorInssAnterior = valorIrrf;
@@ -143,19 +143,19 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, decimal _val
 
         return strMensagem.ToString();
     }
-    public async Task<decimal> Simplificado(decimal valorPensao = 0)
+    public async Task<double> Simplificado(double valorPensao = 0)
     {
         if (_competencia < DateTime.Parse("01/05/2023"))
         {
             return 0;
         }
 
-        decimal valorDeducao = await _simplificadoServices.ValorSimplificado(_competencia);
-        decimal baseIrrf = await BaseIrrfSimplificado() - valorPensao;
+        double valorDeducao = await _simplificadoServices.ValorSimplificado(_competencia);
+        double baseIrrf = await BaseIrrfSimplificado() - valorPensao;
         int faixaIrrf = await _irrfServices.FaixaIrrf(baseIrrf, _competencia);
-        decimal porcentagemInss = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia);
-        decimal deducaoIrrf = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
-        decimal desconto = baseIrrf * (porcentagemInss / 100) - deducaoIrrf;
+        double porcentagemInss = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia);
+        double deducaoIrrf = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
+        double desconto = baseIrrf * (porcentagemInss / 100) - deducaoIrrf;
         desconto = Math.Round(desconto, 2);
 
         return desconto;
@@ -167,14 +167,14 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, decimal _val
             return "Calculo Simplificado é a partir de 05/2023!\n\n";
         }
 
-        decimal valorDeducao = await _simplificadoServices.ValorSimplificado(_competencia);
-        decimal baseIrrf = await BaseIrrfSimplificado();
+        double valorDeducao = await _simplificadoServices.ValorSimplificado(_competencia);
+        double baseIrrf = await BaseIrrfSimplificado();
         int faixaIrrf = await _irrfServices.FaixaIrrf(baseIrrf, _competencia);
-        decimal porcentagemInss = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia);
-        decimal deducaoIrrf = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
-        decimal desconto = baseIrrf * (porcentagemInss / 100) - deducaoIrrf;
+        double porcentagemInss = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia);
+        double deducaoIrrf = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
+        double desconto = baseIrrf * (porcentagemInss / 100) - deducaoIrrf;
         desconto = Math.Round(desconto, 2);
-        decimal aliquotaEfetiica;
+        double aliquotaEfetiica;
         /*Se ocorrer divisão por zero, retornar o valor 0(zero)*/
         try
         {
@@ -183,7 +183,7 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, decimal _val
         }
         catch
         {
-            aliquotaEfetiica = 0m;
+            aliquotaEfetiica = 0d;
         }
 
         StringBuilder strMensagem = new();
@@ -199,15 +199,15 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, decimal _val
     }
     public async Task<string> DescricaoVantagem()
     {
-        decimal vlrDescontoMinimo = await _descontoMinimoServices.ValorDescontoMinimo(_competencia);
+        double vlrDescontoMinimo = await _descontoMinimoServices.ValorDescontoMinimo(_competencia);
 
         if (_competencia < DateTime.Parse("01/05/2023"))
         {
             return "";
         }
 
-        decimal valorNormal = await Normal();
-        decimal valorSimplificado = await Simplificado();
+        double valorNormal = await Normal();
+        double valorSimplificado = await Simplificado();
 
         if (valorNormal < vlrDescontoMinimo || valorSimplificado < vlrDescontoMinimo)
         {
@@ -217,13 +217,13 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, decimal _val
 
         if (valorNormal > valorSimplificado)
         {
-            decimal total = valorNormal - valorSimplificado;
+            double total = valorNormal - valorSimplificado;
             return $"Calculo Simplificado é mais vantajoso!\n" +
                    $"Diferença: {total:#,##0.00}\n\n";
         }
         else
         {
-            decimal total = valorSimplificado - valorNormal;
+            double total = valorSimplificado - valorNormal;
             return $"Calculo Normal é mais vantajoso!\n" +
                    $"Diferença: {total:#,##0.00}\n\n";
         }

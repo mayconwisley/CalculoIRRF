@@ -13,5 +13,5 @@ public interface IDependenteRepository
     Task<Dependente> Create(Dependente dependente);
     Task<Dependente> Update(Dependente dependente);
     Task<Dependente> Delete(int id);
-    Task<decimal> Value(DateTime competence);
+    Task<double> Value(DateTime competence);
 }

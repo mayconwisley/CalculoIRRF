@@ -42,7 +42,7 @@ public partial class FrmDescontoMinimo : Form
             DescontoMinimo dados = new()
             {
                 Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
-                Valor = decimal.Parse(TxtValor.Text.Trim())
+                Valor = double.Parse(TxtValor.Text.Trim())
             };
             await _descontoMinimoServices.Gravar(dados);
 
@@ -62,7 +62,7 @@ public partial class FrmDescontoMinimo : Form
             {
                 Id = idDescontoMinimo,
                 Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
-                Valor = decimal.Parse(TxtValor.Text.Trim())
+                Valor = double.Parse(TxtValor.Text.Trim())
             };
             await _descontoMinimoServices.Gravar(dados);
             await ListarTabelaDescontoMinimo();
@@ -99,7 +99,7 @@ public partial class FrmDescontoMinimo : Form
         {
             idDescontoMinimo = int.Parse(DgvValorDescontoMinimo.Rows[e.RowIndex].Cells["Id"].Value.ToString());
             MktCompetencia.Text = DateTime.Parse(DgvValorDescontoMinimo.Rows[e.RowIndex].Cells["Competencia"].Value.ToString()).ToString("MM/yyyy");
-            TxtValor.Text = decimal.Parse(DgvValorDescontoMinimo.Rows[e.RowIndex].Cells["Valor"].Value.ToString()).ToString("#,##0.00");
+            TxtValor.Text = double.Parse(DgvValorDescontoMinimo.Rows[e.RowIndex].Cells["Valor"].Value.ToString()).ToString("#,##0.00");
         }
         catch (Exception ex)
         {

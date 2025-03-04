@@ -35,15 +35,15 @@ public partial class FrmPrincipal : Form
     {
 
         DateTime competencia = DateTime.Parse(MktCompetencia.Text.Trim());
-        decimal valorBruto = decimal.Parse(TxtValorBruto.Text.Trim());
-        decimal baseInss = decimal.Parse(TxtBaseInss.Text.Trim());
+        double valorBruto = double.Parse(TxtValorBruto.Text.Trim());
+        double baseInss = double.Parse(TxtBaseInss.Text.Trim());
         int qtdDependente = int.Parse(TxtQtdDependente.Text.Trim());
         RTxtResultado.Clear();
 
         try
         {
             InssCalculo inssCalculo = new(competencia, baseInss, _serviceProvider.GetRequiredService<IInssServices>());
-            decimal valorInss = await inssCalculo.NormalProgressivo();
+            double valorInss = await inssCalculo.NormalProgressivo();
 
             IrrfCalculo irrfCalculo = new(competencia, qtdDependente, valorInss, valorBruto,
                                           _serviceProvider.GetRequiredService<ISimplificadoServices>(),
@@ -76,7 +76,7 @@ public partial class FrmPrincipal : Form
 
             str = await irrfCalculo.DescricaoCalculoNormalProgrssivo();
             str += "--------------------------------------------------------------------\n";
-            str += inssCalculo.DescricaoCalculoNormalProgressivo();
+            str += await inssCalculo.DescricaoCalculoNormalProgressivo();
 
             str += "--------------------------------------------------------------------\n";
             str += "FGTS 8% " + fgtsCalculo.Normal8().ToString("#,##0.00") + "\n";
@@ -109,8 +109,8 @@ public partial class FrmPrincipal : Form
         TxtValorBruto.Text = Validar.Formatar(TxtValorBruto.Text);
         var cadastroInss = _serviceProvider.GetRequiredService<IInssServices>();
 
-        decimal tetoInss = 0;
-        decimal valorBruto = decimal.Parse(TxtValorBruto.Text);
+        double tetoInss = 0;
+        double valorBruto = double.Parse(TxtValorBruto.Text);
 
         _ = new DateTime();
 
@@ -197,8 +197,8 @@ public partial class FrmPrincipal : Form
     private void BtnPensao_Click(object sender, EventArgs e)
     {
         DateTime competencia = DateTime.Parse(MktCompetencia.Text.Trim());
-        decimal baseInss = decimal.Parse(TxtBaseInss.Text.Trim());
-        decimal valorBruto = decimal.Parse(TxtValorBruto.Text.Trim());
+        double baseInss = double.Parse(TxtBaseInss.Text.Trim());
+        double valorBruto = double.Parse(TxtValorBruto.Text.Trim());
         int qtdDependente = int.Parse(TxtQtdDependente.Text.Trim());
         FrmPensao pensao = new(competencia, baseInss, qtdDependente, valorBruto,
                                _serviceProvider.GetRequiredService<IInssServices>(),

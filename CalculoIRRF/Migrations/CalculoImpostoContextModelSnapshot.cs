@@ -26,8 +26,8 @@ namespace CalculoIRRF.Migrations
                     b.Property<DateTime>("Competencia")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("Valor")
-                        .HasColumnType("TEXT");
+                    b.Property<double>("Valor")
+                        .HasColumnType("REAL");
 
                     b.HasKey("Id");
 
@@ -38,7 +38,7 @@ namespace CalculoIRRF.Migrations
                         {
                             Id = 1,
                             Competencia = new DateTime(2015, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Valor = 189.59m
+                            Valor = 189.59
                         });
                 });
 
@@ -51,8 +51,8 @@ namespace CalculoIRRF.Migrations
                     b.Property<DateTime>("Competencia")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("Valor")
-                        .HasColumnType("TEXT");
+                    b.Property<double>("Valor")
+                        .HasColumnType("REAL");
 
                     b.HasKey("Id");
 
@@ -63,7 +63,7 @@ namespace CalculoIRRF.Migrations
                         {
                             Id = 1,
                             Competencia = new DateTime(2023, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Valor = 10m
+                            Valor = 10.0
                         });
                 });
 
@@ -79,11 +79,11 @@ namespace CalculoIRRF.Migrations
                     b.Property<int>("Faixa")
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("Porcentagem")
-                        .HasColumnType("TEXT");
+                    b.Property<double>("Porcentagem")
+                        .HasColumnType("REAL");
 
-                    b.Property<decimal>("Valor")
-                        .HasColumnType("TEXT");
+                    b.Property<double>("Valor")
+                        .HasColumnType("REAL");
 
                     b.HasKey("Id");
 
@@ -95,192 +95,192 @@ namespace CalculoIRRF.Migrations
                             Id = 1,
                             Competencia = new DateTime(2020, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Faixa = 1,
-                            Porcentagem = 7.5m,
-                            Valor = 1045.00m
+                            Porcentagem = 7.5,
+                            Valor = 1045.0
                         },
                         new
                         {
                             Id = 2,
                             Competencia = new DateTime(2020, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Faixa = 2,
-                            Porcentagem = 9m,
-                            Valor = 2089.60m
+                            Porcentagem = 9.0,
+                            Valor = 2089.5999999999999
                         },
                         new
                         {
                             Id = 3,
                             Competencia = new DateTime(2020, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Faixa = 3,
-                            Porcentagem = 12m,
-                            Valor = 3134.40m
+                            Porcentagem = 12.0,
+                            Valor = 3134.4000000000001
                         },
                         new
                         {
                             Id = 4,
                             Competencia = new DateTime(2020, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Faixa = 4,
-                            Porcentagem = 14m,
-                            Valor = 6101.06m
+                            Porcentagem = 14.0,
+                            Valor = 6101.0600000000004
                         },
                         new
                         {
                             Id = 5,
                             Competencia = new DateTime(2022, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Faixa = 1,
-                            Porcentagem = 7.5m,
-                            Valor = 1212.00m
+                            Porcentagem = 7.5,
+                            Valor = 1212.0
                         },
                         new
                         {
                             Id = 6,
                             Competencia = new DateTime(2022, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Faixa = 2,
-                            Porcentagem = 9m,
-                            Valor = 2452.67m
+                            Porcentagem = 9.0,
+                            Valor = 2452.6700000000001
                         },
                         new
                         {
                             Id = 7,
                             Competencia = new DateTime(2022, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Faixa = 3,
-                            Porcentagem = 12m,
-                            Valor = 3679.00m
+                            Porcentagem = 12.0,
+                            Valor = 3679.0
                         },
                         new
                         {
                             Id = 8,
                             Competencia = new DateTime(2022, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Faixa = 4,
-                            Porcentagem = 14m,
-                            Valor = 7087.22m
+                            Porcentagem = 14.0,
+                            Valor = 7087.2200000000003
                         },
                         new
                         {
                             Id = 9,
                             Competencia = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Faixa = 1,
-                            Porcentagem = 7.5m,
-                            Valor = 1302.00m
+                            Porcentagem = 7.5,
+                            Valor = 1302.0
                         },
                         new
                         {
                             Id = 10,
                             Competencia = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Faixa = 2,
-                            Porcentagem = 9m,
-                            Valor = 2571.29m
+                            Porcentagem = 9.0,
+                            Valor = 2571.29
                         },
                         new
                         {
                             Id = 11,
                             Competencia = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Faixa = 3,
-                            Porcentagem = 12m,
-                            Valor = 3856.94m
+                            Porcentagem = 12.0,
+                            Valor = 3856.9400000000001
                         },
                         new
                         {
                             Id = 12,
                             Competencia = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Faixa = 4,
-                            Porcentagem = 14m,
-                            Valor = 7507.49m
+                            Porcentagem = 14.0,
+                            Valor = 7507.4899999999998
                         },
                         new
                         {
                             Id = 13,
                             Competencia = new DateTime(2023, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Faixa = 1,
-                            Porcentagem = 7.5m,
-                            Valor = 1320.00m
+                            Porcentagem = 7.5,
+                            Valor = 1320.0
                         },
                         new
                         {
                             Id = 14,
                             Competencia = new DateTime(2023, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Faixa = 2,
-                            Porcentagem = 9m,
-                            Valor = 2571.29m
+                            Porcentagem = 9.0,
+                            Valor = 2571.29
                         },
                         new
                         {
                             Id = 15,
                             Competencia = new DateTime(2023, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Faixa = 3,
-                            Porcentagem = 12m,
-                            Valor = 3856.94m
+                            Porcentagem = 12.0,
+                            Valor = 3856.9400000000001
                         },
                         new
                         {
                             Id = 16,
                             Competencia = new DateTime(2023, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Faixa = 4,
-                            Porcentagem = 14m,
-                            Valor = 7507.49m
+                            Porcentagem = 14.0,
+                            Valor = 7507.4899999999998
                         },
                         new
                         {
                             Id = 17,
                             Competencia = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Faixa = 1,
-                            Porcentagem = 7.5m,
-                            Valor = 1412.00m
+                            Porcentagem = 7.5,
+                            Valor = 1412.0
                         },
                         new
                         {
                             Id = 18,
                             Competencia = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Faixa = 2,
-                            Porcentagem = 9m,
-                            Valor = 2666.68m
+                            Porcentagem = 9.0,
+                            Valor = 2666.6799999999998
                         },
                         new
                         {
                             Id = 19,
                             Competencia = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Faixa = 3,
-                            Porcentagem = 12m,
-                            Valor = 4000.03m
+                            Porcentagem = 12.0,
+                            Valor = 4000.0300000000002
                         },
                         new
                         {
                             Id = 20,
                             Competencia = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Faixa = 4,
-                            Porcentagem = 14m,
-                            Valor = 7786.02m
+                            Porcentagem = 14.0,
+                            Valor = 7786.0200000000004
                         },
                         new
                         {
                             Id = 21,
                             Competencia = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Faixa = 1,
-                            Porcentagem = 7.5m,
-                            Valor = 1518.00m
+                            Porcentagem = 7.5,
+                            Valor = 1518.0
                         },
                         new
                         {
                             Id = 22,
                             Competencia = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Faixa = 2,
-                            Porcentagem = 9m,
-                            Valor = 2793.88m
+                            Porcentagem = 9.0,
+                            Valor = 2793.8800000000001
                         },
                         new
                         {
                             Id = 23,
                             Competencia = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Faixa = 3,
-                            Porcentagem = 12m,
-                            Valor = 4190.83m
+                            Porcentagem = 12.0,
+                            Valor = 4190.8299999999999
                         },
                         new
                         {
                             Id = 24,
                             Competencia = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Faixa = 4,
-                            Porcentagem = 14m,
-                            Valor = 8157.41m
+                            Porcentagem = 14.0,
+                            Valor = 8157.4099999999999
                         });
                 });
 
@@ -290,11 +290,11 @@ namespace CalculoIRRF.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("Aliquota")
-                        .HasColumnType("TEXT");
+                    b.Property<double>("Aliquota")
+                        .HasColumnType("REAL");
 
-                    b.Property<decimal>("BaseCaculo")
-                        .HasColumnType("TEXT");
+                    b.Property<double>("BaseCaculo")
+                        .HasColumnType("REAL");
 
                     b.Property<DateTime>("DataAtualizacao")
                         .HasColumnType("TEXT");
@@ -319,17 +319,17 @@ namespace CalculoIRRF.Migrations
                     b.Property<DateTime>("Competencia")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("Deducao")
-                        .HasColumnType("TEXT");
+                    b.Property<double>("Deducao")
+                        .HasColumnType("REAL");
 
                     b.Property<int>("Faixa")
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("Porcentagem")
-                        .HasColumnType("TEXT");
+                    b.Property<double>("Porcentagem")
+                        .HasColumnType("REAL");
 
-                    b.Property<decimal>("Valor")
-                        .HasColumnType("TEXT");
+                    b.Property<double>("Valor")
+                        .HasColumnType("REAL");
 
                     b.HasKey("Id");
 
@@ -340,136 +340,136 @@ namespace CalculoIRRF.Migrations
                         {
                             Id = 1,
                             Competencia = new DateTime(2015, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deducao = 0m,
+                            Deducao = 0.0,
                             Faixa = 1,
-                            Porcentagem = 0m,
-                            Valor = 1903.98m
+                            Porcentagem = 0.0,
+                            Valor = 1903.98
                         },
                         new
                         {
                             Id = 2,
                             Competencia = new DateTime(2015, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deducao = 142.80m,
+                            Deducao = 142.80000000000001,
                             Faixa = 2,
-                            Porcentagem = 7.50m,
-                            Valor = 2826.65m
+                            Porcentagem = 7.5,
+                            Valor = 2826.6500000000001
                         },
                         new
                         {
                             Id = 3,
                             Competencia = new DateTime(2015, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deducao = 354.80m,
+                            Deducao = 354.80000000000001,
                             Faixa = 3,
-                            Porcentagem = 15m,
-                            Valor = 3751.05m
+                            Porcentagem = 15.0,
+                            Valor = 3751.0500000000002
                         },
                         new
                         {
                             Id = 4,
                             Competencia = new DateTime(2015, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deducao = 636.13m,
+                            Deducao = 636.13,
                             Faixa = 4,
-                            Porcentagem = 22.50m,
-                            Valor = 4664.68m
+                            Porcentagem = 22.5,
+                            Valor = 4664.6800000000003
                         },
                         new
                         {
                             Id = 5,
                             Competencia = new DateTime(2015, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deducao = 869.36m,
+                            Deducao = 869.36000000000001,
                             Faixa = 5,
-                            Porcentagem = 27.50m,
-                            Valor = 99999999999.99m
+                            Porcentagem = 27.5,
+                            Valor = 99999999999.990005
                         },
                         new
                         {
                             Id = 6,
                             Competencia = new DateTime(2023, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deducao = 0m,
+                            Deducao = 0.0,
                             Faixa = 1,
-                            Porcentagem = 0m,
-                            Valor = 2112.00m
+                            Porcentagem = 0.0,
+                            Valor = 2112.0
                         },
                         new
                         {
                             Id = 8,
                             Competencia = new DateTime(2023, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deducao = 158.40m,
+                            Deducao = 158.40000000000001,
                             Faixa = 2,
-                            Porcentagem = 7.50m,
-                            Valor = 2826.65m
+                            Porcentagem = 7.5,
+                            Valor = 2826.6500000000001
                         },
                         new
                         {
                             Id = 9,
                             Competencia = new DateTime(2023, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deducao = 370.40m,
+                            Deducao = 370.39999999999998,
                             Faixa = 3,
-                            Porcentagem = 15m,
-                            Valor = 3751.05m
+                            Porcentagem = 15.0,
+                            Valor = 3751.0500000000002
                         },
                         new
                         {
                             Id = 10,
                             Competencia = new DateTime(2023, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deducao = 651.73m,
+                            Deducao = 651.73000000000002,
                             Faixa = 4,
-                            Porcentagem = 22.50m,
-                            Valor = 4664.68m
+                            Porcentagem = 22.5,
+                            Valor = 4664.6800000000003
                         },
                         new
                         {
                             Id = 11,
                             Competencia = new DateTime(2023, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deducao = 884.96m,
+                            Deducao = 884.96000000000004,
                             Faixa = 5,
-                            Porcentagem = 27.50m,
-                            Valor = 99999999999.99m
+                            Porcentagem = 27.5,
+                            Valor = 99999999999.990005
                         },
                         new
                         {
                             Id = 12,
                             Competencia = new DateTime(2024, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deducao = 0m,
+                            Deducao = 0.0,
                             Faixa = 1,
-                            Porcentagem = 0m,
-                            Valor = 2259.20m
+                            Porcentagem = 0.0,
+                            Valor = 2259.1999999999998
                         },
                         new
                         {
                             Id = 13,
                             Competencia = new DateTime(2024, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deducao = 169.44m,
+                            Deducao = 169.44,
                             Faixa = 2,
-                            Porcentagem = 7.50m,
-                            Valor = 2826.65m
+                            Porcentagem = 7.5,
+                            Valor = 2826.6500000000001
                         },
                         new
                         {
                             Id = 14,
                             Competencia = new DateTime(2024, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deducao = 381.44m,
+                            Deducao = 381.44,
                             Faixa = 3,
-                            Porcentagem = 15m,
-                            Valor = 3751.05m
+                            Porcentagem = 15.0,
+                            Valor = 3751.0500000000002
                         },
                         new
                         {
                             Id = 15,
                             Competencia = new DateTime(2024, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deducao = 662.77m,
+                            Deducao = 662.76999999999998,
                             Faixa = 4,
-                            Porcentagem = 22.50m,
-                            Valor = 4664.68m
+                            Porcentagem = 22.5,
+                            Valor = 4664.6800000000003
                         },
                         new
                         {
                             Id = 16,
                             Competencia = new DateTime(2024, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deducao = 896.00m,
+                            Deducao = 896.0,
                             Faixa = 5,
-                            Porcentagem = 27.50m,
-                            Valor = 99999999999.99m
+                            Porcentagem = 27.5,
+                            Valor = 99999999999.990005
                         });
                 });
 
@@ -479,11 +479,11 @@ namespace CalculoIRRF.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("Aliquota")
-                        .HasColumnType("TEXT");
+                    b.Property<double>("Aliquota")
+                        .HasColumnType("REAL");
 
-                    b.Property<decimal>("BaseCaculo")
-                        .HasColumnType("TEXT");
+                    b.Property<double>("BaseCaculo")
+                        .HasColumnType("REAL");
 
                     b.Property<DateTime>("DataAtualizacao")
                         .HasColumnType("TEXT");
@@ -491,17 +491,17 @@ namespace CalculoIRRF.Migrations
                     b.Property<DateTime>("DataCriacao")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("Deducao")
-                        .HasColumnType("TEXT");
+                    b.Property<double>("Deducao")
+                        .HasColumnType("REAL");
 
-                    b.Property<decimal>("Dependente")
-                        .HasColumnType("TEXT");
+                    b.Property<double>("Dependente")
+                        .HasColumnType("REAL");
 
                     b.Property<int>("Sequencia")
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("Simplificado")
-                        .HasColumnType("TEXT");
+                    b.Property<double>("Simplificado")
+                        .HasColumnType("REAL");
 
                     b.HasKey("Id");
 
@@ -517,8 +517,8 @@ namespace CalculoIRRF.Migrations
                     b.Property<DateTime>("Competencia")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("Valor")
-                        .HasColumnType("TEXT");
+                    b.Property<double>("Valor")
+                        .HasColumnType("REAL");
 
                     b.HasKey("Id");
 
@@ -529,13 +529,13 @@ namespace CalculoIRRF.Migrations
                         {
                             Id = 1,
                             Competencia = new DateTime(2023, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Valor = 528.00m
+                            Valor = 528.0
                         },
                         new
                         {
                             Id = 2,
                             Competencia = new DateTime(2024, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Valor = 564.80m
+                            Valor = 564.79999999999995
                         });
                 });
 #pragma warning restore 612, 618

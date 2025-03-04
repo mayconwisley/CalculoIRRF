@@ -10,7 +10,7 @@ public interface ISimplificadoServices
     Task<bool> Gravar(Simplificado simplificado);
     Task<bool> Alterar(Simplificado simplificado);
     Task<bool> Excluir(int id);
-    Task<decimal> ValorSimplificado(DateTime competencia);
+    Task<double> ValorSimplificado(DateTime competencia);
     Task<IEnumerable<Simplificado>> ListarTodos();
     Task<IEnumerable<Simplificado>> ListarTodosPorCompetencia(DateTime competencia);
     Task<Simplificado> ListarPorId(int id);

@@ -13,5 +13,5 @@ public interface IDescontoMinimoRepository
     Task<DescontoMinimo> Create(DescontoMinimo descontoMinimo);
     Task<DescontoMinimo> Update(DescontoMinimo descontoMinimo);
     Task<DescontoMinimo> Delete(int id);
-    Task<decimal> Value(DateTime competence);
+    Task<double> Value(DateTime competence);
 }

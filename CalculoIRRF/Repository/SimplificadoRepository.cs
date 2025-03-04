@@ -63,14 +63,14 @@ public class SimplificadoRepository(CalculoImpostoContext _calculoImpostoContext
         return simplificado;
     }
 
-    public async Task<decimal> Value(DateTime competence)
+    public async Task<double> Value(DateTime competence)
     {
         return await _calculoImpostoContext.Simplificado
                      .Where(w => w.Competencia == _calculoImpostoContext.Simplificado
-                                                .Where(w => w.Competencia == competence)
+                                                .Where(w => w.Competencia <= competence)
                                                 .Max(m => m.Competencia))
                      .Select(s => s.Valor)
-                     .DefaultIfEmpty(0)
+                    
                      .FirstOrDefaultAsync();
     }
 }

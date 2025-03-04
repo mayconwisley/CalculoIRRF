@@ -18,15 +18,14 @@ public class IrrfRepository(CalculoImpostoContext _calculoImpostoContext) : IIrr
         return irrf;
     }
 
-    public async Task<decimal> Deduction(int range, DateTime competence)
+    public async Task<double> Deduction(int range, DateTime competence)
     {
         return await _calculoImpostoContext.Irrf
                       .Where(w => w.Faixa == range &&
                                   w.Competencia == _calculoImpostoContext.Irrf
-                                                   .Where(w => w.Competencia == competence)
+                                                   .Where(w => w.Competencia <= competence)
                                                    .Max(m => m.Competencia))
                       .Select(s => s.Deducao)
-                      .DefaultIfEmpty(0)
                       .FirstOrDefaultAsync();
     }
 
@@ -60,31 +59,32 @@ public class IrrfRepository(CalculoImpostoContext _calculoImpostoContext) : IIrr
 
     public async Task<int> LastRange(DateTime competence)
     {
-        return await _calculoImpostoContext.Irrf
-                      .Where(w => w.Competencia == competence)
-                      .MaxAsync(m => m.Faixa);
+        var query = _calculoImpostoContext.Irrf
+                      .Where(w => w.Competencia == competence);
+
+        return await query.AnyAsync() ? await query.MaxAsync(m => m.Faixa) : 0;
     }
 
-    public async Task<decimal> Percent(int range, DateTime competence)
+    public async Task<double> Percent(int range, DateTime competence)
     {
         return await _calculoImpostoContext.Irrf
                      .Where(w => w.Faixa == range &&
                                  w.Competencia == _calculoImpostoContext.Irrf
-                                                  .Where(w => w.Competencia == competence)
+                                                  .Where(w => w.Competencia <= competence)
                                                   .Max(m => m.Competencia))
                      .Select(s => s.Porcentagem)
-                     .DefaultIfEmpty(0)
                      .FirstOrDefaultAsync();
     }
 
-    public async Task<int> Range(decimal baseIrrf, DateTime competence)
+    public async Task<int> Range(double baseIrrf, DateTime competence)
     {
-        return await _calculoImpostoContext.Irrf
-                      .Where(w => baseIrrf >= w.Valor &&
+        var query = _calculoImpostoContext.Irrf
+                      .Where(w => baseIrrf <= w.Valor &&
                                   w.Competencia == _calculoImpostoContext.Irrf
-                                                  .Where(w => w.Competencia == competence)
-                                                  .Max(m => m.Competencia))
-                      .MinAsync(m => m.Faixa);
+                                                  .Where(w => w.Competencia <= competence)
+                                                  .Max(m => m.Competencia));
+
+        return await query.AnyAsync() ? await query.MinAsync(m => m.Faixa) : 0;
     }
 
     public async Task<Irrf> Update(Irrf irrf)
@@ -102,15 +102,14 @@ public class IrrfRepository(CalculoImpostoContext _calculoImpostoContext) : IIrr
         return irrf;
     }
 
-    public async Task<decimal> Value(int range, DateTime competence)
+    public async Task<double> Value(int range, DateTime competence)
     {
         return await _calculoImpostoContext.Irrf
                      .Where(w => w.Faixa == range &&
                                  w.Competencia == _calculoImpostoContext.Irrf
-                                                  .Where(w => w.Competencia == competence)
+                                                  .Where(w => w.Competencia <= competence)
                                                   .Max(m => m.Competencia))
                      .Select(s => s.Valor)
-                     .DefaultIfEmpty(0)
                      .FirstOrDefaultAsync();
     }
 }

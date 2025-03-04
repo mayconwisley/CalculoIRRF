@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace CalculoIRRF.Services.Calculo;
 
-public class PensaoCalculo(DateTime _competencia, int _qtdDependente, decimal _valorInss,
-                           decimal _valorBruto, decimal _porcentagemPensao,
+public class PensaoCalculo(DateTime _competencia, int _qtdDependente, double _valorInss,
+                           double _valorBruto, double _porcentagemPensao,
                            IIrrfServices _irrfServices, ISimplificadoServices _simplificadoServices,
                            IDependenteServices _dependenteServices, IDescontoMinimoServices _descontoMinimoServices)
 {
-    decimal pensaoSimplificado;
-    decimal pensaoNormal;
+    double pensaoSimplificado;
+    double pensaoNormal;
 
     public List<string> DadosCalculoPensao { get; set; } = [];
 
@@ -20,10 +20,10 @@ public class PensaoCalculo(DateTime _competencia, int _qtdDependente, decimal _v
         IrrfCalculo irrfCalculo = new(_competencia, _qtdDependente, _valorInss, _valorBruto,
                                   _simplificadoServices, _descontoMinimoServices, _irrfServices, _dependenteServices);
 
-        decimal valorSimplificado = await _simplificadoServices.ValorSimplificado(_competencia);
-        decimal valorPensao = 0m;
-        decimal anteriorP = 0m;
-        decimal descontoIrrfSimplificado = 0m;
+        double valorSimplificado = await _simplificadoServices.ValorSimplificado(_competencia);
+        double valorPensao = 0d;
+        double anteriorP = 0d;
+        double descontoIrrfSimplificado = 0d;
         int seqCalculo = 0;
 
         DadosCalculoPensao.Add($"Calculo Pensão Alimentícia - Rendimentos {_porcentagemPensao:##0.00}%\n");
@@ -32,14 +32,14 @@ public class PensaoCalculo(DateTime _competencia, int _qtdDependente, decimal _v
         do
         {
             seqCalculo++;
-            decimal baseIrrf = await irrfCalculo.BaseIrrfSimplificado();
-            decimal basePensao = _valorBruto - _valorInss;
+            double baseIrrf = await irrfCalculo.BaseIrrfSimplificado();
+            double basePensao = _valorBruto - _valorInss;
 
             anteriorP = valorPensao;
 
             int faixaIrrf = await _irrfServices.FaixaIrrf(basePensao - anteriorP, _competencia);
-            decimal aliquotaIrrf = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia) / 100;
-            decimal valorDeducao = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
+            double aliquotaIrrf = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia) / 100;
+            double valorDeducao = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
 
             descontoIrrfSimplificado = await irrfCalculo.Simplificado(valorPensao);
             basePensao = basePensao - descontoIrrfSimplificado;
@@ -65,7 +65,7 @@ public class PensaoCalculo(DateTime _competencia, int _qtdDependente, decimal _v
                                        $"Base Pensão: {basePensao:#,##0.00}, " +
                                        $"Valor Pensão: {valorPensao:#,##0.00}\n");
             }
-        } while (Math.Abs(valorPensao - anteriorP) > 0.01m);
+        } while (Math.Abs(valorPensao - anteriorP) > 0.01d);
 
         pensaoSimplificado = valorPensao + descontoIrrfSimplificado;
         DadosCalculoPensao.Add($"\nTotal IR: {descontoIrrfSimplificado:#,##0.00}\n");
@@ -79,12 +79,12 @@ public class PensaoCalculo(DateTime _competencia, int _qtdDependente, decimal _v
                                       _simplificadoServices, _descontoMinimoServices, _irrfServices, _dependenteServices);
 
 
-        decimal baseCalculo = await irrfCalculo.BaseIrrfNormal();
-        decimal valorDependente = await _dependenteServices.VlrDependente(_competencia) * _qtdDependente;
+        double baseCalculo = await irrfCalculo.BaseIrrfNormal();
+        double valorDependente = await _dependenteServices.VlrDependente(_competencia) * _qtdDependente;
 
-        decimal valorPensao = 0m;
-        decimal anteriorP = 0m;
-        decimal descontoIrrfNormal = 0m;
+        double valorPensao = 0d;
+        double anteriorP = 0d;
+        double descontoIrrfNormal = 0d;
         int seqCalculo = 0;
 
         DadosCalculoPensao.Add("\n\tNormal\n\n");
@@ -95,13 +95,13 @@ public class PensaoCalculo(DateTime _competencia, int _qtdDependente, decimal _v
             anteriorP = valorPensao;
 
             int faixaIrrf = await _irrfServices.FaixaIrrf(baseCalculo - anteriorP, _competencia);
-            decimal aliquotaIrrf = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia) / 100;
-            decimal parcelaDeduzirIrrf = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
-            decimal valorDeducao = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
+            double aliquotaIrrf = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia) / 100;
+            double parcelaDeduzirIrrf = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
+            double valorDeducao = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
             descontoIrrfNormal = await irrfCalculo.Normal(valorPensao);
 
-            decimal novaBaseCalculo = baseCalculo - anteriorP;
-            decimal calculoAliquotaIrPensao = novaBaseCalculo * aliquotaIrrf;
+            double novaBaseCalculo = baseCalculo - anteriorP;
+            double calculoAliquotaIrPensao = novaBaseCalculo * aliquotaIrrf;
 
             valorPensao = (baseCalculo - calculoAliquotaIrPensao + parcelaDeduzirIrrf) * (_porcentagemPensao / 100);
 
@@ -125,7 +125,7 @@ public class PensaoCalculo(DateTime _competencia, int _qtdDependente, decimal _v
                                        $"Base Pensão: {baseCalculo - descontoIrrfNormal:#,##0.00} " +
                                        $"Valor Pensão: {valorPensao:#,##0.00}\n");
             }
-        } while (Math.Abs(valorPensao - anteriorP) > 0.01m);
+        } while (Math.Abs(valorPensao - anteriorP) > 0.01d);
 
         pensaoNormal = valorPensao + descontoIrrfNormal;
         DadosCalculoPensao.Add($"\nTotal IR: {descontoIrrfNormal:#,##0.00}\n");

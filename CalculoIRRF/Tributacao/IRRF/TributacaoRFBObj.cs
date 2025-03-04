@@ -1,10 +1,9 @@
-﻿namespace CalculoIRRF.Tributacao.IRRF
+﻿namespace CalculoIRRF.Tributacao.IRRF;
+
+public class TributacaoRFBObj
 {
-    public class TributacaoRFBObj
-    {
-        public int Sequencia { get; set; }
-        public decimal BaseCalculo { get; set; }
-        public decimal Aliquota { get; set; }
-        public decimal Deducao { get; set; }
-    }
+    public int Sequencia { get; set; }
+    public double BaseCalculo { get; set; }
+    public double Aliquota { get; set; }
+    public double Deducao { get; set; }
 }

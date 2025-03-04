@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace CalculoIRRF.Services.Calculo;
 
-public class InssCalculo(DateTime _competencia, decimal _baseInss, IInssServices _inssServices)
+public class InssCalculo(DateTime _competencia, double _baseInss, IInssServices _inssServices)
 {
-    public async Task<decimal> NormalProgressivo()
+    public async Task<double> NormalProgressivo()
     {
-        decimal teto = await _inssServices.TetoInss(_competencia);
+        double teto = await _inssServices.TetoInss(_competencia);
 
         if (_baseInss > teto)
         {
@@ -18,15 +18,15 @@ public class InssCalculo(DateTime _competencia, decimal _baseInss, IInssServices
 
         int faixaInss = await _inssServices.FaixaInss(_baseInss, _competencia);
 
-        decimal desconto = 0;
-        decimal valorInssAnterior = 0;
+        double desconto = 0;
+        double valorInssAnterior = 0;
 
         for (int i = 1; i <= faixaInss; i++)
         {
-            decimal porcentagemInss = await _inssServices.PorcentagemInss(i, _competencia);
-            decimal valorInss = await _inssServices.ValorInss(i, _competencia);
+            double porcentagemInss = await _inssServices.PorcentagemInss(i, _competencia);
+            double valorInss = await _inssServices.ValorInss(i, _competencia);
 
-            decimal baseInssCalculo = valorInss - valorInssAnterior;
+            double baseInssCalculo = valorInss - valorInssAnterior;
 
             if (valorInss > _baseInss)
             {
@@ -50,18 +50,18 @@ public class InssCalculo(DateTime _competencia, decimal _baseInss, IInssServices
         StringBuilder strMensagem = new();
 
         int faixaInss = await _inssServices.FaixaInss(_baseInss, _competencia);
-        decimal totalDesconto = 0;
-        decimal valorInssAnterior = 0;
+        double totalDesconto = 0;
+        double valorInssAnterior = 0;
 
         strMensagem.Append("Informações de Calculo do INSS\n\n");
         strMensagem.Append($"Base INSS: {_baseInss:#,##0.00}\n");
 
         for (int i = 1; i <= faixaInss; i++)
         {
-            decimal porcentagemInss = await _inssServices.PorcentagemInss(i, _competencia);
-            decimal valorInss = await _inssServices.ValorInss(i, _competencia);
+            double porcentagemInss = await _inssServices.PorcentagemInss(i, _competencia);
+            double valorInss = await _inssServices.ValorInss(i, _competencia);
 
-            decimal baseInssCalculo = valorInss - valorInssAnterior;
+            double baseInssCalculo = valorInss - valorInssAnterior;
 
             if (valorInss > _baseInss)
             {
@@ -73,7 +73,7 @@ public class InssCalculo(DateTime _competencia, decimal _baseInss, IInssServices
                 baseInssCalculo = _baseInss - valorInssAnterior;
             }
 
-            decimal desconto = baseInssCalculo * (porcentagemInss / 100);
+            double desconto = baseInssCalculo * (porcentagemInss / 100);
             totalDesconto += desconto;
 
             valorInssAnterior = valorInss;

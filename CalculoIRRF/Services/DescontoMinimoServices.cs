@@ -45,7 +45,7 @@ public class DescontoMinimoServices(IDescontoMinimoRepository _descontoMinimoRep
             throw;
         }
     }
-    public async Task<decimal> ValorDescontoMinimo(DateTime competencia)
+    public async Task<double> ValorDescontoMinimo(DateTime competencia)
     {
         try
         {

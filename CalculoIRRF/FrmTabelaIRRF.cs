@@ -50,9 +50,9 @@ public partial class FrmTabelaIRRF : Form
             {
                 Competencia = DateTime.Parse(MktCompetencia.Text),
                 Faixa = int.Parse(TxtFaixa.Text.Trim()),
-                Valor = decimal.Parse(TxtValor.Text.Trim()),
-                Porcentagem = decimal.Parse(TxtPorcentagem.Text.Trim()),
-                Deducao = decimal.Parse(TxtDeducao.Text.Trim())
+                Valor = double.Parse(TxtValor.Text.Trim()),
+                Porcentagem = double.Parse(TxtPorcentagem.Text.Trim()),
+                Deducao = double.Parse(TxtDeducao.Text.Trim())
             };
 
             await _irrfServices.Gravar(dados);
@@ -74,9 +74,9 @@ public partial class FrmTabelaIRRF : Form
                 Id = idIrrf,
                 Competencia = DateTime.Parse(MktCompetencia.Text),
                 Faixa = int.Parse(TxtFaixa.Text.Trim()),
-                Valor = decimal.Parse(TxtValor.Text.Trim()),
-                Porcentagem = decimal.Parse(TxtPorcentagem.Text.Trim()),
-                Deducao = decimal.Parse(TxtDeducao.Text.Trim())
+                Valor = double.Parse(TxtValor.Text.Trim()),
+                Porcentagem = double.Parse(TxtPorcentagem.Text.Trim()),
+                Deducao = double.Parse(TxtDeducao.Text.Trim())
             };
 
             await _irrfServices.Alterar(dados);
@@ -113,10 +113,10 @@ public partial class FrmTabelaIRRF : Form
         {
             idIrrf = int.Parse(DgvTabelaIRRF.Rows[e.RowIndex].Cells["Id"].Value.ToString());
             MktCompetencia.Text = DateTime.Parse(DgvTabelaIRRF.Rows[e.RowIndex].Cells["Competencia"].Value.ToString()).ToString("MM/yyyy");
-            TxtFaixa.Text = decimal.Parse(DgvTabelaIRRF.Rows[e.RowIndex].Cells["Faixa"].Value.ToString()).ToString("0");
-            TxtValor.Text = decimal.Parse(DgvTabelaIRRF.Rows[e.RowIndex].Cells["Valor"].Value.ToString()).ToString("#,##0.00");
-            TxtPorcentagem.Text = decimal.Parse(DgvTabelaIRRF.Rows[e.RowIndex].Cells["Porcentagem"].Value.ToString()).ToString("#,##0.00");
-            TxtDeducao.Text = decimal.Parse(DgvTabelaIRRF.Rows[e.RowIndex].Cells["Deducao"].Value.ToString()).ToString("#,##0.00");
+            TxtFaixa.Text = double.Parse(DgvTabelaIRRF.Rows[e.RowIndex].Cells["Faixa"].Value.ToString()).ToString("0");
+            TxtValor.Text = double.Parse(DgvTabelaIRRF.Rows[e.RowIndex].Cells["Valor"].Value.ToString()).ToString("#,##0.00");
+            TxtPorcentagem.Text = double.Parse(DgvTabelaIRRF.Rows[e.RowIndex].Cells["Porcentagem"].Value.ToString()).ToString("#,##0.00");
+            TxtDeducao.Text = double.Parse(DgvTabelaIRRF.Rows[e.RowIndex].Cells["Deducao"].Value.ToString()).ToString("#,##0.00");
         }
         catch (Exception ex)
         {

@@ -1,16 +1,16 @@
 ﻿namespace CalculoIRRF.Services.Calculo;
 
-public class FgtsCalculo(decimal baseInss)
+public class FgtsCalculo(double baseInss)
 {
-    private readonly decimal _baseInss = baseInss;
+    private readonly double _baseInss = baseInss;
 
-    public decimal Normal8()
+    public double Normal8()
     {
-        return _baseInss * 0.08m;
+        return _baseInss * 0.08d;
     }
 
-    public decimal Normal2()
+    public double Normal2()
     {
-        return _baseInss * 0.02m;
+        return _baseInss * 0.02d;
     }
 }

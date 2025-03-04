@@ -8,9 +8,9 @@ public class IrrfRfb
     public DateTime DataCriacao { get; set; }
     public DateTime DataAtualizacao { get; set; }
     public int Sequencia { get; set; }
-    public decimal BaseCaculo { get; set; }
-    public decimal Aliquota { get; set; }
-    public decimal Deducao { get; set; }
-    public decimal Dependente { get; set; }
-    public decimal Simplificado { get; set; }
+    public double BaseCaculo { get; set; }
+    public double Aliquota { get; set; }
+    public double Deducao { get; set; }
+    public double Dependente { get; set; }
+    public double Simplificado { get; set; }
 }

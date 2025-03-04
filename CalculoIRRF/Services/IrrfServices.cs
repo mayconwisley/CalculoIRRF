@@ -45,7 +45,7 @@ public class IrrfServices(IIrrfRepository _irrfRepository) : IIrrfServices
             throw;
         }
     }
-    public async Task<int> FaixaIrrf(decimal baseIrrf, DateTime competencia)
+    public async Task<int> FaixaIrrf(double baseIrrf, DateTime competencia)
     {
         try
         {
@@ -67,7 +67,7 @@ public class IrrfServices(IIrrfRepository _irrfRepository) : IIrrfServices
             throw;
         }
     }
-    public async Task<decimal> PorcentagemIrrf(int faixa, DateTime competencia)
+    public async Task<double> PorcentagemIrrf(int faixa, DateTime competencia)
     {
         try
         {
@@ -79,7 +79,7 @@ public class IrrfServices(IIrrfRepository _irrfRepository) : IIrrfServices
             throw;
         }
     }
-    public async Task<decimal> DeducaoIrrf(int faixa, DateTime competencia)
+    public async Task<double> DeducaoIrrf(int faixa, DateTime competencia)
     {
         try
         {
@@ -90,7 +90,7 @@ public class IrrfServices(IIrrfRepository _irrfRepository) : IIrrfServices
             throw;
         }
     }
-    public async Task<decimal> ValorIrrf(int faixa, DateTime competencia)
+    public async Task<double> ValorIrrf(int faixa, DateTime competencia)
     {
 
         try

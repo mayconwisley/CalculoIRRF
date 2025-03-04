@@ -10,7 +10,7 @@ public interface IDescontoMinimoServices
     Task<bool> Gravar(DescontoMinimo descontoMinimo);
     Task<bool> Alterar(DescontoMinimo descontoMinimo);
     Task<bool> Excluir(int id);
-    Task<decimal> ValorDescontoMinimo(DateTime competencia);
+    Task<double> ValorDescontoMinimo(DateTime competencia);
     Task<IEnumerable<DescontoMinimo>> ListarTodos();
     Task<IEnumerable<DescontoMinimo>> ListarTodosPorCompetencia(DateTime competencia);
     Task<DescontoMinimo> ListarPorId(int id);

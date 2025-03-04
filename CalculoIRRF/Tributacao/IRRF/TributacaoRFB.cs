@@ -43,7 +43,7 @@ public class TributacaoRFB
 
     //        if (countItem == item.Sequencia)
     //        {
-    //            irrfRfb.BaseCaculo = decimal.Parse("9999999999999.99");
+    //            irrfRfb.BaseCaculo = double.Parse("9999999999999.99");
     //        }
     //        //  cadastro.GravarRfbOnline(irrfRfb);
 
@@ -58,7 +58,7 @@ public class TributacaoRFB
 
     //        if (countItem == item.Sequencia)
     //        {
-    //            irrf.Valor = decimal.Parse("9999999999999.99");
+    //            irrf.Valor = double.Parse("9999999999999.99");
     //        }
     //        await cadastro.Gravar(irrf);
 
@@ -103,7 +103,7 @@ public class TributacaoRFB
     //    }
     //}
 
-    //private decimal BuscarValorDependenteOnline(HtmlDocument htmlDocument)
+    //private double BuscarValorDependenteOnline(HtmlDocument htmlDocument)
     //{
     //    Validar validar = new Validar();
 
@@ -126,7 +126,7 @@ public class TributacaoRFB
     //        throw;
     //    }
     //}
-    //private decimal BuscarDescontoSimplicadoOnline(HtmlDocument htmlDocument)
+    //private double BuscarDescontoSimplicadoOnline(HtmlDocument htmlDocument)
     //{
 
     //    Validar validar = new Validar();

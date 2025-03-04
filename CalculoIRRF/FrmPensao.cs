@@ -11,8 +11,8 @@ namespace CalculoIRRF;
 public partial class FrmPensao : Form
 {
     readonly DateTime _competencia;
-    readonly decimal _baseInss;
-    readonly decimal _valorBruto;
+    readonly double _baseInss;
+    readonly double _valorBruto;
     readonly int _qtdDependente;
     readonly IInssServices _inssServices;
     readonly IIrrfServices _irrfServices;
@@ -21,7 +21,7 @@ public partial class FrmPensao : Form
     readonly IDescontoMinimoServices _descontoMinimoServices;
 
 
-    public FrmPensao(DateTime competencia, decimal baseInss, int qtdDependente, decimal valorBruto,
+    public FrmPensao(DateTime competencia, double baseInss, int qtdDependente, double valorBruto,
                      IInssServices inssServices, IIrrfServices irrfServices, ISimplificadoServices simplificadoServices,
                      IDependenteServices dependenteServices, IDescontoMinimoServices descontoMinimoServices)
     {
@@ -41,12 +41,12 @@ public partial class FrmPensao : Form
     private async void BtnCalcular_Click(object sender, EventArgs e)
     {
         RtxDescricao.Clear();
-        decimal valorBruto = decimal.Parse(TxtValorBruto.Text.Trim());
-        decimal porcenPensao = decimal.Parse(TxtPorcentagem.Text.Trim());
-        decimal outroDesconto = decimal.Parse(TxtOutrosDescontos.Text.Trim());
+        double valorBruto = double.Parse(TxtValorBruto.Text.Trim());
+        double porcenPensao = double.Parse(TxtPorcentagem.Text.Trim());
+        double outroDesconto = double.Parse(TxtOutrosDescontos.Text.Trim());
 
         InssCalculo inssCalculo = new(_competencia, _baseInss, _inssServices);
-        decimal valorInss = await inssCalculo.NormalProgressivo();
+        double valorInss = await inssCalculo.NormalProgressivo();
 
         PensaoCalculo pensaoCalculo = new(_competencia, _qtdDependente, valorInss, (valorBruto - outroDesconto), porcenPensao,
                                           _irrfServices, _simplificadoServices, _dependenteServices, _descontoMinimoServices);
@@ -125,12 +125,12 @@ public partial class FrmPensao : Form
     private async void BtnDetalhar_Click(object sender, EventArgs e)
     {
         RtxDescricao.Clear();
-        decimal valorBruto = decimal.Parse(TxtValorBruto.Text.Trim());
-        decimal porcenPensao = decimal.Parse(TxtPorcentagem.Text.Trim());
-        decimal outroDesconto = decimal.Parse(TxtOutrosDescontos.Text.Trim());
+        double valorBruto = double.Parse(TxtValorBruto.Text.Trim());
+        double porcenPensao = double.Parse(TxtPorcentagem.Text.Trim());
+        double outroDesconto = double.Parse(TxtOutrosDescontos.Text.Trim());
 
         InssCalculo inssCalculo = new(_competencia, _baseInss, _inssServices);
-        decimal valorInss = await inssCalculo.NormalProgressivo();
+        double valorInss = await inssCalculo.NormalProgressivo();
 
         PensaoCalculo pensaoCalculo = new(_competencia, _qtdDependente, valorInss, (valorBruto - outroDesconto), porcenPensao,
                                           _irrfServices, _simplificadoServices, _dependenteServices, _descontoMinimoServices);

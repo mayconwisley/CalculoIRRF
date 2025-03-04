@@ -42,7 +42,7 @@ public class Validar
 
     public static string Formatar(string valor)
     {
-        decimal formatar = decimal.Parse(valor);
+        double formatar = double.Parse(valor);
         var strValor = formatar.ToString("#,##0.00");
         if (strValor == "0,00")
         {
@@ -86,7 +86,7 @@ public class Validar
 
     public static string FormatarNumero(string valor)
     {
-        decimal formatar = decimal.Parse(valor);
+        double formatar = double.Parse(valor);
         var strValor = formatar.ToString("0");
         if (strValor == "0")
         {
@@ -105,35 +105,35 @@ public class Validar
         return strValor;
     }
 
-    public static decimal ExtrairValor(string dados)
+    public static double ExtrairValor(string dados)
     {
         var match = Regex.Match(dados, @"[\d,.]+");
 
         if (match.Success)
         {
-            return decimal.Parse(match.Value);
+            return double.Parse(match.Value);
         }
         else
         {
             return 0;
         }
     }
-    public static decimal ExtrairMaiorValor(string dados)
+    public static double ExtrairMaiorValor(string dados)
     {
         var matches = Regex.Matches(dados, @"[\d,.]+");
 
         if (matches.Count == 1)
         {
-            return decimal.Parse(matches[0].Value);
+            return double.Parse(matches[0].Value);
         }
 
-        if (decimal.Parse(matches[0].Value) > decimal.Parse(matches[1].Value))
+        if (double.Parse(matches[0].Value) > double.Parse(matches[1].Value))
         {
-            return decimal.Parse(matches[0].Value);
+            return double.Parse(matches[0].Value);
         }
         else
         {
-            return decimal.Parse(matches[1].Value);
+            return double.Parse(matches[1].Value);
         }
     }
 }

@@ -9,7 +9,7 @@ public class DependenteConfiguration : IEntityTypeConfiguration<Dependente>
     public void Configure(EntityTypeBuilder<Dependente> builder)
     {
         builder.HasData(
-       new Dependente { Id = 1, Valor = 189.59m, Competencia = DateTime.Parse("01/01/2015") }
+       new Dependente { Id = 1, Valor = 189.59d, Competencia = DateTime.Parse("01/01/2015") }
        );
     }
 }

@@ -9,7 +9,7 @@ public class DescontoMinimoConfiguration : IEntityTypeConfiguration<DescontoMini
     public void Configure(EntityTypeBuilder<DescontoMinimo> builder)
     {
         builder.HasData(
-            new DescontoMinimo { Id = 1, Valor = 10m, Competencia = DateTime.Parse("01/05/2023") }
+            new DescontoMinimo { Id = 1, Valor = 10d, Competencia = DateTime.Parse("01/05/2023") }
         );
     }
 }

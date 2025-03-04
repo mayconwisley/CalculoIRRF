@@ -56,8 +56,8 @@ public partial class FrmTabelaINSS : Form
             {
                 Competencia = DateTime.Parse(MktCompetencia.Text),
                 Faixa = int.Parse(TxtFaixa.Text.Trim()),
-                Valor = decimal.Parse(TxtValor.Text.Trim()),
-                Porcentagem = decimal.Parse(TxtPorcentagem.Text.Trim())
+                Valor = double.Parse(TxtValor.Text.Trim()),
+                Porcentagem = double.Parse(TxtPorcentagem.Text.Trim())
             };
             await _inssServices.Gravar(dados);
             await ListarTabelaInss();
@@ -77,8 +77,8 @@ public partial class FrmTabelaINSS : Form
                 Id = idInss,
                 Competencia = DateTime.Parse(MktCompetencia.Text),
                 Faixa = int.Parse(TxtFaixa.Text.Trim()),
-                Valor = decimal.Parse(TxtValor.Text.Trim()),
-                Porcentagem = decimal.Parse(TxtPorcentagem.Text.Trim())
+                Valor = double.Parse(TxtValor.Text.Trim()),
+                Porcentagem = double.Parse(TxtPorcentagem.Text.Trim())
             };
             await _inssServices.Alterar(dados);
             await ListarTabelaInss();
@@ -108,9 +108,9 @@ public partial class FrmTabelaINSS : Form
         {
             idInss = int.Parse(DgvTabelaINSS.Rows[e.RowIndex].Cells["Id"].Value.ToString());
             MktCompetencia.Text = DateTime.Parse(DgvTabelaINSS.Rows[e.RowIndex].Cells["Competencia"].Value.ToString()).ToString("MM/yyyy");
-            TxtFaixa.Text = decimal.Parse(DgvTabelaINSS.Rows[e.RowIndex].Cells["Faixa"].Value.ToString()).ToString("0");
-            TxtValor.Text = decimal.Parse(DgvTabelaINSS.Rows[e.RowIndex].Cells["Valor"].Value.ToString()).ToString("#,##0.00");
-            TxtPorcentagem.Text = decimal.Parse(DgvTabelaINSS.Rows[e.RowIndex].Cells["Porcentagem"].Value.ToString()).ToString("#,##0.00");
+            TxtFaixa.Text = double.Parse(DgvTabelaINSS.Rows[e.RowIndex].Cells["Faixa"].Value.ToString()).ToString("0");
+            TxtValor.Text = double.Parse(DgvTabelaINSS.Rows[e.RowIndex].Cells["Valor"].Value.ToString()).ToString("#,##0.00");
+            TxtPorcentagem.Text = double.Parse(DgvTabelaINSS.Rows[e.RowIndex].Cells["Porcentagem"].Value.ToString()).ToString("#,##0.00");
         }
         catch (Exception ex)
         {

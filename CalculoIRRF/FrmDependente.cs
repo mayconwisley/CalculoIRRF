@@ -42,7 +42,7 @@ public partial class FrmDependente : Form
             Dependente dados = new()
             {
                 Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
-                Valor = decimal.Parse(TxtValor.Text.Trim())
+                Valor = double.Parse(TxtValor.Text.Trim())
             };
 
             await _dependenteServices.Gravar(dados);
@@ -61,7 +61,7 @@ public partial class FrmDependente : Form
             {
                 Id = idDependente,
                 Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
-                Valor = decimal.Parse(TxtValor.Text.Trim())
+                Valor = double.Parse(TxtValor.Text.Trim())
             };
             await _dependenteServices.Alterar(dados);
             await ListarTabelaDependente();
@@ -89,7 +89,7 @@ public partial class FrmDependente : Form
         {
             idDependente = int.Parse(DgvValorDependente.Rows[e.RowIndex].Cells["Id"].Value.ToString());
             MktCompetencia.Text = DateTime.Parse(DgvValorDependente.Rows[e.RowIndex].Cells["Competencia"].Value.ToString()).ToString("MM/yyyy");
-            TxtValor.Text = decimal.Parse(DgvValorDependente.Rows[e.RowIndex].Cells["Valor"].Value.ToString()).ToString("#,##0.00");
+            TxtValor.Text = double.Parse(DgvValorDependente.Rows[e.RowIndex].Cells["Valor"].Value.ToString()).ToString("#,##0.00");
         }
         catch (Exception ex)
         {

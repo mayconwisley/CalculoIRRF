@@ -45,7 +45,7 @@ public class InssServices(IInssRepository _inssRepository) : IInssServices
             throw;
         }
     }
-    public async Task<int> FaixaInss(decimal baseInss, DateTime competencia)
+    public async Task<int> FaixaInss(double baseInss, DateTime competencia)
     {
         try
         {
@@ -70,7 +70,7 @@ public class InssServices(IInssRepository _inssRepository) : IInssServices
             throw;
         }
     }
-    public async Task<decimal> PorcentagemInss(int faixa, DateTime competencia)
+    public async Task<double> PorcentagemInss(int faixa, DateTime competencia)
     {
         try
         {
@@ -82,7 +82,7 @@ public class InssServices(IInssRepository _inssRepository) : IInssServices
             throw;
         }
     }
-    public async Task<decimal> ValorInss(int faixa, DateTime competencia)
+    public async Task<double> ValorInss(int faixa, DateTime competencia)
     {
         try
         {
@@ -94,7 +94,7 @@ public class InssServices(IInssRepository _inssRepository) : IInssServices
             throw;
         }
     }
-    public async Task<decimal> TetoInss(DateTime competencia)
+    public async Task<double> TetoInss(DateTime competencia)
     {
         try
         {

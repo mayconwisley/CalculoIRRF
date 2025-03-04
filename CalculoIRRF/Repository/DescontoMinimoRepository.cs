@@ -78,14 +78,14 @@ public class DescontoMinimoRepository(CalculoImpostoContext _calculoImpostoConte
         return descontoMinimo ?? new();
     }
 
-    public async Task<decimal> Value(DateTime competence)
+    public async Task<double> Value(DateTime competence)
     {
-        var value = await _calculoImpostoContext.DescontoMinimo
+        var value = (double)await _calculoImpostoContext.DescontoMinimo
                           .Where(w => w.Competencia == _calculoImpostoContext.DescontoMinimo
                                                        .Where(w => w.Competencia == competence)
                                                        .Max(m => m.Competencia))
                           .Select(s => s.Valor)
-                          .DefaultIfEmpty(0)
+
                           .FirstOrDefaultAsync();
         return value;
     }

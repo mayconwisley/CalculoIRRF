@@ -68,46 +68,43 @@ public class InssRepository(CalculoImpostoContext _calculoImpostoContext) : IIns
         var query = _calculoImpostoContext.Inss
                     .Where(w => w.Competencia == competence);
 
-        var lastRange = await query.AnyAsync() ? await query.MinAsync(m => m.Faixa) : 0;
-
-        return lastRange;
+        return await query.AnyAsync() ? await query.MinAsync(m => m.Faixa) : 0;
     }
 
-    public async Task<decimal> Percent(int range, DateTime competence)
+    public async Task<double> Percent(int range, DateTime competence)
     {
         var percent = await _calculoImpostoContext.Inss
                             .Where(w => w.Faixa == range &&
                                         w.Competencia == _calculoImpostoContext
                                                         .Inss
-                                                        .Where(w => w.Competencia == competence)
+                                                        .Where(w => w.Competencia <= competence)
                                                         .Max(m => m.Competencia))
                             .Select(s => s.Porcentagem)
-                            .DefaultIfEmpty(0)
                             .FirstOrDefaultAsync();
         return percent;
     }
 
-    public async Task<int> Range(decimal baseInss, DateTime competence)
+    public async Task<int> Range(double baseInss, DateTime competence)
     {
         var range = await _calculoImpostoContext.Inss
-                          .Where(w => w.Valor == baseInss &&
+                          .Where(w => w.Valor >= baseInss &&
                                       w.Competencia == _calculoImpostoContext.Inss
-                                                       .Where(w => w.Competencia == competence)
+                                                       .Where(w => w.Competencia <= competence)
                                                        .Max(m => m.Competencia))
                           .Select(s => s.Faixa)
-                          .DefaultIfEmpty(0)
+
                           .FirstOrDefaultAsync();
         return range;
     }
 
-    public async Task<decimal> Roof(DateTime competence)
+    public async Task<double> Roof(DateTime competence)
     {
-        var roof = await _calculoImpostoContext.Inss
-                         .Where(w => w.Competencia == _calculoImpostoContext.Inss
-                                                      .Where(w => w.Competencia == competence)
-                                                      .Max(m => m.Competencia))
-                         .MaxAsync(m => m.Valor);
-        return roof;
+        var query = _calculoImpostoContext.Inss
+                      .Where(w => w.Competencia == _calculoImpostoContext.Inss
+                                                   .Where(w => w.Competencia <= competence)
+                                                   .Max(m => m.Competencia));
+
+        return await query.AnyAsync() ? await query.MaxAsync(ma => ma.Valor) : 0d;
     }
 
     public async Task<Inss> Update(Inss inss)
@@ -125,15 +122,14 @@ public class InssRepository(CalculoImpostoContext _calculoImpostoContext) : IIns
         return inss;
     }
 
-    public async Task<decimal> Value(int range, DateTime competence)
+    public async Task<double> Value(int range, DateTime competence)
     {
         var value = await _calculoImpostoContext.Inss
                           .Where(w => w.Faixa == range &&
                                     w.Competencia == _calculoImpostoContext.Inss
-                                                    .Where(w => w.Competencia == competence)
+                                                    .Where(w => w.Competencia <= competence)
                                                     .Max(m => m.Competencia))
                           .Select(s => s.Valor)
-                          .DefaultIfEmpty(0)
                           .FirstOrDefaultAsync();
         return value;
     }

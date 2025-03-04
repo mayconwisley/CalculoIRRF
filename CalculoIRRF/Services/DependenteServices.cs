@@ -46,7 +46,7 @@ public class DependenteServices(IDependenteRepository _dependenteRepository) : I
             throw new Exception(ex.Message);
         }
     }
-    public async Task<decimal> VlrDependente(DateTime competencia)
+    public async Task<double> VlrDependente(DateTime competencia)
     {
         try
         {

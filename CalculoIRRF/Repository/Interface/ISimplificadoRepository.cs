@@ -13,5 +13,5 @@ public interface ISimplificadoRepository
     Task<Simplificado> Create(Simplificado simplificado);
     Task<Simplificado> Update(Simplificado simplificado);
     Task<Simplificado> Delete(int id);
-    Task<decimal> Value(DateTime competence);
+    Task<double> Value(DateTime competence);
 }

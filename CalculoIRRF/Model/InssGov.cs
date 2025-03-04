@@ -8,6 +8,6 @@ public class InssGov
     public DateTime DataCriacao { get; set; }
     public DateTime DataAtualizacao { get; set; }
     public int Sequencia { get; set; }
-    public decimal BaseCaculo { get; set; }
-    public decimal Aliquota { get; set; }
+    public double BaseCaculo { get; set; }
+    public double Aliquota { get; set; }
 }

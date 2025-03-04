@@ -45,7 +45,7 @@ public class DependenteRepository(CalculoImpostoContext _calculoImpostoContext) 
     {
         var listDependente = await _calculoImpostoContext.Dependente
                                    .Where(w => w.Competencia == _calculoImpostoContext.Dependente
-                                                                .Where(w => w.Competencia == competence)
+                                                                .Where(w => w.Competencia <= competence)
                                                                 .Max(m => m.Competencia))
                                    .ToListAsync();
         return listDependente ?? [];
@@ -70,14 +70,14 @@ public class DependenteRepository(CalculoImpostoContext _calculoImpostoContext) 
         return dependente;
     }
 
-    public async Task<decimal> Value(DateTime competence)
+    public async Task<double> Value(DateTime competence)
     {
-        var value = await _calculoImpostoContext.Dependente
+        var value = (double)await _calculoImpostoContext.Dependente
                               .Where(w => w.Competencia == _calculoImpostoContext.Dependente
                                                           .Where(w => w.Competencia <= competence)
                                                           .Max(w => w.Competencia))
                               .Select(s => s.Valor)
-                              .DefaultIfEmpty(0)
+
                               .FirstOrDefaultAsync();
         return value;
     }

@@ -43,7 +43,7 @@ public partial class FrmDeducaoSimplificada : Form
             Simplificado dados = new()
             {
                 Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
-                Valor = decimal.Parse(TxtValor.Text.Trim())
+                Valor = double.Parse(TxtValor.Text.Trim())
             };
             await _simplificadoServices.Gravar(dados);
             await ListarTabelaSimplificado();
@@ -62,7 +62,7 @@ public partial class FrmDeducaoSimplificada : Form
             {
                 Id = idSimplificado,
                 Competencia = DateTime.Parse(MktCompetencia.Text.Trim()),
-                Valor = decimal.Parse(TxtValor.Text.Trim())
+                Valor = double.Parse(TxtValor.Text.Trim())
             };
             await _simplificadoServices.Alterar(dados);
             await ListarTabelaSimplificado();
@@ -98,7 +98,7 @@ public partial class FrmDeducaoSimplificada : Form
         {
             idSimplificado = int.Parse(DgvValorSimplificado.Rows[e.RowIndex].Cells["Id"].Value.ToString());
             MktCompetencia.Text = DateTime.Parse(DgvValorSimplificado.Rows[e.RowIndex].Cells["Competencia"].Value.ToString()).ToString("MM/yyyy");
-            TxtValor.Text = decimal.Parse(DgvValorSimplificado.Rows[e.RowIndex].Cells["Valor"].Value.ToString()).ToString("#,##0.00");
+            TxtValor.Text = double.Parse(DgvValorSimplificado.Rows[e.RowIndex].Cells["Valor"].Value.ToString()).ToString("#,##0.00");
         }
         catch (Exception ex)
         {

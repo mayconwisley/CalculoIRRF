@@ -13,5 +13,5 @@ public interface IDependenteServices
     Task<bool> Gravar(Dependente dependente);
     Task<bool> Alterar(Dependente dependente);
     Task<bool> Excluir(int id);
-    Task<decimal> VlrDependente(DateTime competencia);
+    Task<double> VlrDependente(DateTime competencia);
 }
