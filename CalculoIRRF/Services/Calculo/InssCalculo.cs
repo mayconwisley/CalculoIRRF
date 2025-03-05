@@ -1,11 +1,12 @@
-﻿using CalculoIRRF.Services.Interface;
+﻿using CalculoIRRF.Services.Calculo.Interface;
+using CalculoIRRF.Services.Interface;
 using System;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CalculoIRRF.Services.Calculo;
 
-public class InssCalculo(DateTime _competencia, double _baseInss, IInssServices _inssServices)
+public class InssCalculo(DateTime _competencia, double _baseInss, IInssServices _inssServices) : IInssCalculo
 {
     public async Task<double> NormalProgressivo()
     {

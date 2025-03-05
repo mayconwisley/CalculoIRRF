@@ -1,4 +1,5 @@
-﻿using CalculoIRRF.Services.Interface;
+﻿using CalculoIRRF.Services.Calculo.Interface;
+using CalculoIRRF.Services.Interface;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ namespace CalculoIRRF.Services.Calculo;
 
 public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valorInss, double _valorBruto,
                          ISimplificadoServices _simplificadoServices, IDescontoMinimoServices _descontoMinimoServices,
-                         IIrrfServices _irrfServices, IDependenteServices _dependenteServices)
+                         IIrrfServices _irrfServices, IDependenteServices _dependenteServices) : IIrrfCalculo
 {
     public async Task<double> BaseIrrfNormal()
     {
@@ -56,7 +57,7 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
             aliquotaEfetiva = 0d;
         }
 
-        StringBuilder strMensagem = new StringBuilder();
+        StringBuilder strMensagem = new();
         strMensagem.Append("Informações de Calculo do IR Normal\n\n");
         strMensagem.Append($"Valor Bruto: {_valorBruto:#,##0.00}\n");
         strMensagem.Append($"Valor INSS: {_valorInss:#,##0.00}\n");
@@ -111,6 +112,50 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
         strMensagem.Append($"Valor Bruto: {_valorBruto:#,##0.00}\n");
         strMensagem.Append($"Valor INSS: {_valorInss:#,##0.00}\n");
         strMensagem.Append($"Quantidade Dependente: {_qtdDependente} Valor: {valorDependente:#,##0.00} Total: {_qtdDependente * valorDependente:#,##0.00}\n");
+        strMensagem.Append($"Base de IR: {baseIrrf:#,##0.00}\n");
+
+        for (int i = 1; i <= faixaIrrf; i++)
+        {
+            double porcentagemInss = await _irrfServices.PorcentagemIrrf(i, _competencia);
+            double valorIrrf = await _irrfServices.ValorIrrf(i, _competencia);
+            double baseIrrfCalculo = valorIrrf - valorInssAnterior;
+
+            if (valorIrrf > baseIrrf)
+            {
+                baseIrrfCalculo = baseIrrf - valorInssAnterior;
+            }
+
+            if (baseIrrfCalculo > _valorBruto)
+            {
+                baseIrrfCalculo = baseIrrf - valorInssAnterior;
+            }
+
+            double desconto = baseIrrfCalculo * (porcentagemInss / 100);
+            totalDesconto += desconto;
+
+            valorInssAnterior = valorIrrf;
+
+            strMensagem.Append($"{i}º Faixa ");
+            strMensagem.Append($"Base do IR: {baseIrrfCalculo:#,##0.00} ");
+            strMensagem.Append($"Porcentagem: {porcentagemInss:#,##0.00}% ");
+            strMensagem.Append($"Imposto: {desconto:#,##0.00}\n");
+        }
+        strMensagem.Append($"Valor do Desconto: {totalDesconto:#,##0.00}\n\n");
+
+        return strMensagem.ToString();
+    }
+    public async Task<string> DescricaoCalculoSimplificadoProgrssivo()
+    {
+        StringBuilder strMensagem = new();
+
+
+        double baseIrrf = await BaseIrrfSimplificado();
+        int faixaIrrf = await _irrfServices.FaixaIrrf(baseIrrf, _competencia);
+        double totalDesconto = 0;
+        double valorInssAnterior = 0;
+
+        strMensagem.Append("Informações de Calculo do IR Simplificado Progressivo\n\n");
+        strMensagem.Append($"Valor Bruto: {_valorBruto:#,##0.00}\n");
         strMensagem.Append($"Base de IR: {baseIrrf:#,##0.00}\n");
 
         for (int i = 1; i <= faixaIrrf; i++)

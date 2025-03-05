@@ -3,7 +3,6 @@ using CalculoIRRF.Services.Interface;
 using CalculoIRRF.Services.Validacao;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Drawing;
 using System.Runtime.Versioning;
 using System.Windows.Forms;
 
@@ -13,87 +12,68 @@ namespace CalculoIRRF;
 public partial class FrmPrincipal : Form
 {
     readonly IServiceProvider _serviceProvider;
+    readonly IInssServices _inssServices;
+    readonly ISimplificadoServices _simplificadoServices;
+    readonly IDescontoMinimoServices _descontoMinimoServices;
+    readonly IIrrfServices _irrfServices;
+    readonly IDependenteServices _dependenteServices;
+
     public FrmPrincipal(IServiceProvider serviceProvider)
     {
         InitializeComponent();
         _serviceProvider = serviceProvider;
+        _inssServices = _serviceProvider.GetRequiredService<IInssServices>();
+        _irrfServices = _serviceProvider.GetRequiredService<IIrrfServices>();
+        _simplificadoServices = _serviceProvider.GetRequiredService<ISimplificadoServices>();
+        _descontoMinimoServices = _serviceProvider.GetRequiredService<IDescontoMinimoServices>();
+        _dependenteServices = _serviceProvider.GetRequiredService<IDependenteServices>();
     }
 
     private void BtnTabelaIRRF_Click(object sender, EventArgs e)
     {
-        FrmTabelaIRRF tabelaIRRF = new(_serviceProvider.GetRequiredService<IIrrfServices>());
+        FrmTabelaIRRF tabelaIRRF = new(_irrfServices);
         tabelaIRRF.ShowDialog();
     }
 
     private void BtnTabelaValSimplificado_Click(object sender, EventArgs e)
     {
-        FrmDeducaoSimplificada deducaoSimplificada = new(_serviceProvider.GetRequiredService<ISimplificadoServices>());
+        FrmDeducaoSimplificada deducaoSimplificada = new(_simplificadoServices);
         deducaoSimplificada.ShowDialog();
     }
 
     private async void BtnCalcular_Click(object sender, EventArgs e)
     {
-
-        DateTime competencia = DateTime.Parse(MktCompetencia.Text.Trim());
-        double valorBruto = double.Parse(TxtValorBruto.Text.Trim());
-        double baseInss = double.Parse(TxtBaseInss.Text.Trim());
-        int qtdDependente = int.Parse(TxtQtdDependente.Text.Trim());
         RTxtResultado.Clear();
+
+        if (!DateTime.TryParse(MktCompetencia.Text.Trim(), out DateTime competencia) ||
+         !double.TryParse(TxtValorBruto.Text.Trim(), out double valorBruto) ||
+         !double.TryParse(TxtBaseInss.Text.Trim(), out double baseInss) ||
+         !int.TryParse(TxtQtdDependente.Text.Trim(), out int qtdDependente))
+        {
+            MessageBox.Show("Por favor, insira valores válidos.");
+            return;
+        }
 
         try
         {
-            InssCalculo inssCalculo = new(competencia, baseInss, _serviceProvider.GetRequiredService<IInssServices>());
-            double valorInss = await inssCalculo.NormalProgressivo();
+            var calculoImposto = _serviceProvider.GetRequiredService<CalculoImposto>();
+            var resultado = await calculoImposto.Calcular(competencia, valorBruto, baseInss, qtdDependente);
 
-            IrrfCalculo irrfCalculo = new(competencia, qtdDependente, valorInss, valorBruto,
-                                          _serviceProvider.GetRequiredService<ISimplificadoServices>(),
-                                          _serviceProvider.GetRequiredService<IDescontoMinimoServices>(),
-                                          _serviceProvider.GetRequiredService<IIrrfServices>(),
-                                          _serviceProvider.GetRequiredService<IDependenteServices>());
-
-            FgtsCalculo fgtsCalculo = new(baseInss);
-
-            Color colorIrNormal = Color.Blue;
-            RTxtResultado.SelectionColor = colorIrNormal;
-
-            string str = await irrfCalculo.DescricaoCalculoNormal();
-            str += "--------------------------------------------------------------------\n";
-            RTxtResultado.SelectedText = str;
-
-            Color colorIrSimplificado = Color.Red;
-            RTxtResultado.SelectionColor = colorIrSimplificado;
-
-            str = await irrfCalculo.DescricaoCalculoSimplificado();
-            str += "--------------------------------------------------------------------\n";
-            RTxtResultado.SelectedText = str;
-
-            Color colorVantagem = Color.Green;
-            RTxtResultado.SelectionColor = colorVantagem;
-
-            str = await irrfCalculo.DescricaoVantagem();
-            str += "--------------------------------------------------------------------\n";
-            RTxtResultado.SelectedText = str;
-
-            str = await irrfCalculo.DescricaoCalculoNormalProgrssivo();
-            str += "--------------------------------------------------------------------\n";
-            str += await inssCalculo.DescricaoCalculoNormalProgressivo();
-
-            str += "--------------------------------------------------------------------\n";
-            str += "FGTS 8% " + fgtsCalculo.Normal8().ToString("#,##0.00") + "\n";
-            str += "FGTS 2% " + fgtsCalculo.Normal2().ToString("#,##0.00");
-
-
-            RTxtResultado.SelectedText = str;
+            foreach (var (color, text) in resultado)
+            {
+                RTxtResultado.SelectionColor = color;
+                RTxtResultado.AppendText(text);
+            }
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            MessageBox.Show($"Erro ao calcular: {ex.Message}");
         }
     }
 
     private void BtnDependente_Click(object sender, EventArgs e)
     {
-        FrmDependente dependente = new(_serviceProvider.GetRequiredService<IDependenteServices>());
+        FrmDependente dependente = new(_dependenteServices);
         dependente.ShowDialog();
     }
 
@@ -107,26 +87,15 @@ public partial class FrmPrincipal : Form
     {
         TxtValorBruto.Text = Validar.Zero(TxtValorBruto.Text);
         TxtValorBruto.Text = Validar.Formatar(TxtValorBruto.Text);
-        var cadastroInss = _serviceProvider.GetRequiredService<IInssServices>();
 
-        double tetoInss = 0;
-        double valorBruto = double.Parse(TxtValorBruto.Text);
-
-        _ = new DateTime();
-
-        if (DateTime.TryParse(MktCompetencia.Text, out DateTime competencia))
+        if (!DateTime.TryParse(MktCompetencia.Text, out DateTime competencia) ||
+            !double.TryParse(TxtValorBruto.Text, out double valorBruto))
         {
-            tetoInss = await cadastroInss.TetoInss(competencia);
+            return;
         }
 
-        if (valorBruto > tetoInss)
-        {
-            TxtBaseInss.Text = tetoInss.ToString();
-        }
-        else
-        {
-            TxtBaseInss.Text = TxtValorBruto.Text;
-        }
+        double tetoInss = await _inssServices.TetoInss(competencia);
+        TxtBaseInss.Text = Math.Min(valorBruto, tetoInss).ToString("#,##0.00");
     }
 
     private void TxtValorBruto_Enter(object sender, EventArgs e)
@@ -184,13 +153,13 @@ public partial class FrmPrincipal : Form
 
     private void BtnTabelaINSS_Click(object sender, EventArgs e)
     {
-        FrmTabelaINSS tabelaINSS = new(_serviceProvider.GetRequiredService<IInssServices>());
+        FrmTabelaINSS tabelaINSS = new(_inssServices);
         tabelaINSS.ShowDialog();
     }
 
     private void BtnDescMinimo_Click(object sender, EventArgs e)
     {
-        FrmDescontoMinimo descontoMinimo = new(_serviceProvider.GetRequiredService<IDescontoMinimoServices>());
+        FrmDescontoMinimo descontoMinimo = new(_descontoMinimoServices);
         descontoMinimo.ShowDialog();
     }
 
@@ -201,11 +170,8 @@ public partial class FrmPrincipal : Form
         double valorBruto = double.Parse(TxtValorBruto.Text.Trim());
         int qtdDependente = int.Parse(TxtQtdDependente.Text.Trim());
         FrmPensao pensao = new(competencia, baseInss, qtdDependente, valorBruto,
-                               _serviceProvider.GetRequiredService<IInssServices>(),
-                               _serviceProvider.GetRequiredService<IIrrfServices>(),
-                               _serviceProvider.GetRequiredService<ISimplificadoServices>(),
-                               _serviceProvider.GetRequiredService<IDependenteServices>(),
-                               _serviceProvider.GetRequiredService<IDescontoMinimoServices>());
+                               _inssServices, _irrfServices, _simplificadoServices,
+                               _dependenteServices, _descontoMinimoServices);
         pensao.ShowDialog();
     }
 }

@@ -1,6 +1,8 @@
-﻿namespace CalculoIRRF.Services.Calculo;
+﻿using CalculoIRRF.Services.Calculo.Interface;
 
-public class FgtsCalculo(double baseInss)
+namespace CalculoIRRF.Services.Calculo;
+
+public class FgtsCalculo(double baseInss) : IFgtsCalculo
 {
     private readonly double _baseInss = baseInss;
 

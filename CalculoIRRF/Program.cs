@@ -2,6 +2,7 @@
 using CalculoIRRF.Repository;
 using CalculoIRRF.Repository.Interface;
 using CalculoIRRF.Services;
+using CalculoIRRF.Services.Calculo;
 using CalculoIRRF.Services.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,6 +47,7 @@ internal static class Program
         .AddScoped<IInssServices, InssServices>()
         .AddScoped<IIrrfServices, IrrfServices>()
         .AddScoped<ISimplificadoServices, SimplificadoServices>()
+        .AddScoped<CalculoImposto>()
         .BuildServiceProvider();
 
         return serviceProvider;
