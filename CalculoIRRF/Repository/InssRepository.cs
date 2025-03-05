@@ -13,13 +13,26 @@ public class InssRepository(CalculoImpostoContext _calculoImpostoContext) : IIns
 {
     public async Task<Inss> Create(Inss inss)
     {
-        if (inss is not null)
+        if (inss is null)
         {
-            _calculoImpostoContext.Inss.Add(inss);
-            await _calculoImpostoContext.SaveChangesAsync();
-            return inss;
+            throw new ArgumentException("Erro no objeto INSS");
         }
-        return new();
+
+        _calculoImpostoContext.Inss.Add(inss);
+        await _calculoImpostoContext.SaveChangesAsync();
+        return inss;
+    }
+
+    public async Task<InssGov> Create(InssGov inssGov)
+    {
+        if (inssGov is null)
+        {
+            throw new ArgumentException("Erro no objeto INSS GOV");
+        }
+
+        _calculoImpostoContext.InssGov.Add(inssGov);
+        await _calculoImpostoContext.SaveChangesAsync();
+        return inssGov;
     }
 
     public async Task<Inss> Delete(int id)
@@ -53,6 +66,16 @@ public class InssRepository(CalculoImpostoContext _calculoImpostoContext) : IIns
                             .ToListAsync();
 
         return listInss ?? [];
+    }
+
+    public async Task<bool> IsGov(DateTime competence)
+    {
+        var isInssGov = await _calculoImpostoContext
+                            .InssGov
+                            .Where(w => w.DataAtualizacao == competence)
+                            .AnyAsync();
+
+        return isInssGov;
     }
 
     public async Task<Inss> GetById(int id)

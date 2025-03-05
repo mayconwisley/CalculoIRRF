@@ -8,8 +8,10 @@ namespace CalculoIRRF.Services.Interface;
 public interface IInssServices
 {
     Task<bool> Gravar(Inss inss);
+    Task<bool> Gravar(InssGov inssGov);
     Task<bool> Alterar(Inss inss);
     Task<bool> Excluir(int id);
+    Task<bool> IsGov(DateTime competencia);
     Task<int> FaixaInss(double baseInss, DateTime competencia);
     Task<int> UltimaFaixaInss(DateTime competencia);
     Task<double> PorcentagemInss(int faixa, DateTime competencia);

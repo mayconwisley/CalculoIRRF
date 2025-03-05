@@ -21,6 +21,20 @@ public class InssServices(IInssRepository _inssRepository) : IInssServices
             throw;
         }
     }
+
+    public async Task<bool> Gravar(InssGov inssGov)
+    {
+        try
+        {
+            await _inssRepository.Create(inssGov);
+            return true;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
     public async Task<bool> Alterar(Inss inss)
     {
         try
@@ -140,6 +154,19 @@ public class InssServices(IInssRepository _inssRepository) : IInssServices
         }
         catch (Exception)
         {
+            throw;
+        }
+    }
+
+    public async Task<bool> IsGov(DateTime competencia)
+    {
+        try
+        {
+            return await _inssRepository.IsGov(competencia);
+        }
+        catch (Exception)
+        {
+
             throw;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using CalculoIRRF.Model;
 using CalculoIRRF.Services.Interface;
 using CalculoIRRF.Services.Validacao;
+using CalculoIRRF.Tributacao.INSS;
 using System;
 using System.Runtime.Versioning;
 using System.Threading.Tasks;
@@ -194,7 +195,7 @@ public partial class FrmTabelaINSS : Form
 
     private async void LkLblOnline_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
     {
-        //TributacaoINSS tributacaoINSS = new();
-        //await tributacaoINSS.AtualizarOnline();
+        TributacaoINSS tributacaoINSS = new(_inssServices);
+        await tributacaoINSS.AtualizarOnline();
     }
 }
