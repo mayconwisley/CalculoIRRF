@@ -11,87 +11,37 @@ public class DependenteServices(IDependenteRepository _dependenteRepository) : I
 {
     public async Task<bool> Gravar(Dependente dependente)
     {
-        try
-        {
-            await _dependenteRepository.Create(dependente);
-            return true;
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message);
-        }
+        await _dependenteRepository.Create(dependente);
+        return true;
     }
     public async Task<bool> Alterar(Dependente dependente)
     {
-
-        try
-        {
-            await _dependenteRepository.Update(dependente);
-            return true;
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message);
-        }
+        await _dependenteRepository.Update(dependente);
+        return true;
     }
     public async Task<bool> Excluir(int id)
     {
-        try
-        {
-            await _dependenteRepository.Delete(id);
-            return true;
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message);
-        }
+        await _dependenteRepository.Delete(id);
+        return true;
     }
     public async Task<double> VlrDependente(DateTime competencia)
     {
-        try
-        {
-            var value = await _dependenteRepository.Value(competencia);
-            return value;
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message);
-        }
+        var value = await _dependenteRepository.Value(competencia);
+        return value;
     }
     public async Task<IEnumerable<Dependente>> ListarTodos()
     {
-        try
-        {
-            var listDependente = await _dependenteRepository.GetAll();
-            return listDependente;
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message);
-        }
+        var listDependente = await _dependenteRepository.GetAll();
+        return listDependente;
     }
     public async Task<IEnumerable<Dependente>> ListarTodosPorCompetencia(DateTime competencia)
     {
-        try
-        {
-            var listDependente = await _dependenteRepository.GetByCompetence(competencia);
-            return listDependente;
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message);
-        }
+        var listDependente = await _dependenteRepository.GetByCompetence(competencia);
+        return listDependente;
     }
     public async Task<Dependente> ListarPorId(int id)
     {
-        try
-        {
-            var dependente = await _dependenteRepository.GetById(id);
-            return dependente;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        var dependente = await _dependenteRepository.GetById(id);
+        return dependente;
     }
 }

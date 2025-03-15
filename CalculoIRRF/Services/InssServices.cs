@@ -11,163 +11,71 @@ public class InssServices(IInssRepository _inssRepository) : IInssServices
 {
     public async Task<bool> Gravar(Inss inss)
     {
-        try
-        {
-            await _inssRepository.Create(inss);
-            return true;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        await _inssRepository.Create(inss);
+        return true;
     }
 
     public async Task<bool> Gravar(InssGov inssGov)
     {
-        try
-        {
-            await _inssRepository.Create(inssGov);
-            return true;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        await _inssRepository.Create(inssGov);
+        return true;
     }
 
     public async Task<bool> Alterar(Inss inss)
     {
-        try
-        {
-            await _inssRepository.Update(inss);
-            return true;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        await _inssRepository.Update(inss);
+        return true;
     }
     public async Task<bool> Excluir(int id)
     {
-        try
-        {
-            await _inssRepository.Delete(id);
-            return true;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        await _inssRepository.Delete(id);
+        return true;
     }
     public async Task<int> FaixaInss(double baseInss, DateTime competencia)
     {
-        try
-        {
-            var range = await _inssRepository.Range(baseInss, competencia);
-            return range;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        var range = await _inssRepository.Range(baseInss, competencia);
+        return range;
     }
     public async Task<int> UltimaFaixaInss(DateTime competencia)
     {
-        try
-        {
-            var lastRange = await _inssRepository.LastRange(competencia);
-            return lastRange;
+        var lastRange = await _inssRepository.LastRange(competencia);
+        return lastRange;
 
-        }
-        catch (Exception)
-        {
-            throw;
-        }
     }
     public async Task<double> PorcentagemInss(int faixa, DateTime competencia)
     {
-        try
-        {
-            var percent = await _inssRepository.Percent(faixa, competencia);
-            return percent;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        var percent = await _inssRepository.Percent(faixa, competencia);
+        return percent;
     }
     public async Task<double> ValorInss(int faixa, DateTime competencia)
     {
-        try
-        {
-            var value = await _inssRepository.Value(faixa, competencia);
-            return value;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        var value = await _inssRepository.Value(faixa, competencia);
+        return value;
     }
     public async Task<double> TetoInss(DateTime competencia)
     {
-        try
-        {
-            var roof = await _inssRepository.Roof(competencia);
-            return roof;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        var roof = await _inssRepository.Roof(competencia);
+        return roof;
     }
     public async Task<IEnumerable<Inss>> ListarTodos()
     {
-        try
-        {
-            var listInss = await _inssRepository.GetAll();
-            return listInss;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        var listInss = await _inssRepository.GetAll();
+        return listInss;
     }
     public async Task<IEnumerable<Inss>> ListarTodosPorCompetencia(DateTime competencia)
     {
-        try
-        {
-            var listInss = await _inssRepository.GetByCompetence(competencia);
-            return listInss;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        var listInss = await _inssRepository.GetByCompetence(competencia);
+        return listInss;
     }
 
     public async Task<Inss> ListarPorId(int id)
     {
-        try
-        {
-            var inss = await _inssRepository.GetById(id);
-            return inss;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        var inss = await _inssRepository.GetById(id);
+        return inss;
     }
 
     public async Task<bool> IsGov(DateTime competencia)
     {
-        try
-        {
-            return await _inssRepository.IsGov(competencia);
-        }
-        catch (Exception)
-        {
-
-            throw;
-        }
+        return await _inssRepository.IsGov(competencia);
     }
 }

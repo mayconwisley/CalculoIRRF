@@ -35,13 +35,12 @@ public class IrrfRepository(CalculoImpostoContext _calculoImpostoContext) : IIrr
         _calculoImpostoContext.Irrf.Remove(irrf);
         await _calculoImpostoContext.SaveChangesAsync();
         return irrf;
-
-
     }
 
     public async Task<IEnumerable<Irrf>> GetAll()
     {
         return await _calculoImpostoContext.Irrf
+                     .OrderByDescending(o => o.Competencia)
                      .ToListAsync();
     }
 
@@ -49,6 +48,7 @@ public class IrrfRepository(CalculoImpostoContext _calculoImpostoContext) : IIrr
     {
         return await _calculoImpostoContext.Irrf
                     .Where(w => w.Competencia == competence)
+                    .OrderBy(o => o.Faixa)
                     .ToListAsync();
     }
 
