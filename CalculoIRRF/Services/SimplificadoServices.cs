@@ -11,84 +11,35 @@ public class SimplificadoServices(ISimplificadoRepository _simplificadoRepositor
 {
     public async Task<bool> Gravar(Simplificado simplificado)
     {
-        try
-        {
-            await _simplificadoRepository.Create(simplificado);
-            return true;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        await _simplificadoRepository.Create(simplificado);
+        return true;
     }
     public async Task<bool> Alterar(Simplificado simplificado)
     {
-        try
-        {
-            await _simplificadoRepository.Update(simplificado);
-            return true;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        await _simplificadoRepository.Update(simplificado);
+        return true;
     }
     public async Task<bool> Excluir(int id)
     {
-        try
-        {
-            await _simplificadoRepository.Delete(id);
-            return true;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        await _simplificadoRepository.Delete(id);
+        return true;
     }
     public async Task<double> ValorSimplificado(DateTime competencia)
     {
-        try
-        {
-            return await _simplificadoRepository.Value(competencia);
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        return await _simplificadoRepository.Value(competencia);
     }
     public async Task<IEnumerable<Simplificado>> ListarTodos()
     {
 
-        try
-        {
-            return await _simplificadoRepository.GetAll();
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        return await _simplificadoRepository.GetAll();
     }
     public async Task<IEnumerable<Simplificado>> ListarTodosPorCompetencia(DateTime competencia)
     {
-        try
-        {
-            return await _simplificadoRepository.GetByCompetence(competencia);
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        return await _simplificadoRepository.GetByCompetence(competencia);
     }
     public async Task<Simplificado> ListarPorId(int id)
     {
-        try
-        {
-            var simplificado = await _simplificadoRepository.GetById(id);
-            return simplificado;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        var simplificado = await _simplificadoRepository.GetById(id);
+        return simplificado;
     }
 }

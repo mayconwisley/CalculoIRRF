@@ -44,88 +44,66 @@ public class TributacaoINSS(IInssServices _inssServices)
                 Aliquota = item.Aliquota
             };
             await _inssServices.Gravar(inssGov);
-
         }
     }
 
     private static List<TributacaoINSSObj> BuscarINSSOnline(HtmlDocument htmlDocument)
     {
         List<TributacaoINSSObj> listTributacaoRFBObj = new List<TributacaoINSSObj>();
-        try
-        {
-            var table = htmlDocument.DocumentNode.SelectSingleNode("//table");
 
-            if (table != null)
+        var table = htmlDocument.DocumentNode.SelectSingleNode("//table");
+
+        if (table != null)
+        {
+            var rows = table.SelectNodes(".//tr");
+            int sequencia = 0;
+            foreach (var row in rows)
             {
-                var rows = table.SelectNodes(".//tr");
-                int sequencia = 0;
-                foreach (var row in rows)
+
+                if (Validar.ExtrairValor(row.InnerText) == 0)
                 {
-
-                    if (Validar.ExtrairValor(row.InnerText) == 0)
-                    {
-                        continue;
-                    }
-
-                    var cells = row.SelectNodes(".//td");
-
-                    if (cells != null)
-                    {
-                        listTributacaoRFBObj.Add(new TributacaoINSSObj
-                        {
-                            Sequencia = ++sequencia,
-                            BaseCalculo = Validar.ExtrairMaiorValor(cells[0].InnerText.Trim()),
-                            Aliquota = Validar.ExtrairValor(cells[1].InnerText.Trim()),
-
-                        });
-                    }
+                    continue;
                 }
-                return listTributacaoRFBObj;
+
+                var cells = row.SelectNodes(".//td");
+
+                if (cells != null)
+                {
+                    listTributacaoRFBObj.Add(new TributacaoINSSObj
+                    {
+                        Sequencia = ++sequencia,
+                        BaseCalculo = Validar.ExtrairMaiorValor(cells[0].InnerText.Trim()),
+                        Aliquota = Validar.ExtrairValor(cells[1].InnerText.Trim()),
+
+                    });
+                }
             }
-            else
-            {
-                return new List<TributacaoINSSObj>();
-            }
+            return listTributacaoRFBObj;
         }
-        catch (Exception)
+        else
         {
-            throw;
+            return [];
         }
     }
     private static DateTime BuscarDataPublicacaoOnline(HtmlDocument htmlDocument)
     {
-        try
+        var dataPublicacao = htmlDocument.DocumentNode.SelectNodes("//span[contains(@class, 'documentPublished')]/span");
+        if (dataPublicacao != null)
         {
-            var dataPublicacao = htmlDocument.DocumentNode.SelectNodes("//span[contains(@class, 'documentPublished')]/span");
-            if (dataPublicacao != null)
-            {
-                var data = DateTime.Parse(dataPublicacao[1].InnerText.Trim().Replace("h", ":"));
-                return data;
-            }
-            return DateTime.Now;
+            var data = DateTime.Parse(dataPublicacao[1].InnerText.Trim().Replace("h", ":"));
+            return data;
         }
-        catch (Exception)
-        {
-            throw;
-        }
+        return DateTime.Now;
     }
     private static DateTime BuscarDataAtualizacaoOnline(HtmlDocument htmlDocument)
     {
-        try
+        var dataPublicacao = htmlDocument.DocumentNode.SelectNodes("//span[contains(@class, 'documentModified')]/span");
+        if (dataPublicacao != null)
         {
-            var dataPublicacao = htmlDocument.DocumentNode.SelectNodes("//span[contains(@class, 'documentModified')]/span");
-            if (dataPublicacao != null)
-            {
-                var data = DateTime.Parse(dataPublicacao[1].InnerText.Trim().Replace("h", ":"));
-                return data;
-            }
-            return DateTime.Now;
+            var data = DateTime.Parse(dataPublicacao[1].InnerText.Trim().Replace("h", ":"));
+            return data;
         }
-        catch (Exception)
-        {
-            throw;
-        }
+        return DateTime.Now;
     }
-
 }
 
