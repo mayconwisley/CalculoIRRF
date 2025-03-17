@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CalculoIRRF.Services.Calculo;
 
-public class PensaoCalculo(DateTime _competencia, int _qtdDependente, double _valorInss,
+public class CalculoPensao(DateTime _competencia, int _qtdDependente, double _valorInss,
                            double _valorBruto, double _porcentagemPensao,
                            IIrrfServices _irrfServices, ISimplificadoServices _simplificadoServices,
                            IDependenteServices _dependenteServices, IDescontoMinimoServices _descontoMinimoServices)
@@ -26,33 +26,33 @@ public class PensaoCalculo(DateTime _competencia, int _qtdDependente, double _va
         double descontoIrrfSimplificado = 0d;
         int seqCalculo = 0;
 
-        DadosCalculoPensao.Add($"Calculo Pensão Alimentícia - Rendimentos {_porcentagemPensao:##0.00}%\n");
         DadosCalculoPensao.Add("\n\tSimplificado\n\n");
 
         do
         {
             seqCalculo++;
             double baseIrrf = await irrfCalculo.BaseIrrfSimplificado();
-            double basePensao = _valorBruto - _valorInss;
 
             anteriorP = valorPensao;
 
-            int faixaIrrf = await _irrfServices.FaixaIrrf(basePensao - anteriorP, _competencia);
+            int faixaIrrf = await _irrfServices.FaixaIrrf(baseIrrf - anteriorP, _competencia);
             double aliquotaIrrf = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia) / 100;
             double valorDeducao = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
 
             descontoIrrfSimplificado = await irrfCalculo.Simplificado(valorPensao);
-            basePensao = basePensao - descontoIrrfSimplificado;
+
+            double basePensao = _valorBruto - _valorInss - descontoIrrfSimplificado;
             valorPensao = basePensao * (_porcentagemPensao / 100);
 
             if (detalhe)
             {
-                DadosCalculoPensao.Add($"\t{seqCalculo}º: Calculo\n" +
-                                       $"{_valorBruto:#,##0.00} - {valorSimplificado:#,##0.00} = {baseIrrf:#,##0.00}\n" +
-                                       $"(({baseIrrf:#,##0.00} - {anteriorP:#,##0.00}) * {aliquotaIrrf * 100:#,##0.00}%) - {valorDeducao:#,##0.00} = {descontoIrrfSimplificado:#,##0.00}\n\n" +
+                DadosCalculoPensao.Add($"\t{seqCalculo}º: Calculo IRRF\n" +
+                                       $"{baseIrrf:#,##0.00} - {anteriorP:#,##0.00} = {(baseIrrf - anteriorP):#,##0.00}\n" +
+                                       $"({(baseIrrf - anteriorP):#,##0.00} * {aliquotaIrrf * 100:#,##0.00}%) - {valorDeducao:#,##0.00} = {descontoIrrfSimplificado:#,##0.00}\n\n" +
                                        $"\tBase Pensão\n" +
                                        $"{_valorBruto:#,##0.00} - {_valorInss:#,##0.00} - {descontoIrrfSimplificado:#,##0.00} = {basePensao:#,##0.00}\n" +
-                                       $"{basePensao:#,##0.00} * {_porcentagemPensao:#,##0.00}% = {valorPensao:#,##0.00}\n\n");
+                                       $"{basePensao:#,##0.00} * {_porcentagemPensao:#,##0.00}% = {valorPensao:#,##0.00}\n\n" +
+                                       $"________________________________________________________________\n\n");
 
             }
             else
@@ -61,16 +61,18 @@ public class PensaoCalculo(DateTime _competencia, int _qtdDependente, double _va
                                        $"Base IR: {baseIrrf - anteriorP:#,##0.00}, " +
                                        $"Aliquota: {aliquotaIrrf * 100:#,##0.00}%, " +
                                        $"Dedução: {valorDeducao:#,##0.00}, " +
-                                       $"IR: {descontoIrrfSimplificado:#,##0.00}, " +
-                                       $"Base Pensão: {basePensao:#,##0.00}, " +
-                                       $"Valor Pensão: {valorPensao:#,##0.00}\n");
+                                       $"IR: {descontoIrrfSimplificado:#,##0.00}\n" +
+                                       $"\tBase Pensão: {basePensao:#,##0.00}, " +
+                                       $"Valor Pensão: {valorPensao:#,##0.00}\n\n");
             }
         } while (Math.Abs(valorPensao - anteriorP) > 0.01d);
 
         pensaoSimplificado = valorPensao + descontoIrrfSimplificado;
+
         DadosCalculoPensao.Add($"\nTotal IR: {descontoIrrfSimplificado:#,##0.00}\n");
         DadosCalculoPensao.Add($"\nTotal Pensão: {valorPensao:#,##0.00}\n");
         DadosCalculoPensao.Add($"\nTotal: Pensão + IR: {pensaoSimplificado:#,##0.00}\n");
+        DadosCalculoPensao.Add("________________________________________________________________\n");
     }
     public async Task CalculoJudicialIrrfNormal(bool detalhe)
     {
@@ -100,19 +102,18 @@ public class PensaoCalculo(DateTime _competencia, int _qtdDependente, double _va
             double valorDeducao = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
             descontoIrrfNormal = await irrfCalculo.Normal(valorPensao);
 
-            double novaBaseCalculo = baseCalculo - anteriorP;
-            double calculoAliquotaIrPensao = novaBaseCalculo * aliquotaIrrf;
-
-            valorPensao = (baseCalculo - calculoAliquotaIrPensao + parcelaDeduzirIrrf) * (_porcentagemPensao / 100);
+            double basePensao = _valorBruto - _valorInss - descontoIrrfNormal;
+            valorPensao = basePensao * (_porcentagemPensao / 100);
 
             if (detalhe)
             {
-                DadosCalculoPensao.Add($"\t{seqCalculo}º: Calculo\n" +
+                DadosCalculoPensao.Add($"\t{seqCalculo}º: Calculo IRRF\n" +
                                        $"{_valorBruto:#,##0.00} - {_valorInss:#,##0.00} = {baseCalculo:#,##0.00}\n" +
                                        $"(({baseCalculo:#,##0.00} - {valorDependente:#,##0.00} - {anteriorP:#,##0.00}) * {aliquotaIrrf * 100:#,##0.00}%) - {valorDeducao:#,##0.00} = {descontoIrrfNormal:#,##0.00}\n\n" +
                                        $"\tBase Pensão\n" +
-                                       $"{_valorBruto:#,##0.00} - {_valorInss:#,##0.00} - {descontoIrrfNormal:#,##0.00} = {baseCalculo - descontoIrrfNormal:#,##0.00}\n" +
-                                       $"{baseCalculo - descontoIrrfNormal:#,##0.00} * {_porcentagemPensao:#,##0.00}% = {valorPensao:#,##0.00}\n\n");
+                                       $"{_valorBruto:#,##0.00} - {_valorInss:#,##0.00} - {descontoIrrfNormal:#,##0.00} = {_valorBruto - _valorInss - descontoIrrfNormal:#,##0.00}\n" +
+                                       $"{_valorBruto - _valorInss - descontoIrrfNormal:#,##0.00} * {_porcentagemPensao:#,##0.00}% = {valorPensao:#,##0.00}\n\n" +
+                                       $"________________________________________________________________\n\n");
 
             }
             else
@@ -121,16 +122,18 @@ public class PensaoCalculo(DateTime _competencia, int _qtdDependente, double _va
                                        $"Base IR: {baseCalculo - anteriorP:#,##0.00}, " +
                                        $"Aliquota: {aliquotaIrrf * 100:#,##0.00}%, " +
                                        $"Dedução: {valorDeducao:#,##0.00}, " +
-                                       $"IR: {descontoIrrfNormal:#,##0.00}, " +
-                                       $"Base Pensão: {baseCalculo - descontoIrrfNormal:#,##0.00} " +
-                                       $"Valor Pensão: {valorPensao:#,##0.00}\n");
+                                       $"IR: {descontoIrrfNormal:#,##0.00}\n" +
+                                       $"\tBase Pensão: {basePensao:#,##0.00} " +
+                                       $"Valor Pensão: {valorPensao:#,##0.00}\n\n");
             }
         } while (Math.Abs(valorPensao - anteriorP) > 0.01d);
 
         pensaoNormal = valorPensao + descontoIrrfNormal;
+
         DadosCalculoPensao.Add($"\nTotal IR: {descontoIrrfNormal:#,##0.00}\n");
         DadosCalculoPensao.Add($"\nTotal Pensão: {valorPensao:#,##0.00}\n");
         DadosCalculoPensao.Add($"\nTotal: Pensão + IR: {pensaoNormal:#,##0.00}\n");
+        DadosCalculoPensao.Add("________________________________________________________________\n");
     }
     public void Vantagem()
     {

@@ -48,11 +48,14 @@ public partial class FrmPensao : Form
         InssCalculo inssCalculo = new(_competencia, _baseInss, _inssServices);
         double valorInss = await inssCalculo.NormalProgressivo();
 
-        PensaoCalculo pensaoCalculo = new(_competencia, _qtdDependente, valorInss, (valorBruto - outroDesconto), porcenPensao,
+        CalculoPensao pensaoCalculo = new(_competencia, _qtdDependente, valorInss, (valorBruto - outroDesconto), porcenPensao,
                                           _irrfServices, _simplificadoServices, _dependenteServices, _descontoMinimoServices);
 
-        await pensaoCalculo.CalculoJudicialIrrfSimplificado(false);
+        RtxDescricao.AppendText($"Calculo Pensão Alimentícia - Rendimentos {porcenPensao:##0.00}%\n");
+
         await pensaoCalculo.CalculoJudicialIrrfNormal(false);
+        await pensaoCalculo.CalculoJudicialIrrfSimplificado(false);
+
         pensaoCalculo.Vantagem();
 
         foreach (var item in pensaoCalculo.DadosCalculoPensao)
@@ -132,10 +135,11 @@ public partial class FrmPensao : Form
         InssCalculo inssCalculo = new(_competencia, _baseInss, _inssServices);
         double valorInss = await inssCalculo.NormalProgressivo();
 
-        PensaoCalculo pensaoCalculo = new(_competencia, _qtdDependente, valorInss, (valorBruto - outroDesconto), porcenPensao,
+        CalculoPensao pensaoCalculo = new(_competencia, _qtdDependente, valorInss, (valorBruto - outroDesconto), porcenPensao,
                                           _irrfServices, _simplificadoServices, _dependenteServices, _descontoMinimoServices);
-        await pensaoCalculo.CalculoJudicialIrrfSimplificado(true);
         await pensaoCalculo.CalculoJudicialIrrfNormal(true);
+        await pensaoCalculo.CalculoJudicialIrrfSimplificado(true);
+
 
         foreach (var item in pensaoCalculo.DadosCalculoPensao)
         {
