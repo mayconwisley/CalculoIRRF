@@ -28,275 +28,284 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.BtnExcluir = new System.Windows.Forms.Button();
-            this.BtnAlterar = new System.Windows.Forms.Button();
-            this.BtnGravar = new System.Windows.Forms.Button();
-            this.DgvTabelaINSS = new System.Windows.Forms.DataGridView();
-            this.Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Competencia = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Faixa = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Valor = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Porcentagem = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TxtPorcentagem = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.TxtValor = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.TxtFaixa = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.MktCompetencia = new System.Windows.Forms.MaskedTextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.LkLblOnline = new System.Windows.Forms.LinkLabel();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvTabelaINSS)).BeginInit();
-            this.SuspendLayout();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            BtnExcluir = new System.Windows.Forms.Button();
+            BtnAlterar = new System.Windows.Forms.Button();
+            BtnGravar = new System.Windows.Forms.Button();
+            DgvTabelaINSS = new System.Windows.Forms.DataGridView();
+            Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            Competencia = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            Faixa = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            Valor = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            Porcentagem = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            TxtPorcentagem = new System.Windows.Forms.TextBox();
+            label4 = new System.Windows.Forms.Label();
+            TxtValor = new System.Windows.Forms.TextBox();
+            label3 = new System.Windows.Forms.Label();
+            TxtFaixa = new System.Windows.Forms.TextBox();
+            label2 = new System.Windows.Forms.Label();
+            MktCompetencia = new System.Windows.Forms.MaskedTextBox();
+            label1 = new System.Windows.Forms.Label();
+            LkLblOnline = new System.Windows.Forms.LinkLabel();
+            ((System.ComponentModel.ISupportInitialize)DgvTabelaINSS).BeginInit();
+            SuspendLayout();
             // 
             // BtnExcluir
             // 
-            this.BtnExcluir.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.BtnExcluir.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
-            this.BtnExcluir.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver;
-            this.BtnExcluir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnExcluir.Location = new System.Drawing.Point(254, 72);
-            this.BtnExcluir.Name = "BtnExcluir";
-            this.BtnExcluir.Size = new System.Drawing.Size(75, 23);
-            this.BtnExcluir.TabIndex = 22;
-            this.BtnExcluir.Text = "&Excluir";
-            this.BtnExcluir.UseVisualStyleBackColor = true;
-            this.BtnExcluir.Click += new System.EventHandler(this.BtnExcluir_Click);
+            BtnExcluir.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(64, 64, 64);
+            BtnExcluir.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
+            BtnExcluir.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver;
+            BtnExcluir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            BtnExcluir.Location = new System.Drawing.Point(296, 83);
+            BtnExcluir.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            BtnExcluir.Name = "BtnExcluir";
+            BtnExcluir.Size = new System.Drawing.Size(88, 27);
+            BtnExcluir.TabIndex = 22;
+            BtnExcluir.Text = "&Excluir";
+            BtnExcluir.UseVisualStyleBackColor = true;
+            BtnExcluir.Click += BtnExcluir_Click;
             // 
             // BtnAlterar
             // 
-            this.BtnAlterar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.BtnAlterar.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
-            this.BtnAlterar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver;
-            this.BtnAlterar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnAlterar.Location = new System.Drawing.Point(254, 43);
-            this.BtnAlterar.Name = "BtnAlterar";
-            this.BtnAlterar.Size = new System.Drawing.Size(75, 23);
-            this.BtnAlterar.TabIndex = 21;
-            this.BtnAlterar.Text = "&Alterar";
-            this.BtnAlterar.UseVisualStyleBackColor = true;
-            this.BtnAlterar.Click += new System.EventHandler(this.BtnAlterar_Click);
+            BtnAlterar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(64, 64, 64);
+            BtnAlterar.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
+            BtnAlterar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver;
+            BtnAlterar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            BtnAlterar.Location = new System.Drawing.Point(296, 50);
+            BtnAlterar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            BtnAlterar.Name = "BtnAlterar";
+            BtnAlterar.Size = new System.Drawing.Size(88, 27);
+            BtnAlterar.TabIndex = 21;
+            BtnAlterar.Text = "&Alterar";
+            BtnAlterar.UseVisualStyleBackColor = true;
+            BtnAlterar.Click += BtnAlterar_Click;
             // 
             // BtnGravar
             // 
-            this.BtnGravar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.BtnGravar.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
-            this.BtnGravar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver;
-            this.BtnGravar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnGravar.Location = new System.Drawing.Point(254, 14);
-            this.BtnGravar.Name = "BtnGravar";
-            this.BtnGravar.Size = new System.Drawing.Size(75, 23);
-            this.BtnGravar.TabIndex = 20;
-            this.BtnGravar.Text = "&Gravar";
-            this.BtnGravar.UseVisualStyleBackColor = true;
-            this.BtnGravar.Click += new System.EventHandler(this.BtnGravar_Click);
+            BtnGravar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(64, 64, 64);
+            BtnGravar.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
+            BtnGravar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver;
+            BtnGravar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            BtnGravar.Location = new System.Drawing.Point(296, 16);
+            BtnGravar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            BtnGravar.Name = "BtnGravar";
+            BtnGravar.Size = new System.Drawing.Size(88, 27);
+            BtnGravar.TabIndex = 20;
+            BtnGravar.Text = "&Gravar";
+            BtnGravar.UseVisualStyleBackColor = true;
+            BtnGravar.Click += BtnGravar_Click;
             // 
             // DgvTabelaINSS
             // 
-            this.DgvTabelaINSS.AllowUserToAddRows = false;
-            this.DgvTabelaINSS.AllowUserToDeleteRows = false;
-            this.DgvTabelaINSS.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.DgvTabelaINSS.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.DgvTabelaINSS.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvTabelaINSS.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Id,
-            this.Competencia,
-            this.Faixa,
-            this.Valor,
-            this.Porcentagem});
-            this.DgvTabelaINSS.Location = new System.Drawing.Point(13, 101);
-            this.DgvTabelaINSS.MultiSelect = false;
-            this.DgvTabelaINSS.Name = "DgvTabelaINSS";
-            this.DgvTabelaINSS.ReadOnly = true;
-            this.DgvTabelaINSS.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DgvTabelaINSS.Size = new System.Drawing.Size(316, 150);
-            this.DgvTabelaINSS.TabIndex = 19;
-            this.DgvTabelaINSS.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvTabelaINSS_CellDoubleClick);
+            DgvTabelaINSS.AllowUserToAddRows = false;
+            DgvTabelaINSS.AllowUserToDeleteRows = false;
+            DgvTabelaINSS.BackgroundColor = System.Drawing.SystemColors.Control;
+            DgvTabelaINSS.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            DgvTabelaINSS.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            DgvTabelaINSS.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { Id, Competencia, Faixa, Valor, Porcentagem });
+            DgvTabelaINSS.Location = new System.Drawing.Point(15, 117);
+            DgvTabelaINSS.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            DgvTabelaINSS.MultiSelect = false;
+            DgvTabelaINSS.Name = "DgvTabelaINSS";
+            DgvTabelaINSS.ReadOnly = true;
+            DgvTabelaINSS.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            DgvTabelaINSS.Size = new System.Drawing.Size(369, 173);
+            DgvTabelaINSS.TabIndex = 19;
+            DgvTabelaINSS.CellDoubleClick += DgvTabelaINSS_CellDoubleClick;
             // 
             // Id
             // 
-            this.Id.DataPropertyName = "Id";
-            this.Id.HeaderText = "Id";
-            this.Id.Name = "Id";
-            this.Id.ReadOnly = true;
-            this.Id.Visible = false;
+            Id.DataPropertyName = "Id";
+            Id.HeaderText = "Id";
+            Id.Name = "Id";
+            Id.ReadOnly = true;
+            Id.Visible = false;
             // 
             // Competencia
             // 
-            this.Competencia.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Competencia.DataPropertyName = "Competencia";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle5.Format = "MM/yyyy";
-            dataGridViewCellStyle5.NullValue = null;
-            this.Competencia.DefaultCellStyle = dataGridViewCellStyle5;
-            this.Competencia.HeaderText = "Competência";
-            this.Competencia.Name = "Competencia";
-            this.Competencia.ReadOnly = true;
-            this.Competencia.Width = 94;
+            Competencia.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            Competencia.DataPropertyName = "Competencia";
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle1.Format = "MM/yyyy";
+            dataGridViewCellStyle1.NullValue = null;
+            Competencia.DefaultCellStyle = dataGridViewCellStyle1;
+            Competencia.HeaderText = "Competência";
+            Competencia.Name = "Competencia";
+            Competencia.ReadOnly = true;
+            Competencia.Width = 103;
             // 
             // Faixa
             // 
-            this.Faixa.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Faixa.DataPropertyName = "Faixa";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle6.Format = "N0";
-            dataGridViewCellStyle6.NullValue = null;
-            this.Faixa.DefaultCellStyle = dataGridViewCellStyle6;
-            this.Faixa.HeaderText = "Faixa";
-            this.Faixa.Name = "Faixa";
-            this.Faixa.ReadOnly = true;
-            this.Faixa.Width = 57;
+            Faixa.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            Faixa.DataPropertyName = "Faixa";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle2.Format = "N0";
+            dataGridViewCellStyle2.NullValue = null;
+            Faixa.DefaultCellStyle = dataGridViewCellStyle2;
+            Faixa.HeaderText = "Faixa";
+            Faixa.Name = "Faixa";
+            Faixa.ReadOnly = true;
+            Faixa.Width = 59;
             // 
             // Valor
             // 
-            this.Valor.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Valor.DataPropertyName = "Valor";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle7.Format = "N2";
-            dataGridViewCellStyle7.NullValue = null;
-            this.Valor.DefaultCellStyle = dataGridViewCellStyle7;
-            this.Valor.HeaderText = "Valor";
-            this.Valor.Name = "Valor";
-            this.Valor.ReadOnly = true;
-            this.Valor.Width = 56;
+            Valor.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            Valor.DataPropertyName = "Valor";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle3.Format = "N2";
+            dataGridViewCellStyle3.NullValue = null;
+            Valor.DefaultCellStyle = dataGridViewCellStyle3;
+            Valor.HeaderText = "Valor";
+            Valor.Name = "Valor";
+            Valor.ReadOnly = true;
+            Valor.Width = 58;
             // 
             // Porcentagem
             // 
-            this.Porcentagem.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Porcentagem.DataPropertyName = "Porcentagem";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle8.Format = "N2";
-            dataGridViewCellStyle8.NullValue = null;
-            this.Porcentagem.DefaultCellStyle = dataGridViewCellStyle8;
-            this.Porcentagem.HeaderText = "%";
-            this.Porcentagem.Name = "Porcentagem";
-            this.Porcentagem.ReadOnly = true;
-            this.Porcentagem.Width = 40;
+            Porcentagem.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            Porcentagem.DataPropertyName = "Porcentagem";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle4.Format = "N2";
+            dataGridViewCellStyle4.NullValue = null;
+            Porcentagem.DefaultCellStyle = dataGridViewCellStyle4;
+            Porcentagem.HeaderText = "%";
+            Porcentagem.Name = "Porcentagem";
+            Porcentagem.ReadOnly = true;
+            Porcentagem.Width = 42;
             // 
             // TxtPorcentagem
             // 
-            this.TxtPorcentagem.Location = new System.Drawing.Point(126, 66);
-            this.TxtPorcentagem.Name = "TxtPorcentagem";
-            this.TxtPorcentagem.Size = new System.Drawing.Size(35, 20);
-            this.TxtPorcentagem.TabIndex = 17;
-            this.TxtPorcentagem.Text = "0,00";
-            this.TxtPorcentagem.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.TxtPorcentagem.TextChanged += new System.EventHandler(this.TxtPorcentagem_TextChanged);
-            this.TxtPorcentagem.Enter += new System.EventHandler(this.TxtPorcentagem_Enter);
-            this.TxtPorcentagem.Leave += new System.EventHandler(this.TxtPorcentagem_Leave);
+            TxtPorcentagem.Location = new System.Drawing.Point(147, 76);
+            TxtPorcentagem.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            TxtPorcentagem.Name = "TxtPorcentagem";
+            TxtPorcentagem.Size = new System.Drawing.Size(40, 23);
+            TxtPorcentagem.TabIndex = 17;
+            TxtPorcentagem.Text = "0,00";
+            TxtPorcentagem.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            TxtPorcentagem.TextChanged += TxtPorcentagem_TextChanged;
+            TxtPorcentagem.Enter += TxtPorcentagem_Enter;
+            TxtPorcentagem.Leave += TxtPorcentagem_Leave;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(123, 50);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(15, 13);
-            this.label4.TabIndex = 12;
-            this.label4.Text = "%";
+            label4.AutoSize = true;
+            label4.Location = new System.Drawing.Point(144, 58);
+            label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new System.Drawing.Size(17, 15);
+            label4.TabIndex = 12;
+            label4.Text = "%";
             // 
             // TxtValor
             // 
-            this.TxtValor.Location = new System.Drawing.Point(48, 66);
-            this.TxtValor.Name = "TxtValor";
-            this.TxtValor.Size = new System.Drawing.Size(72, 20);
-            this.TxtValor.TabIndex = 13;
-            this.TxtValor.Text = "0,00";
-            this.TxtValor.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.TxtValor.TextChanged += new System.EventHandler(this.TxtValor_TextChanged);
-            this.TxtValor.Enter += new System.EventHandler(this.TxtValor_Enter);
-            this.TxtValor.Leave += new System.EventHandler(this.TxtValor_Leave);
+            TxtValor.Location = new System.Drawing.Point(56, 76);
+            TxtValor.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            TxtValor.Name = "TxtValor";
+            TxtValor.Size = new System.Drawing.Size(83, 23);
+            TxtValor.TabIndex = 13;
+            TxtValor.Text = "0,00";
+            TxtValor.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            TxtValor.TextChanged += TxtValor_TextChanged;
+            TxtValor.Enter += TxtValor_Enter;
+            TxtValor.Leave += TxtValor_Leave;
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(45, 50);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(31, 13);
-            this.label3.TabIndex = 14;
-            this.label3.Text = "Valor";
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(52, 58);
+            label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(33, 15);
+            label3.TabIndex = 14;
+            label3.Text = "Valor";
             // 
             // TxtFaixa
             // 
-            this.TxtFaixa.Location = new System.Drawing.Point(13, 66);
-            this.TxtFaixa.Name = "TxtFaixa";
-            this.TxtFaixa.Size = new System.Drawing.Size(29, 20);
-            this.TxtFaixa.TabIndex = 11;
-            this.TxtFaixa.Text = "1";
-            this.TxtFaixa.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.TxtFaixa.TextChanged += new System.EventHandler(this.TxtFaixa_TextChanged);
-            this.TxtFaixa.Enter += new System.EventHandler(this.TxtFaixa_Enter);
-            this.TxtFaixa.Leave += new System.EventHandler(this.TxtFaixa_Leave);
+            TxtFaixa.Location = new System.Drawing.Point(15, 76);
+            TxtFaixa.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            TxtFaixa.Name = "TxtFaixa";
+            TxtFaixa.Size = new System.Drawing.Size(33, 23);
+            TxtFaixa.TabIndex = 11;
+            TxtFaixa.Text = "1";
+            TxtFaixa.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            TxtFaixa.TextChanged += TxtFaixa_TextChanged;
+            TxtFaixa.Enter += TxtFaixa_Enter;
+            TxtFaixa.Leave += TxtFaixa_Leave;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(10, 50);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(32, 13);
-            this.label2.TabIndex = 16;
-            this.label2.Text = "Faixa";
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(12, 58);
+            label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(34, 15);
+            label2.TabIndex = 16;
+            label2.Text = "Faixa";
             // 
             // MktCompetencia
             // 
-            this.MktCompetencia.Location = new System.Drawing.Point(13, 27);
-            this.MktCompetencia.Mask = "00/0000";
-            this.MktCompetencia.Name = "MktCompetencia";
-            this.MktCompetencia.Size = new System.Drawing.Size(69, 20);
-            this.MktCompetencia.TabIndex = 9;
-            this.MktCompetencia.Leave += new System.EventHandler(this.MktCompetencia_Leave);
+            MktCompetencia.Location = new System.Drawing.Point(15, 31);
+            MktCompetencia.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            MktCompetencia.Mask = "00/0000";
+            MktCompetencia.Name = "MktCompetencia";
+            MktCompetencia.Size = new System.Drawing.Size(80, 23);
+            MktCompetencia.TabIndex = 9;
+            MktCompetencia.Leave += MktCompetencia_Leave;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 11);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(69, 13);
-            this.label1.TabIndex = 10;
-            this.label1.Text = "Competência";
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(15, 13);
+            label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(78, 15);
+            label1.TabIndex = 10;
+            label1.Text = "Competência";
             // 
             // LkLblOnline
             // 
-            this.LkLblOnline.AutoSize = true;
-            this.LkLblOnline.Location = new System.Drawing.Point(176, 19);
-            this.LkLblOnline.Name = "LkLblOnline";
-            this.LkLblOnline.Size = new System.Drawing.Size(37, 13);
-            this.LkLblOnline.TabIndex = 23;
-            this.LkLblOnline.TabStop = true;
-            this.LkLblOnline.Text = "Online";
-            this.LkLblOnline.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LkLblOnline_LinkClicked);
+            LkLblOnline.AutoSize = true;
+            LkLblOnline.Location = new System.Drawing.Point(172, 22);
+            LkLblOnline.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            LkLblOnline.Name = "LkLblOnline";
+            LkLblOnline.Size = new System.Drawing.Size(116, 15);
+            LkLblOnline.TabIndex = 23;
+            LkLblOnline.TabStop = true;
+            LkLblOnline.Text = "Buscar Tabela Online";
+            LkLblOnline.LinkClicked += LkLblOnline_LinkClicked;
             // 
             // FrmTabelaINSS
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(338, 262);
-            this.Controls.Add(this.LkLblOnline);
-            this.Controls.Add(this.BtnExcluir);
-            this.Controls.Add(this.BtnAlterar);
-            this.Controls.Add(this.BtnGravar);
-            this.Controls.Add(this.DgvTabelaINSS);
-            this.Controls.Add(this.TxtPorcentagem);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.TxtValor);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.TxtFaixa);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.MktCompetencia);
-            this.Controls.Add(this.label1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "FrmTabelaINSS";
-            this.ShowIcon = false;
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Tabela INSS";
-            this.Load += new System.EventHandler(this.FrmTabelaINSS_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.DgvTabelaINSS)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(394, 302);
+            Controls.Add(LkLblOnline);
+            Controls.Add(BtnExcluir);
+            Controls.Add(BtnAlterar);
+            Controls.Add(BtnGravar);
+            Controls.Add(DgvTabelaINSS);
+            Controls.Add(TxtPorcentagem);
+            Controls.Add(label4);
+            Controls.Add(TxtValor);
+            Controls.Add(label3);
+            Controls.Add(TxtFaixa);
+            Controls.Add(label2);
+            Controls.Add(MktCompetencia);
+            Controls.Add(label1);
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Name = "FrmTabelaINSS";
+            ShowIcon = false;
+            ShowInTaskbar = false;
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            Text = "Tabela INSS";
+            Load += FrmTabelaINSS_Load;
+            ((System.ComponentModel.ISupportInitialize)DgvTabelaINSS).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 

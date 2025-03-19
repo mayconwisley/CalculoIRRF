@@ -19,5 +19,6 @@ public interface IInssServices
     Task<double> TetoInss(DateTime competencia);
     Task<IEnumerable<Inss>> ListarTodos();
     Task<IEnumerable<Inss>> ListarTodosPorCompetencia(DateTime competencia);
+    Task<IEnumerable<InssGov>> ListarTodosPorDataAtualizacao(DateTime dataAtualizacao);
     Task<Inss> ListarPorId(int id);
 }

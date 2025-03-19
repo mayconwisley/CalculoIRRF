@@ -156,4 +156,14 @@ public class InssRepository(CalculoImpostoContext _calculoImpostoContext) : IIns
                           .FirstOrDefaultAsync();
         return value;
     }
+
+    public async Task<IEnumerable<InssGov>> GetByDateUpdate(DateTime dateUpdate)
+    {
+        var listInssGov = await _calculoImpostoContext
+                          .InssGov
+                          .Where(w => w.DataAtualizacao == dateUpdate)
+                          .ToListAsync();
+
+        return listInssGov ?? [];
+    }
 }

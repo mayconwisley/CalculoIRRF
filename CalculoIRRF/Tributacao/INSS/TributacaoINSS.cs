@@ -11,7 +11,7 @@ namespace CalculoIRRF.Tributacao.INSS;
 
 public class TributacaoINSS(IInssServices _inssServices)
 {
-    public async Task AtualizarOnline()
+    public async Task<List<InssGov>> AtualizarOnline()
     {
         InssGov inssGov;
 
@@ -21,16 +21,17 @@ public class TributacaoINSS(IInssServices _inssServices)
 
         if (htmlDocument is null)
         {
-            return;
+            return null;
         }
 
         var dataPublicacao = BuscarDataPublicacaoOnline(htmlDocument);
         var dataAtualizacao = BuscarDataAtualizacaoOnline(htmlDocument);
         var tributacaoINSS = BuscarINSSOnline(htmlDocument);
         var isInss = await _inssServices.IsGov(dataAtualizacao);
+
         if (isInss)
         {
-            return;
+            return null;
         }
 
         foreach (var item in tributacaoINSS)
@@ -45,11 +46,14 @@ public class TributacaoINSS(IInssServices _inssServices)
             };
             await _inssServices.Gravar(inssGov);
         }
+
+        var listInssGov = await _inssServices.ListarTodosPorDataAtualizacao(dataAtualizacao);
+        return [.. listInssGov];
     }
 
     private static List<TributacaoINSSObj> BuscarINSSOnline(HtmlDocument htmlDocument)
     {
-        List<TributacaoINSSObj> listTributacaoRFBObj = new List<TributacaoINSSObj>();
+        List<TributacaoINSSObj> listTributacaoRFBObj = [];
 
         var table = htmlDocument.DocumentNode.SelectSingleNode("//table");
 

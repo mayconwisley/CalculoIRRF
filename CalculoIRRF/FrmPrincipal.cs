@@ -64,6 +64,8 @@ public partial class FrmPrincipal : Form
                 RTxtResultado.SelectionColor = color;
                 RTxtResultado.AppendText(text);
             }
+
+            BtnPensao.Enabled = true;
         }
         catch (Exception ex)
         {
@@ -104,6 +106,7 @@ public partial class FrmPrincipal : Form
         {
             TxtValorBruto.Text = "";
         }
+        BtnPensao.Enabled = false;
     }
 
     private void TxtDescInss_TextChanged(object sender, EventArgs e)
@@ -124,6 +127,7 @@ public partial class FrmPrincipal : Form
         {
             TxtBaseInss.Text = "";
         }
+        BtnPensao.Enabled = false;
     }
 
     private void TxtQtdDependente_TextChanged(object sender, EventArgs e)
@@ -144,6 +148,7 @@ public partial class FrmPrincipal : Form
         {
             TxtQtdDependente.Text = "";
         }
+        BtnPensao.Enabled = false;
     }
 
     private void FrmPrincipal_Load(object sender, EventArgs e)

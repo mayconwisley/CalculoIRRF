@@ -78,4 +78,9 @@ public class InssServices(IInssRepository _inssRepository) : IInssServices
     {
         return await _inssRepository.IsGov(competencia);
     }
+
+    public async Task<IEnumerable<InssGov>> ListarTodosPorDataAtualizacao(DateTime dataAtualizacao)
+    {
+        return await _inssRepository.GetByDateUpdate(dataAtualizacao);
+    }
 }

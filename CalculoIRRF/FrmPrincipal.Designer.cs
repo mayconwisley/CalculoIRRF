@@ -29,275 +29,296 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmPrincipal));
-            this.label1 = new System.Windows.Forms.Label();
-            this.TxtValorBruto = new System.Windows.Forms.TextBox();
-            this.TxtDescontoInss = new System.Windows.Forms.Label();
-            this.TxtBaseInss = new System.Windows.Forms.TextBox();
-            this.TxtQtdDependente = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.BtnCalcular = new System.Windows.Forms.Button();
-            this.BtnTabelaIRRF = new System.Windows.Forms.Button();
-            this.BtnTabelaValSimplificado = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.RTxtResultado = new System.Windows.Forms.RichTextBox();
-            this.BtnDependente = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.MktCompetencia = new System.Windows.Forms.MaskedTextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.BtnTabelaINSS = new System.Windows.Forms.Button();
-            this.BtnDescMinimo = new System.Windows.Forms.Button();
-            this.BtnPensao = new System.Windows.Forms.Button();
-            this.groupBox1.SuspendLayout();
-            this.SuspendLayout();
+            label1 = new System.Windows.Forms.Label();
+            TxtValorBruto = new System.Windows.Forms.TextBox();
+            TxtDescontoInss = new System.Windows.Forms.Label();
+            TxtBaseInss = new System.Windows.Forms.TextBox();
+            TxtQtdDependente = new System.Windows.Forms.TextBox();
+            label3 = new System.Windows.Forms.Label();
+            BtnCalcular = new System.Windows.Forms.Button();
+            BtnTabelaIRRF = new System.Windows.Forms.Button();
+            BtnTabelaValSimplificado = new System.Windows.Forms.Button();
+            groupBox1 = new System.Windows.Forms.GroupBox();
+            RTxtResultado = new System.Windows.Forms.RichTextBox();
+            BtnDependente = new System.Windows.Forms.Button();
+            label2 = new System.Windows.Forms.Label();
+            MktCompetencia = new System.Windows.Forms.MaskedTextBox();
+            label4 = new System.Windows.Forms.Label();
+            BtnTabelaINSS = new System.Windows.Forms.Button();
+            BtnDescMinimo = new System.Windows.Forms.Button();
+            BtnPensao = new System.Windows.Forms.Button();
+            groupBox1.SuspendLayout();
+            SuspendLayout();
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(86, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(73, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Valor Bruto IR";
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(100, 10);
+            label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(78, 15);
+            label1.TabIndex = 0;
+            label1.Text = "Valor Bruto IR";
             // 
             // TxtValorBruto
             // 
-            this.TxtValorBruto.Location = new System.Drawing.Point(86, 25);
-            this.TxtValorBruto.Name = "TxtValorBruto";
-            this.TxtValorBruto.Size = new System.Drawing.Size(89, 20);
-            this.TxtValorBruto.TabIndex = 1;
-            this.TxtValorBruto.Text = "0,00";
-            this.TxtValorBruto.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.TxtValorBruto.TextChanged += new System.EventHandler(this.TxtValorBruto_TextChanged);
-            this.TxtValorBruto.Enter += new System.EventHandler(this.TxtValorBruto_Enter);
-            this.TxtValorBruto.Leave += new System.EventHandler(this.TxtValorBruto_Leave);
+            TxtValorBruto.Location = new System.Drawing.Point(100, 29);
+            TxtValorBruto.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            TxtValorBruto.Name = "TxtValorBruto";
+            TxtValorBruto.Size = new System.Drawing.Size(103, 23);
+            TxtValorBruto.TabIndex = 1;
+            TxtValorBruto.Text = "0,00";
+            TxtValorBruto.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            TxtValorBruto.TextChanged += TxtValorBruto_TextChanged;
+            TxtValorBruto.Enter += TxtValorBruto_Enter;
+            TxtValorBruto.Leave += TxtValorBruto_Leave;
             // 
             // TxtDescontoInss
             // 
-            this.TxtDescontoInss.AutoSize = true;
-            this.TxtDescontoInss.Location = new System.Drawing.Point(181, 9);
-            this.TxtDescontoInss.Name = "TxtDescontoInss";
-            this.TxtDescontoInss.Size = new System.Drawing.Size(59, 13);
-            this.TxtDescontoInss.TabIndex = 2;
-            this.TxtDescontoInss.Text = "Base INSS";
+            TxtDescontoInss.AutoSize = true;
+            TxtDescontoInss.Location = new System.Drawing.Point(211, 10);
+            TxtDescontoInss.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            TxtDescontoInss.Name = "TxtDescontoInss";
+            TxtDescontoInss.Size = new System.Drawing.Size(58, 15);
+            TxtDescontoInss.TabIndex = 2;
+            TxtDescontoInss.Text = "Base INSS";
             // 
             // TxtBaseInss
             // 
-            this.TxtBaseInss.Location = new System.Drawing.Point(181, 25);
-            this.TxtBaseInss.Name = "TxtBaseInss";
-            this.TxtBaseInss.Size = new System.Drawing.Size(89, 20);
-            this.TxtBaseInss.TabIndex = 2;
-            this.TxtBaseInss.Text = "0,00";
-            this.TxtBaseInss.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.TxtBaseInss.TextChanged += new System.EventHandler(this.TxtDescInss_TextChanged);
-            this.TxtBaseInss.Enter += new System.EventHandler(this.TxtDescInss_Enter);
-            this.TxtBaseInss.Leave += new System.EventHandler(this.TxtDescInss_Leave);
+            TxtBaseInss.Location = new System.Drawing.Point(211, 29);
+            TxtBaseInss.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            TxtBaseInss.Name = "TxtBaseInss";
+            TxtBaseInss.Size = new System.Drawing.Size(103, 23);
+            TxtBaseInss.TabIndex = 2;
+            TxtBaseInss.Text = "0,00";
+            TxtBaseInss.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            TxtBaseInss.TextChanged += TxtDescInss_TextChanged;
+            TxtBaseInss.Enter += TxtDescInss_Enter;
+            TxtBaseInss.Leave += TxtDescInss_Leave;
             // 
             // TxtQtdDependente
             // 
-            this.TxtQtdDependente.Location = new System.Drawing.Point(276, 25);
-            this.TxtQtdDependente.Name = "TxtQtdDependente";
-            this.TxtQtdDependente.Size = new System.Drawing.Size(89, 20);
-            this.TxtQtdDependente.TabIndex = 3;
-            this.TxtQtdDependente.Text = "0";
-            this.TxtQtdDependente.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.TxtQtdDependente.TextChanged += new System.EventHandler(this.TxtQtdDependente_TextChanged);
-            this.TxtQtdDependente.Enter += new System.EventHandler(this.TxtQtdDependente_Enter);
-            this.TxtQtdDependente.Leave += new System.EventHandler(this.TxtQtdDependente_Leave);
+            TxtQtdDependente.Location = new System.Drawing.Point(322, 29);
+            TxtQtdDependente.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            TxtQtdDependente.Name = "TxtQtdDependente";
+            TxtQtdDependente.Size = new System.Drawing.Size(103, 23);
+            TxtQtdDependente.TabIndex = 3;
+            TxtQtdDependente.Text = "0";
+            TxtQtdDependente.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            TxtQtdDependente.TextChanged += TxtQtdDependente_TextChanged;
+            TxtQtdDependente.Enter += TxtQtdDependente_Enter;
+            TxtQtdDependente.Leave += TxtQtdDependente_Leave;
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(276, 9);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(89, 13);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Qtd. Dependente";
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(322, 10);
+            label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(97, 15);
+            label3.TabIndex = 2;
+            label3.Text = "Qtd. Dependente";
             // 
             // BtnCalcular
             // 
-            this.BtnCalcular.FlatAppearance.BorderColor = System.Drawing.Color.DarkGreen;
-            this.BtnCalcular.FlatAppearance.BorderSize = 2;
-            this.BtnCalcular.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.BtnCalcular.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightGreen;
-            this.BtnCalcular.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnCalcular.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BtnCalcular.Location = new System.Drawing.Point(11, 60);
-            this.BtnCalcular.Name = "BtnCalcular";
-            this.BtnCalcular.Size = new System.Drawing.Size(259, 33);
-            this.BtnCalcular.TabIndex = 4;
-            this.BtnCalcular.Text = "&Calcular";
-            this.BtnCalcular.UseVisualStyleBackColor = true;
-            this.BtnCalcular.Click += new System.EventHandler(this.BtnCalcular_Click);
+            BtnCalcular.FlatAppearance.BorderColor = System.Drawing.Color.DarkGreen;
+            BtnCalcular.FlatAppearance.BorderSize = 2;
+            BtnCalcular.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(192, 255, 192);
+            BtnCalcular.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightGreen;
+            BtnCalcular.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            BtnCalcular.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            BtnCalcular.Location = new System.Drawing.Point(13, 69);
+            BtnCalcular.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            BtnCalcular.Name = "BtnCalcular";
+            BtnCalcular.Size = new System.Drawing.Size(302, 38);
+            BtnCalcular.TabIndex = 4;
+            BtnCalcular.Text = "&Calcular";
+            BtnCalcular.UseVisualStyleBackColor = true;
+            BtnCalcular.Click += BtnCalcular_Click;
             // 
             // BtnTabelaIRRF
             // 
-            this.BtnTabelaIRRF.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaption;
-            this.BtnTabelaIRRF.FlatAppearance.CheckedBackColor = System.Drawing.Color.Gray;
-            this.BtnTabelaIRRF.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGray;
-            this.BtnTabelaIRRF.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.BtnTabelaIRRF.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnTabelaIRRF.Location = new System.Drawing.Point(501, 12);
-            this.BtnTabelaIRRF.Name = "BtnTabelaIRRF";
-            this.BtnTabelaIRRF.Size = new System.Drawing.Size(90, 23);
-            this.BtnTabelaIRRF.TabIndex = 6;
-            this.BtnTabelaIRRF.Text = "IRRF";
-            this.BtnTabelaIRRF.UseVisualStyleBackColor = true;
-            this.BtnTabelaIRRF.Click += new System.EventHandler(this.BtnTabelaIRRF_Click);
+            BtnTabelaIRRF.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaption;
+            BtnTabelaIRRF.FlatAppearance.CheckedBackColor = System.Drawing.Color.Gray;
+            BtnTabelaIRRF.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGray;
+            BtnTabelaIRRF.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(224, 224, 224);
+            BtnTabelaIRRF.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            BtnTabelaIRRF.Location = new System.Drawing.Point(584, 14);
+            BtnTabelaIRRF.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            BtnTabelaIRRF.Name = "BtnTabelaIRRF";
+            BtnTabelaIRRF.Size = new System.Drawing.Size(105, 27);
+            BtnTabelaIRRF.TabIndex = 6;
+            BtnTabelaIRRF.Text = "IRRF";
+            BtnTabelaIRRF.UseVisualStyleBackColor = true;
+            BtnTabelaIRRF.Click += BtnTabelaIRRF_Click;
             // 
             // BtnTabelaValSimplificado
             // 
-            this.BtnTabelaValSimplificado.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaption;
-            this.BtnTabelaValSimplificado.FlatAppearance.CheckedBackColor = System.Drawing.Color.Gray;
-            this.BtnTabelaValSimplificado.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGray;
-            this.BtnTabelaValSimplificado.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.BtnTabelaValSimplificado.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnTabelaValSimplificado.Location = new System.Drawing.Point(404, 70);
-            this.BtnTabelaValSimplificado.Name = "BtnTabelaValSimplificado";
-            this.BtnTabelaValSimplificado.Size = new System.Drawing.Size(187, 23);
-            this.BtnTabelaValSimplificado.TabIndex = 9;
-            this.BtnTabelaValSimplificado.Text = "Valor Simplificado";
-            this.BtnTabelaValSimplificado.UseVisualStyleBackColor = true;
-            this.BtnTabelaValSimplificado.Click += new System.EventHandler(this.BtnTabelaValSimplificado_Click);
+            BtnTabelaValSimplificado.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaption;
+            BtnTabelaValSimplificado.FlatAppearance.CheckedBackColor = System.Drawing.Color.Gray;
+            BtnTabelaValSimplificado.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGray;
+            BtnTabelaValSimplificado.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(224, 224, 224);
+            BtnTabelaValSimplificado.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            BtnTabelaValSimplificado.Location = new System.Drawing.Point(471, 81);
+            BtnTabelaValSimplificado.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            BtnTabelaValSimplificado.Name = "BtnTabelaValSimplificado";
+            BtnTabelaValSimplificado.Size = new System.Drawing.Size(218, 27);
+            BtnTabelaValSimplificado.TabIndex = 9;
+            BtnTabelaValSimplificado.Text = "Valor Simplificado";
+            BtnTabelaValSimplificado.UseVisualStyleBackColor = true;
+            BtnTabelaValSimplificado.Click += BtnTabelaValSimplificado_Click;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.RTxtResultado);
-            this.groupBox1.Location = new System.Drawing.Point(11, 99);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(580, 427);
-            this.groupBox1.TabIndex = 10;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Calculo do IR";
+            groupBox1.Controls.Add(RTxtResultado);
+            groupBox1.Location = new System.Drawing.Point(13, 114);
+            groupBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox1.Size = new System.Drawing.Size(677, 493);
+            groupBox1.TabIndex = 10;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Calculo do IR";
             // 
             // RTxtResultado
             // 
-            this.RTxtResultado.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RTxtResultado.Location = new System.Drawing.Point(6, 12);
-            this.RTxtResultado.Name = "RTxtResultado";
-            this.RTxtResultado.ReadOnly = true;
-            this.RTxtResultado.Size = new System.Drawing.Size(568, 409);
-            this.RTxtResultado.TabIndex = 0;
-            this.RTxtResultado.Text = "";
+            RTxtResultado.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            RTxtResultado.Location = new System.Drawing.Point(7, 14);
+            RTxtResultado.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            RTxtResultado.Name = "RTxtResultado";
+            RTxtResultado.ReadOnly = true;
+            RTxtResultado.Size = new System.Drawing.Size(662, 471);
+            RTxtResultado.TabIndex = 0;
+            RTxtResultado.Text = "";
             // 
             // BtnDependente
             // 
-            this.BtnDependente.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaption;
-            this.BtnDependente.FlatAppearance.CheckedBackColor = System.Drawing.Color.Gray;
-            this.BtnDependente.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGray;
-            this.BtnDependente.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.BtnDependente.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnDependente.Location = new System.Drawing.Point(501, 41);
-            this.BtnDependente.Name = "BtnDependente";
-            this.BtnDependente.Size = new System.Drawing.Size(90, 23);
-            this.BtnDependente.TabIndex = 8;
-            this.BtnDependente.Text = "Dependente";
-            this.BtnDependente.UseVisualStyleBackColor = true;
-            this.BtnDependente.Click += new System.EventHandler(this.BtnDependente_Click);
+            BtnDependente.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaption;
+            BtnDependente.FlatAppearance.CheckedBackColor = System.Drawing.Color.Gray;
+            BtnDependente.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGray;
+            BtnDependente.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(224, 224, 224);
+            BtnDependente.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            BtnDependente.Location = new System.Drawing.Point(584, 47);
+            BtnDependente.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            BtnDependente.Name = "BtnDependente";
+            BtnDependente.Size = new System.Drawing.Size(105, 27);
+            BtnDependente.TabIndex = 8;
+            BtnDependente.Text = "Dependente";
+            BtnDependente.UseVisualStyleBackColor = true;
+            BtnDependente.Click += BtnDependente_Click;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(11, 9);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(69, 13);
-            this.label2.TabIndex = 7;
-            this.label2.Text = "Competência";
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(13, 10);
+            label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(78, 15);
+            label2.TabIndex = 7;
+            label2.Text = "Competência";
             // 
             // MktCompetencia
             // 
-            this.MktCompetencia.Location = new System.Drawing.Point(11, 25);
-            this.MktCompetencia.Mask = "00/0000";
-            this.MktCompetencia.Name = "MktCompetencia";
-            this.MktCompetencia.Size = new System.Drawing.Size(69, 20);
-            this.MktCompetencia.TabIndex = 0;
+            MktCompetencia.Location = new System.Drawing.Point(13, 29);
+            MktCompetencia.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            MktCompetencia.Mask = "00/0000";
+            MktCompetencia.Name = "MktCompetencia";
+            MktCompetencia.Size = new System.Drawing.Size(80, 23);
+            MktCompetencia.TabIndex = 0;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(2, 529);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(173, 13);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "Calculadora de IR - Maycon Wisley";
+            label4.AutoSize = true;
+            label4.Location = new System.Drawing.Point(2, 610);
+            label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new System.Drawing.Size(190, 15);
+            label4.TabIndex = 9;
+            label4.Text = "Calculadora de IR - Maycon Wisley";
             // 
             // BtnTabelaINSS
             // 
-            this.BtnTabelaINSS.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaption;
-            this.BtnTabelaINSS.FlatAppearance.CheckedBackColor = System.Drawing.Color.Gray;
-            this.BtnTabelaINSS.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGray;
-            this.BtnTabelaINSS.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.BtnTabelaINSS.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnTabelaINSS.Location = new System.Drawing.Point(404, 12);
-            this.BtnTabelaINSS.Name = "BtnTabelaINSS";
-            this.BtnTabelaINSS.Size = new System.Drawing.Size(90, 23);
-            this.BtnTabelaINSS.TabIndex = 5;
-            this.BtnTabelaINSS.Text = "INSS";
-            this.BtnTabelaINSS.UseVisualStyleBackColor = true;
-            this.BtnTabelaINSS.Click += new System.EventHandler(this.BtnTabelaINSS_Click);
+            BtnTabelaINSS.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaption;
+            BtnTabelaINSS.FlatAppearance.CheckedBackColor = System.Drawing.Color.Gray;
+            BtnTabelaINSS.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGray;
+            BtnTabelaINSS.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(224, 224, 224);
+            BtnTabelaINSS.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            BtnTabelaINSS.Location = new System.Drawing.Point(471, 14);
+            BtnTabelaINSS.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            BtnTabelaINSS.Name = "BtnTabelaINSS";
+            BtnTabelaINSS.Size = new System.Drawing.Size(105, 27);
+            BtnTabelaINSS.TabIndex = 5;
+            BtnTabelaINSS.Text = "INSS";
+            BtnTabelaINSS.UseVisualStyleBackColor = true;
+            BtnTabelaINSS.Click += BtnTabelaINSS_Click;
             // 
             // BtnDescMinimo
             // 
-            this.BtnDescMinimo.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaption;
-            this.BtnDescMinimo.FlatAppearance.CheckedBackColor = System.Drawing.Color.Gray;
-            this.BtnDescMinimo.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGray;
-            this.BtnDescMinimo.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.BtnDescMinimo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnDescMinimo.Location = new System.Drawing.Point(404, 41);
-            this.BtnDescMinimo.Name = "BtnDescMinimo";
-            this.BtnDescMinimo.Size = new System.Drawing.Size(90, 23);
-            this.BtnDescMinimo.TabIndex = 7;
-            this.BtnDescMinimo.Text = "Desc. Minimo";
-            this.BtnDescMinimo.UseVisualStyleBackColor = true;
-            this.BtnDescMinimo.Click += new System.EventHandler(this.BtnDescMinimo_Click);
+            BtnDescMinimo.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaption;
+            BtnDescMinimo.FlatAppearance.CheckedBackColor = System.Drawing.Color.Gray;
+            BtnDescMinimo.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGray;
+            BtnDescMinimo.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(224, 224, 224);
+            BtnDescMinimo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            BtnDescMinimo.Location = new System.Drawing.Point(471, 47);
+            BtnDescMinimo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            BtnDescMinimo.Name = "BtnDescMinimo";
+            BtnDescMinimo.Size = new System.Drawing.Size(105, 27);
+            BtnDescMinimo.TabIndex = 7;
+            BtnDescMinimo.Text = "Desc. Minimo";
+            BtnDescMinimo.UseVisualStyleBackColor = true;
+            BtnDescMinimo.Click += BtnDescMinimo_Click;
             // 
             // BtnPensao
             // 
-            this.BtnPensao.FlatAppearance.BorderColor = System.Drawing.Color.DarkGreen;
-            this.BtnPensao.FlatAppearance.BorderSize = 2;
-            this.BtnPensao.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.BtnPensao.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightGreen;
-            this.BtnPensao.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnPensao.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BtnPensao.Location = new System.Drawing.Point(276, 60);
-            this.BtnPensao.Name = "BtnPensao";
-            this.BtnPensao.Size = new System.Drawing.Size(89, 33);
-            this.BtnPensao.TabIndex = 11;
-            this.BtnPensao.Text = "&Pensão";
-            this.BtnPensao.UseVisualStyleBackColor = true;
-            this.BtnPensao.Click += new System.EventHandler(this.BtnPensao_Click);
+            BtnPensao.Enabled = false;
+            BtnPensao.FlatAppearance.BorderColor = System.Drawing.Color.DarkGreen;
+            BtnPensao.FlatAppearance.BorderSize = 2;
+            BtnPensao.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(192, 255, 192);
+            BtnPensao.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightGreen;
+            BtnPensao.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            BtnPensao.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            BtnPensao.Location = new System.Drawing.Point(322, 69);
+            BtnPensao.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            BtnPensao.Name = "BtnPensao";
+            BtnPensao.Size = new System.Drawing.Size(104, 38);
+            BtnPensao.TabIndex = 11;
+            BtnPensao.Text = "&Pensão";
+            BtnPensao.UseVisualStyleBackColor = true;
+            BtnPensao.Click += BtnPensao_Click;
             // 
             // FrmPrincipal
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(603, 551);
-            this.Controls.Add(this.BtnPensao);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.MktCompetencia);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.BtnDescMinimo);
-            this.Controls.Add(this.BtnDependente);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.BtnTabelaValSimplificado);
-            this.Controls.Add(this.BtnTabelaINSS);
-            this.Controls.Add(this.BtnTabelaIRRF);
-            this.Controls.Add(this.BtnCalcular);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.TxtQtdDependente);
-            this.Controls.Add(this.TxtDescontoInss);
-            this.Controls.Add(this.TxtBaseInss);
-            this.Controls.Add(this.TxtValorBruto);
-            this.Controls.Add(this.label1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
-            this.Name = "FrmPrincipal";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Calculadora Novo IR";
-            this.Load += new System.EventHandler(this.FrmPrincipal_Load);
-            this.groupBox1.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(704, 636);
+            Controls.Add(BtnPensao);
+            Controls.Add(label4);
+            Controls.Add(MktCompetencia);
+            Controls.Add(label2);
+            Controls.Add(BtnDescMinimo);
+            Controls.Add(BtnDependente);
+            Controls.Add(groupBox1);
+            Controls.Add(BtnTabelaValSimplificado);
+            Controls.Add(BtnTabelaINSS);
+            Controls.Add(BtnTabelaIRRF);
+            Controls.Add(BtnCalcular);
+            Controls.Add(label3);
+            Controls.Add(TxtQtdDependente);
+            Controls.Add(TxtDescontoInss);
+            Controls.Add(TxtBaseInss);
+            Controls.Add(TxtValorBruto);
+            Controls.Add(label1);
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
+            Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            MaximizeBox = false;
+            Name = "FrmPrincipal";
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            Text = "Calculadora Novo IR";
+            Load += FrmPrincipal_Load;
+            groupBox1.ResumeLayout(false);
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 

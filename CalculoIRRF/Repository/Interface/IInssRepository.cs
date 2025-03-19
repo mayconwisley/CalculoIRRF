@@ -9,6 +9,7 @@ public interface IInssRepository
 {
     Task<IEnumerable<Inss>> GetAll();
     Task<IEnumerable<Inss>> GetByCompetence(DateTime competence);
+    Task<IEnumerable<InssGov>> GetByDateUpdate(DateTime dateUpdate);
     Task<bool> IsGov(DateTime competence);
     Task<Inss> GetById(int id);
     Task<int> Range(double baseInss, DateTime competence);
