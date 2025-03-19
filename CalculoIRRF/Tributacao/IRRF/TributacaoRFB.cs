@@ -13,8 +13,8 @@ public class TributacaoRFB(IIrrfServices _irrfServices)
 {
     public async Task<List<IrrfRfb>> AtualizarOnline()
     {
-        //string urlRfb = $@"https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas/{DateTime.Now:yyyy}";
-        string urlRfb = $@"https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas/2024";
+        string urlRfb = $@"https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas/{DateTime.Now:yyyy}";
+        //string urlRfb = $@"https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas/2024";
 
         var htmlDocument = await AcessarUrl.AcessarSite(urlRfb) ?? throw new ArgumentException($"Site atual inválido\n{urlRfb}");
 
