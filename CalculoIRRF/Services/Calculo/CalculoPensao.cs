@@ -20,7 +20,6 @@ public class CalculoPensao(DateTime _competencia, int _qtdDependente, double _va
         IrrfCalculo irrfCalculo = new(_competencia, _qtdDependente, _valorInss, _valorBruto,
                                   _simplificadoServices, _descontoMinimoServices, _irrfServices, _dependenteServices);
 
-        double valorSimplificado = await _simplificadoServices.ValorSimplificado(_competencia);
         double valorPensao = 0d;
         double anteriorP = 0d;
         double descontoIrrfSimplificado = 0d;
@@ -53,7 +52,6 @@ public class CalculoPensao(DateTime _competencia, int _qtdDependente, double _va
                                        $"{_valorBruto:#,##0.00} - {_valorInss:#,##0.00} - {descontoIrrfSimplificado:#,##0.00} = {basePensao:#,##0.00}\n" +
                                        $"{basePensao:#,##0.00} * {_porcentagemPensao:#,##0.00}% = {valorPensao:#,##0.00}\n\n" +
                                        $"________________________________________________________________\n\n");
-
             }
             else
             {
