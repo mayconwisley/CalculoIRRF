@@ -1,6 +1,7 @@
 ﻿using CalculoIRRF.Model;
 using CalculoIRRF.Services.Interface;
 using CalculoIRRF.Services.Validacao;
+using CalculoIRRF.Tributacao.IRRF;
 using System;
 using System.Runtime.Versioning;
 using System.Threading.Tasks;
@@ -222,8 +223,47 @@ public partial class FrmTabelaIRRF : Form
 
     private async void LblLinkOnline_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
     {
-        //TributacaoRFB tributacaoRFB = new();
-        //await tributacaoRFB.AtualizarOnline();
-        //await ListarTabelaIrrf();
+        try
+        {
+            TributacaoRFB tributacaoRFB = new(_irrfServices);
+            var listIrrf = await tributacaoRFB.AtualizarOnline();
+
+            if (listIrrf is null)
+            {
+                MessageBox.Show("Tabela já atualizada", this.Text);
+                return;
+            }
+
+            int countItem = 0;
+            foreach (var irrfGov in listIrrf)
+            {
+                countItem++;
+                var irrf = new Irrf
+                {
+                    Competencia = DateTime.Parse(MktCompetencia.Text),
+                    Faixa = irrfGov.Sequencia,
+                    Valor = irrfGov.BaseCaculo,
+                    Porcentagem = irrfGov.Aliquota,
+                    Deducao = irrfGov.Deducao
+                };
+
+                if (countItem == irrfGov.Sequencia)
+                {
+                    irrf.Valor = double.Parse("99999999999.99");
+                }
+
+                if (!await _irrfServices.Gravar(irrf))
+                {
+                    MessageBox.Show("Erro ao gravar dados", this.Text);
+                    return;
+                }
+            }
+            await ListarTabelaIrrf();
+            MessageBox.Show("Tabela atualizada com sucesso", this.Text);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message, this.Text);
+        }
     }
 }

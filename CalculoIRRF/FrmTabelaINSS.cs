@@ -195,31 +195,39 @@ public partial class FrmTabelaINSS : Form
 
     private async void LkLblOnline_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
     {
-        TributacaoINSS tributacaoINSS = new(_inssServices);
-        var listInssGov = await tributacaoINSS.AtualizarOnline();
-
-        if (listInssGov is null)
+        try
         {
-            MessageBox.Show("Tabela já atualizada", this.Text);
-        }
+            TributacaoINSS tributacaoINSS = new(_inssServices);
+            var listInssGov = await tributacaoINSS.AtualizarOnline();
 
-        foreach (var inss in listInssGov)
-        {
-            Inss dados = new()
+            if (listInssGov is null)
             {
-                Competencia = DateTime.Parse(MktCompetencia.Text),
-                Faixa = inss.Sequencia,
-                Valor = inss.BaseCaculo,
-                Porcentagem = inss.Aliquota
-            };
-
-            if (!await _inssServices.Gravar(dados))
-            {
-                MessageBox.Show("Erro ao gravar dados", this.Text);
+                MessageBox.Show("Tabela já atualizada", this.Text);
                 return;
             }
+
+            foreach (var inss in listInssGov)
+            {
+                Inss dados = new()
+                {
+                    Competencia = DateTime.Parse(MktCompetencia.Text),
+                    Faixa = inss.Sequencia,
+                    Valor = inss.BaseCaculo,
+                    Porcentagem = inss.Aliquota
+                };
+
+                if (!await _inssServices.Gravar(dados))
+                {
+                    MessageBox.Show("Erro ao gravar dados", this.Text);
+                    return;
+                }
+            }
+            await ListarTabelaInss();
+            MessageBox.Show("Tabela atualizada com sucesso", this.Text);
         }
-        await ListarTabelaInss();
-        MessageBox.Show("Tabela atualizada com sucesso", this.Text);
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message, this.Text);
+        }
     }
 }

@@ -57,4 +57,20 @@ public class IrrfServices(IIrrfRepository _irrfRepository) : IIrrfServices
         var irrf = await _irrfRepository.GetById(id);
         return irrf;
     }
+
+    public async Task<bool> GravarRfb(IrrfRfb irrfRfb)
+    {
+        await _irrfRepository.Create(irrfRfb);
+        return true;
+    }
+
+    public Task<IEnumerable<IrrfRfb>> ListarTodosDataAtualizacao(DateTime dataAtualizacao)
+    {
+        return _irrfRepository.GetByDateUpdate(dataAtualizacao);
+    }
+
+    public async Task<bool> IsGov(DateTime competencia)
+    {
+        return await _irrfRepository.IsGov(competencia);
+    }
 }

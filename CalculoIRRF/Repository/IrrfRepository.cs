@@ -17,6 +17,12 @@ public class IrrfRepository(CalculoImpostoContext _calculoImpostoContext) : IIrr
         await _calculoImpostoContext.SaveChangesAsync();
         return irrf;
     }
+    public async Task<IrrfRfb> Create(IrrfRfb irrfRfb)
+    {
+        _calculoImpostoContext.IrrfRfb.Add(irrfRfb);
+        await _calculoImpostoContext.SaveChangesAsync();
+        return irrfRfb;
+    }
 
     public async Task<double> Deduction(int range, DateTime competence)
     {
@@ -51,10 +57,26 @@ public class IrrfRepository(CalculoImpostoContext _calculoImpostoContext) : IIrr
                     .OrderBy(o => o.Faixa)
                     .ToListAsync();
     }
+    public async Task<IEnumerable<IrrfRfb>> GetByDateUpdate(DateTime dateUpdate)
+    {
+        return await _calculoImpostoContext.IrrfRfb
+                    .Where(w => w.DataAtualizacao == dateUpdate)
+                    .ToListAsync();
+    }
 
     public async Task<Irrf> GetById(int id)
     {
         return await _calculoImpostoContext.Irrf.FindAsync(id);
+    }
+
+    public async Task<bool> IsGov(DateTime competence)
+    {
+        var isIrrfGov = await _calculoImpostoContext
+                          .IrrfRfb
+                          .Where(w => w.DataAtualizacao == competence)
+                          .AnyAsync();
+
+        return isIrrfGov;
     }
 
     public async Task<int> LastRange(DateTime competence)
