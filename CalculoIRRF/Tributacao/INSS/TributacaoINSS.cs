@@ -17,22 +17,17 @@ public class TributacaoINSS(IInssServices _inssServices)
 
         string urlInss = $@"https://www.gov.br/inss/pt-br/direitos-e-deveres/inscricao-e-contribuicao/tabela-de-contribuicao-mensal";
 
-        var htmlDocument = await AcessarUrl.AcessarSite(urlInss);
-
-        if (htmlDocument is null)
+        var htmlDocument = await AcessarUrl.AcessarSite(urlInss) ?? throw new ArgumentException($"Site inválido\n{urlInss}");
+        var dataAtualizacao = BuscarDataAtualizacaoOnline(htmlDocument);
+        var isInss = await _inssServices.IsGov(dataAtualizacao);
+        if (isInss)
         {
             return null;
         }
 
         var dataPublicacao = BuscarDataPublicacaoOnline(htmlDocument);
-        var dataAtualizacao = BuscarDataAtualizacaoOnline(htmlDocument);
-        var tributacaoINSS = BuscarINSSOnline(htmlDocument);
-        var isInss = await _inssServices.IsGov(dataAtualizacao);
 
-        if (isInss)
-        {
-            return null;
-        }
+        var tributacaoINSS = BuscarINSSOnline(htmlDocument);
 
         foreach (var item in tributacaoINSS)
         {
