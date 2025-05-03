@@ -6,12 +6,12 @@ namespace CalculoIRRF.Model.Configuration;
 
 public class SimplificadoConfiguration : IEntityTypeConfiguration<Simplificado>
 {
-    public void Configure(EntityTypeBuilder<Simplificado> builder)
-    {
-        builder.HasData(
-        new Simplificado { Id = 1, Valor = 528.00d, Competencia = DateTime.Parse("01/05/2023") },
-            new Simplificado { Id = 2, Valor = 564.80d, Competencia = DateTime.Parse("01/02/2024") }
-        );
-
-    }
+	public void Configure(EntityTypeBuilder<Simplificado> builder)
+	{
+		builder.HasData(
+		new Simplificado { Id = 1, Valor = 528.00d, Competencia = DateTime.Parse("01/05/2023") },
+			new Simplificado { Id = 2, Valor = 564.80d, Competencia = DateTime.Parse("01/02/2024") },
+			new Simplificado { Id = 3, Valor = 607.20d, Competencia = DateTime.Parse("01/05/2025") }
+		);
+	}
 }
