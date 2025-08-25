@@ -3,6 +3,7 @@ using System;
 using CalculoIRRF.DataBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CalculoIRRF.Migrations
 {
     [DbContext(typeof(CalculoImpostoContext))]
-    partial class CalculoImpostoContextModelSnapshot : ModelSnapshot
+    [Migration("20250503171220_Nova-Tabela-IRRF-2025")]
+    partial class NovaTabelaIRRF2025
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
