@@ -11,98 +11,85 @@ namespace CalculoIRRF.Tributacao.INSS;
 
 public class TributacaoINSS(IInssServices _inssServices)
 {
-    public async Task<List<InssGov>> AtualizarOnline()
-    {
-        InssGov inssGov;
+	public async Task<List<InssGov>> AtualizarOnline()
+	{
+		InssGov inssGov;
 
-        string urlInss = $@"https://www.gov.br/inss/pt-br/direitos-e-deveres/inscricao-e-contribuicao/tabela-de-contribuicao-mensal";
+		string urlInss = $@"https://www.contabeis.com.br/tabelas/inss/";
 
-        var htmlDocument = await AcessarUrl.AcessarSite(urlInss) ?? throw new ArgumentException($"Site inválido\n{urlInss}");
-        var dataAtualizacao = BuscarDataAtualizacaoOnline(htmlDocument);
-        var isInss = await _inssServices.IsGov(dataAtualizacao);
-        if (isInss)
-        {
-            return null;
-        }
+		var htmlDocument = await AcessarUrl.AcessarSite(urlInss) ?? throw new ArgumentException($"Site inválido\n{urlInss}");
+		var vigencia = Vigencia(htmlDocument);
+		var isInss = await _inssServices.IsGov(vigencia);
+		if (isInss)
+			return null;
 
-        var dataPublicacao = BuscarDataPublicacaoOnline(htmlDocument);
+		var faixa = await _inssServices.UltimaFaixaInss(vigencia);
+		if (faixa > 0)
+			return null;
 
-        var tributacaoINSS = BuscarINSSOnline(htmlDocument);
+		var tributacaoINSS = GerarTabela(htmlDocument);
 
-        foreach (var item in tributacaoINSS)
-        {
-            inssGov = new InssGov
-            {
-                DataCriacao = dataPublicacao,
-                DataAtualizacao = dataAtualizacao,
-                Sequencia = item.Sequencia,
-                BaseCaculo = item.BaseCalculo,
-                Aliquota = item.Aliquota
-            };
-            await _inssServices.Gravar(inssGov);
-        }
+		foreach (var item in tributacaoINSS)
+		{
+			inssGov = new InssGov
+			{
+				Vigencia = vigencia,
+				Sequencia = item.Sequencia,
+				BaseCaculo = item.BaseCalculo,
+				Aliquota = item.Aliquota
+			};
+			await _inssServices.Gravar(inssGov);
+		}
 
-        var listInssGov = await _inssServices.ListarTodosPorDataAtualizacao(dataAtualizacao);
-        return [.. listInssGov];
-    }
+		var listInssGov = await _inssServices.ListarTodosPorVigencia(vigencia);
+		return [.. listInssGov];
+	}
 
-    private static List<TributacaoINSSObj> BuscarINSSOnline(HtmlDocument htmlDocument)
-    {
-        List<TributacaoINSSObj> listTributacaoRFBObj = [];
+	private static List<TributacaoINSSObj> GerarTabela(HtmlDocument htmlDocument)
+	{
+		List<TributacaoINSSObj> tributacaoINSSObjs = [];
 
-        var table = htmlDocument.DocumentNode.SelectSingleNode("//table");
+		var section = htmlDocument.DocumentNode.SelectSingleNode("//section[contains(@class, 'inss')]") ??
+			throw new Exception("Tabela INSS não encontrada na página");
 
-        if (table != null)
-        {
-            var rows = table.SelectNodes(".//tr");
-            int sequencia = 0;
-            foreach (var row in rows)
-            {
+		var linhas = section.SelectNodes(".//ul[contains(@class, 'itemList') and contains(@class, 'qtd3')]") ??
+			throw new Exception("Nenhum faixa de INSS encontrada");
 
-                if (Validar.ExtrairValor(row.InnerText) == 0)
-                {
-                    continue;
-                }
+		int sequencia = 1;
+		foreach (var linha in linhas)
+		{
+			var coluna = linha.SelectNodes(".//li");
+			if (coluna is null || coluna.Count < 3)
+				continue;
 
-                var cells = row.SelectNodes(".//td");
+			if (coluna[1].InnerText.Contains("O valor máximo do INSS do segurado empregado é"))
+				continue;
 
-                if (cells != null)
-                {
-                    listTributacaoRFBObj.Add(new TributacaoINSSObj
-                    {
-                        Sequencia = ++sequencia,
-                        BaseCalculo = Validar.ExtrairMaiorValor(cells[0].InnerText.Trim()),
-                        Aliquota = Validar.ExtrairValor(cells[1].InnerText.Trim()),
+			var baseCalculo = Validar.ExtrairMaiorValor(coluna[0].InnerText.Trim());
+			var aliquota = Validar.ExtrairValor(coluna[1].InnerText.Trim());
 
-                    });
-                }
-            }
-            return listTributacaoRFBObj;
-        }
-        else
-        {
-            return [];
-        }
-    }
-    private static DateTime BuscarDataPublicacaoOnline(HtmlDocument htmlDocument)
-    {
-        var dataPublicacao = htmlDocument.DocumentNode.SelectNodes("//span[contains(@class, 'documentPublished')]/span");
-        if (dataPublicacao != null)
-        {
-            var data = DateTime.Parse(dataPublicacao[1].InnerText.Trim().Replace("h", ":"));
-            return data;
-        }
-        return DateTime.Now;
-    }
-    private static DateTime BuscarDataAtualizacaoOnline(HtmlDocument htmlDocument)
-    {
-        var dataPublicacao = htmlDocument.DocumentNode.SelectNodes("//span[contains(@class, 'documentModified')]/span");
-        if (dataPublicacao != null)
-        {
-            var data = DateTime.Parse(dataPublicacao[1].InnerText.Trim().Replace("h", ":"));
-            return data;
-        }
-        return DateTime.Now;
-    }
+			tributacaoINSSObjs.Add(new TributacaoINSSObj
+			{
+				Sequencia = sequencia++,
+				BaseCalculo = Validar.ExtrairMaiorValor(coluna[0].InnerText.Trim()),
+				Aliquota = Validar.ExtrairValor(coluna[1].InnerText.Trim()),
+			});
+
+		}
+		return tributacaoINSSObjs;
+
+	}
+	private static DateTime Vigencia(HtmlDocument htmlDocument)
+	{
+		var section = htmlDocument.DocumentNode.SelectSingleNode("//section[contains(@class, 'inss')]") ??
+			throw new Exception("Tabela INSS não encontrada na página");
+
+		var vigencia = section.SelectSingleNode(".//span") ??
+			throw new Exception("Vigência não encontrada");
+
+		DateTime dtVigencia = DateTime.Parse(vigencia.InnerText.Replace(" ", "").Trim());
+
+		return dtVigencia;
+	}
 }
 

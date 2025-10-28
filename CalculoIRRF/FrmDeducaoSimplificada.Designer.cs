@@ -20,193 +20,200 @@
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
+		#region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.label1 = new System.Windows.Forms.Label();
-            this.MktCompetencia = new System.Windows.Forms.MaskedTextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.TxtValor = new System.Windows.Forms.TextBox();
-            this.DgvValorSimplificado = new System.Windows.Forms.DataGridView();
-            this.Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Competencia = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Valor = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.BtnGravar = new System.Windows.Forms.Button();
-            this.BtnAlterar = new System.Windows.Forms.Button();
-            this.BtnExcluir = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvValorSimplificado)).BeginInit();
-            this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 10);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(69, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Competência";
-            // 
-            // MktCompetencia
-            // 
-            this.MktCompetencia.Location = new System.Drawing.Point(11, 26);
-            this.MktCompetencia.Mask = "00/0000";
-            this.MktCompetencia.Name = "MktCompetencia";
-            this.MktCompetencia.Size = new System.Drawing.Size(69, 20);
-            this.MktCompetencia.TabIndex = 1;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(11, 49);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(31, 13);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Valor";
-            // 
-            // TxtValor
-            // 
-            this.TxtValor.Location = new System.Drawing.Point(11, 65);
-            this.TxtValor.Name = "TxtValor";
-            this.TxtValor.Size = new System.Drawing.Size(69, 20);
-            this.TxtValor.TabIndex = 3;
-            this.TxtValor.Text = "0,00";
-            this.TxtValor.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.TxtValor.TextChanged += new System.EventHandler(this.TxtValor_TextChanged);
-            this.TxtValor.Enter += new System.EventHandler(this.TxtValor_Enter);
-            this.TxtValor.Leave += new System.EventHandler(this.TxtValor_Leave);
-            // 
-            // DgvValorSimplificado
-            // 
-            this.DgvValorSimplificado.AllowUserToAddRows = false;
-            this.DgvValorSimplificado.AllowUserToDeleteRows = false;
-            this.DgvValorSimplificado.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.DgvValorSimplificado.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.DgvValorSimplificado.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvValorSimplificado.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Id,
-            this.Competencia,
-            this.Valor});
-            this.DgvValorSimplificado.Location = new System.Drawing.Point(11, 105);
-            this.DgvValorSimplificado.MultiSelect = false;
-            this.DgvValorSimplificado.Name = "DgvValorSimplificado";
-            this.DgvValorSimplificado.ReadOnly = true;
-            this.DgvValorSimplificado.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DgvValorSimplificado.Size = new System.Drawing.Size(238, 150);
-            this.DgvValorSimplificado.TabIndex = 4;
-            this.DgvValorSimplificado.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvValorSimplificado_CellDoubleClick);
-            // 
-            // Id
-            // 
-            this.Id.DataPropertyName = "Id";
-            this.Id.HeaderText = "Id";
-            this.Id.Name = "Id";
-            this.Id.ReadOnly = true;
-            this.Id.Visible = false;
-            // 
-            // Competencia
-            // 
-            this.Competencia.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Competencia.DataPropertyName = "Competencia";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle1.Format = "MM/yyyy";
-            dataGridViewCellStyle1.NullValue = null;
-            this.Competencia.DefaultCellStyle = dataGridViewCellStyle1;
-            this.Competencia.HeaderText = "Competência";
-            this.Competencia.Name = "Competencia";
-            this.Competencia.ReadOnly = true;
-            this.Competencia.Width = 94;
-            // 
-            // Valor
-            // 
-            this.Valor.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Valor.DataPropertyName = "Valor";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle2.Format = "N2";
-            dataGridViewCellStyle2.NullValue = null;
-            this.Valor.DefaultCellStyle = dataGridViewCellStyle2;
-            this.Valor.HeaderText = "Valor";
-            this.Valor.Name = "Valor";
-            this.Valor.ReadOnly = true;
-            this.Valor.Width = 56;
-            // 
-            // BtnGravar
-            // 
-            this.BtnGravar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.BtnGravar.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
-            this.BtnGravar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver;
-            this.BtnGravar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnGravar.Location = new System.Drawing.Point(174, 13);
-            this.BtnGravar.Name = "BtnGravar";
-            this.BtnGravar.Size = new System.Drawing.Size(75, 23);
-            this.BtnGravar.TabIndex = 5;
-            this.BtnGravar.Text = "&Gravar";
-            this.BtnGravar.UseVisualStyleBackColor = true;
-            this.BtnGravar.Click += new System.EventHandler(this.BtnGravar_Click);
-            // 
-            // BtnAlterar
-            // 
-            this.BtnAlterar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.BtnAlterar.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
-            this.BtnAlterar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver;
-            this.BtnAlterar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnAlterar.Location = new System.Drawing.Point(174, 42);
-            this.BtnAlterar.Name = "BtnAlterar";
-            this.BtnAlterar.Size = new System.Drawing.Size(75, 23);
-            this.BtnAlterar.TabIndex = 5;
-            this.BtnAlterar.Text = "&Alterar";
-            this.BtnAlterar.UseVisualStyleBackColor = true;
-            this.BtnAlterar.Click += new System.EventHandler(this.BtnAlterar_Click);
-            // 
-            // BtnExcluir
-            // 
-            this.BtnExcluir.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.BtnExcluir.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
-            this.BtnExcluir.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver;
-            this.BtnExcluir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnExcluir.Location = new System.Drawing.Point(174, 71);
-            this.BtnExcluir.Name = "BtnExcluir";
-            this.BtnExcluir.Size = new System.Drawing.Size(75, 23);
-            this.BtnExcluir.TabIndex = 5;
-            this.BtnExcluir.Text = "&Excluir";
-            this.BtnExcluir.UseVisualStyleBackColor = true;
-            this.BtnExcluir.Click += new System.EventHandler(this.BtnExcluir_Click);
-            // 
-            // FrmDeducaoSimplificada
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(261, 265);
-            this.Controls.Add(this.BtnExcluir);
-            this.Controls.Add(this.BtnAlterar);
-            this.Controls.Add(this.BtnGravar);
-            this.Controls.Add(this.DgvValorSimplificado);
-            this.Controls.Add(this.TxtValor);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.MktCompetencia);
-            this.Controls.Add(this.label1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "FrmDeducaoSimplificada";
-            this.ShowIcon = false;
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Dedução Simplificada";
-            this.Load += new System.EventHandler(this.FrmDeducaoSimplificada_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.DgvValorSimplificado)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+			label1 = new System.Windows.Forms.Label();
+			MktCompetencia = new System.Windows.Forms.MaskedTextBox();
+			label2 = new System.Windows.Forms.Label();
+			TxtValor = new System.Windows.Forms.TextBox();
+			DgvValorSimplificado = new System.Windows.Forms.DataGridView();
+			Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			Competencia = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			Valor = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			BtnGravar = new System.Windows.Forms.Button();
+			BtnAlterar = new System.Windows.Forms.Button();
+			BtnExcluir = new System.Windows.Forms.Button();
+			((System.ComponentModel.ISupportInitialize)DgvValorSimplificado).BeginInit();
+			SuspendLayout();
+			// 
+			// label1
+			// 
+			label1.AutoSize = true;
+			label1.Location = new System.Drawing.Point(13, 12);
+			label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			label1.Name = "label1";
+			label1.Size = new System.Drawing.Size(78, 15);
+			label1.TabIndex = 0;
+			label1.Text = "Competência";
+			// 
+			// MktCompetencia
+			// 
+			MktCompetencia.Location = new System.Drawing.Point(13, 30);
+			MktCompetencia.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			MktCompetencia.Mask = "00/0000";
+			MktCompetencia.Name = "MktCompetencia";
+			MktCompetencia.Size = new System.Drawing.Size(80, 23);
+			MktCompetencia.TabIndex = 1;
+			// 
+			// label2
+			// 
+			label2.AutoSize = true;
+			label2.Location = new System.Drawing.Point(13, 57);
+			label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			label2.Name = "label2";
+			label2.Size = new System.Drawing.Size(33, 15);
+			label2.TabIndex = 2;
+			label2.Text = "Valor";
+			// 
+			// TxtValor
+			// 
+			TxtValor.Location = new System.Drawing.Point(13, 75);
+			TxtValor.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			TxtValor.Name = "TxtValor";
+			TxtValor.Size = new System.Drawing.Size(80, 23);
+			TxtValor.TabIndex = 3;
+			TxtValor.Text = "0,00";
+			TxtValor.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			TxtValor.TextChanged += TxtValor_TextChanged;
+			TxtValor.Enter += TxtValor_Enter;
+			TxtValor.Leave += TxtValor_Leave;
+			// 
+			// DgvValorSimplificado
+			// 
+			DgvValorSimplificado.AllowUserToAddRows = false;
+			DgvValorSimplificado.AllowUserToDeleteRows = false;
+			DgvValorSimplificado.BackgroundColor = System.Drawing.SystemColors.Control;
+			DgvValorSimplificado.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+			DgvValorSimplificado.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			DgvValorSimplificado.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { Id, Competencia, Valor });
+			DgvValorSimplificado.Location = new System.Drawing.Point(13, 121);
+			DgvValorSimplificado.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			DgvValorSimplificado.MultiSelect = false;
+			DgvValorSimplificado.Name = "DgvValorSimplificado";
+			DgvValorSimplificado.ReadOnly = true;
+			DgvValorSimplificado.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+			DgvValorSimplificado.Size = new System.Drawing.Size(278, 173);
+			DgvValorSimplificado.TabIndex = 4;
+			DgvValorSimplificado.CellDoubleClick += DgvValorSimplificado_CellDoubleClick;
+			// 
+			// Id
+			// 
+			Id.DataPropertyName = "Id";
+			Id.HeaderText = "Id";
+			Id.Name = "Id";
+			Id.ReadOnly = true;
+			Id.Visible = false;
+			// 
+			// Competencia
+			// 
+			Competencia.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+			Competencia.DataPropertyName = "Competencia";
+			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+			dataGridViewCellStyle1.Format = "MM/yyyy";
+			dataGridViewCellStyle1.NullValue = null;
+			Competencia.DefaultCellStyle = dataGridViewCellStyle1;
+			Competencia.HeaderText = "Competência";
+			Competencia.Name = "Competencia";
+			Competencia.ReadOnly = true;
+			Competencia.Width = 103;
+			// 
+			// Valor
+			// 
+			Valor.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+			Valor.DataPropertyName = "Valor";
+			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+			dataGridViewCellStyle2.Format = "N2";
+			dataGridViewCellStyle2.NullValue = null;
+			Valor.DefaultCellStyle = dataGridViewCellStyle2;
+			Valor.HeaderText = "Valor";
+			Valor.Name = "Valor";
+			Valor.ReadOnly = true;
+			// 
+			// BtnGravar
+			// 
+			BtnGravar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(64, 64, 64);
+			BtnGravar.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
+			BtnGravar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver;
+			BtnGravar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			BtnGravar.Location = new System.Drawing.Point(203, 15);
+			BtnGravar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			BtnGravar.Name = "BtnGravar";
+			BtnGravar.Size = new System.Drawing.Size(88, 27);
+			BtnGravar.TabIndex = 5;
+			BtnGravar.Text = "&Gravar";
+			BtnGravar.UseVisualStyleBackColor = true;
+			BtnGravar.Click += BtnGravar_Click;
+			// 
+			// BtnAlterar
+			// 
+			BtnAlterar.Enabled = false;
+			BtnAlterar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(64, 64, 64);
+			BtnAlterar.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
+			BtnAlterar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver;
+			BtnAlterar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			BtnAlterar.Location = new System.Drawing.Point(203, 48);
+			BtnAlterar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			BtnAlterar.Name = "BtnAlterar";
+			BtnAlterar.Size = new System.Drawing.Size(88, 27);
+			BtnAlterar.TabIndex = 5;
+			BtnAlterar.Text = "&Alterar";
+			BtnAlterar.UseVisualStyleBackColor = true;
+			BtnAlterar.Click += BtnAlterar_Click;
+			// 
+			// BtnExcluir
+			// 
+			BtnExcluir.Enabled = false;
+			BtnExcluir.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(64, 64, 64);
+			BtnExcluir.FlatAppearance.CheckedBackColor = System.Drawing.Color.Silver;
+			BtnExcluir.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver;
+			BtnExcluir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			BtnExcluir.Location = new System.Drawing.Point(203, 82);
+			BtnExcluir.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			BtnExcluir.Name = "BtnExcluir";
+			BtnExcluir.Size = new System.Drawing.Size(88, 27);
+			BtnExcluir.TabIndex = 5;
+			BtnExcluir.Text = "&Excluir";
+			BtnExcluir.UseVisualStyleBackColor = true;
+			BtnExcluir.Click += BtnExcluir_Click;
+			// 
+			// FrmDeducaoSimplificada
+			// 
+			AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+			AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			ClientSize = new System.Drawing.Size(304, 306);
+			Controls.Add(BtnExcluir);
+			Controls.Add(BtnAlterar);
+			Controls.Add(BtnGravar);
+			Controls.Add(DgvValorSimplificado);
+			Controls.Add(TxtValor);
+			Controls.Add(label2);
+			Controls.Add(MktCompetencia);
+			Controls.Add(label1);
+			FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+			Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			Name = "FrmDeducaoSimplificada";
+			ShowIcon = false;
+			ShowInTaskbar = false;
+			StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+			Text = "Dedução Simplificada";
+			Load += FrmDeducaoSimplificada_Load;
+			((System.ComponentModel.ISupportInitialize)DgvValorSimplificado).EndInit();
+			ResumeLayout(false);
+			PerformLayout();
 
-        }
+		}
 
-        #endregion
+		#endregion
 
-        private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Label label1;
         private System.Windows.Forms.MaskedTextBox MktCompetencia;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox TxtValor;
@@ -214,8 +221,8 @@
         private System.Windows.Forms.Button BtnGravar;
         private System.Windows.Forms.Button BtnAlterar;
         private System.Windows.Forms.Button BtnExcluir;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Competencia;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Valor;
-    }
+		private System.Windows.Forms.DataGridViewTextBoxColumn Id;
+		private System.Windows.Forms.DataGridViewTextBoxColumn Competencia;
+		private System.Windows.Forms.DataGridViewTextBoxColumn Valor;
+	}
 }

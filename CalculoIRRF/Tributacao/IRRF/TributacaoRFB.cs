@@ -11,130 +11,121 @@ namespace CalculoIRRF.Tributacao.IRRF;
 
 public class TributacaoRFB(IIrrfServices _irrfServices)
 {
-    public async Task<List<IrrfRfb>> AtualizarOnline()
-    {
-        string urlRfb = $@"https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas/{DateTime.Now:yyyy}";
+	public async Task<List<IrrfRfb>> AtualizarOnline()
+	{
+		string urlRfb = $@"https://www.contabeis.com.br/tabelas/imposto-renda/";
 
-        var htmlDocument = await AcessarUrl.AcessarSite(urlRfb) ?? throw new ArgumentException($"Site atual inválido\n{urlRfb}");
-        var dataAtualizacao = BuscarDataAtualizacaoOnline(htmlDocument);
-        var isIrrf = await _irrfServices.IsGov(dataAtualizacao);
+		var htmlDocument = await AcessarUrl.AcessarSite(urlRfb) ??
+			throw new ArgumentException($"Site atual inválido\n{urlRfb}");
 
-        if (isIrrf)
-        {
-            return null;
-        }
 
-        var dataPublicacao = BuscarDataPublicacaoOnline(htmlDocument);
+		var vigencia = Vigencia(htmlDocument);
+		var isIrrf = await _irrfServices.IsGov(vigencia);
+		if (isIrrf)
+			return null;
 
-        var valorDependente = BuscarValorDependenteOnline(htmlDocument);
-        var valorDescontoSimplificado = BuscarDescontoSimplicadoOnline(htmlDocument);
+		var faixa = await _irrfServices.UltimaFaixaIrrf(vigencia);
+		if (faixa > 0)
+			return null;
 
-        var tributacaoRFB = BuscarIRRFOnline(htmlDocument);
-        var countItem = tributacaoRFB.Count;
+		var impostoRFB = GerarTabela(htmlDocument);
+		var dependente = ValorDependente(htmlDocument);
+		var simplificado = 0.0;
 
-        foreach (var item in tributacaoRFB)
-        {
-            IrrfRfb irrfRfb = new()
-            {
-                DataCriacao = dataPublicacao,
-                DataAtualizacao = dataAtualizacao,
-                Dependente = valorDependente,
-                Simplificado = valorDescontoSimplificado,
-                Sequencia = item.Sequencia,
-                BaseCaculo = item.BaseCalculo,
-                Aliquota = item.Aliquota,
-                Deducao = item.Deducao
-            };
+		var countItem = impostoRFB.Count;
 
-            if (countItem == item.Sequencia)
-            {
-                irrfRfb.BaseCaculo = double.Parse("9999999999999.99");
-            }
-            await _irrfServices.GravarRfb(irrfRfb);
-        }
+		foreach (var item in impostoRFB)
+		{
+			if (item.Sequencia == 1)
+				simplificado = item.BaseCalculo * 0.25;
 
-        var listIrrfRfb = await _irrfServices.ListarTodosDataAtualizacao(dataAtualizacao);
-        return [.. listIrrfRfb];
-    }
-    private static List<TributacaoRFBObj> BuscarIRRFOnline(HtmlDocument htmlDocument)
-    {
-        List<TributacaoRFBObj> listTributacaoRFBObj = [];
+			IrrfRfb irrfRfb = new()
+			{
+				Dependente = dependente,
+				Simplificado = simplificado,
+				Sequencia = item.Sequencia,
+				BaseCaculo = item.BaseCalculo,
+				Aliquota = item.Aliquota,
+				Deducao = item.Deducao,
+				Vigencia = vigencia,
+			};
 
-        var table = htmlDocument.DocumentNode.SelectSingleNode("//table");
+			if (countItem == item.Sequencia)
+				irrfRfb.BaseCaculo = double.Parse("9999999999999.99");
 
-        if (table != null)
-        {
-            var rows = table.SelectNodes(".//tr");
-            int sequencia = 0;
-            foreach (var row in rows)
-            {
-                var cells = row.SelectNodes(".//td");
-                if (cells != null)
-                {
-                    listTributacaoRFBObj.Add(new TributacaoRFBObj
-                    {
-                        Sequencia = ++sequencia,
-                        BaseCalculo = Validar.ExtrairMaiorValor(cells[0].InnerText.Trim()),
-                        Aliquota = Validar.ExtrairValor(cells[1].InnerText.Trim()),
-                        Deducao = Validar.ExtrairValor(cells[2].InnerText.TrimEnd())
-                    });
-                }
-            }
-            return listTributacaoRFBObj;
-        }
-        else
-        {
-            return new List<TributacaoRFBObj>();
-        }
-    }
+			await _irrfServices.GravarRfb(irrfRfb);
+		}
 
-    private static double BuscarValorDependenteOnline(HtmlDocument htmlDocument)
-    {
-        var spans = htmlDocument.DocumentNode.SelectNodes("//p/em/span");
-        if (spans != null)
-        {
-            string[] br = ["<br>"];
-            var valores = spans[1].InnerHtml.Split(br, StringSplitOptions.None);
-            var deducaoDependente = Validar.ExtrairValor(valores[0].Trim());
-            return deducaoDependente;
-        }
-        return 0;
-    }
-    private static double BuscarDescontoSimplicadoOnline(HtmlDocument htmlDocument)
-    {
-        var spans = htmlDocument.DocumentNode.SelectNodes("//p/em/span");
-        if (spans != null)
-        {
-            string[] br = ["<br>"];
-            var valores = spans[1].InnerHtml.Split(br, StringSplitOptions.None);
-            if (valores.Length == 1)
-            {
-                return 0;
-            }
-            var deducaoSimplificado = Validar.ExtrairValor(valores[1].Trim());
+		var listIrrfRfb = await _irrfServices.ListarTodosDataVigencia(vigencia);
+		return [.. listIrrfRfb];
+	}
+	private static List<TributacaoRFBObj> GerarTabela(HtmlDocument htmlDocument)
+	{
+		List<TributacaoRFBObj> listTributacaoRFBObj = [];
+		var section = htmlDocument.DocumentNode.SelectSingleNode("//section[contains(@class, 'impostoRenda')]") ??
+			throw new Exception("Tabela IRRF não encontrada na página");
 
-            return deducaoSimplificado;
-        }
-        return 0;
-    }
-    private static DateTime BuscarDataPublicacaoOnline(HtmlDocument htmlDocument)
-    {
-        var dataPublicacao = htmlDocument.DocumentNode.SelectNodes("//span[contains(@class, 'documentPublished')]/span");
-        if (dataPublicacao != null)
-        {
-            var data = DateTime.Parse(dataPublicacao[1].InnerText.Trim().Replace("h", ":"));
-            return data;
-        }
-        return DateTime.Now;
-    }
-    private static DateTime BuscarDataAtualizacaoOnline(HtmlDocument htmlDocument)
-    {
-        var dataPublicacao = htmlDocument.DocumentNode.SelectNodes("//span[contains(@class, 'documentModified')]/span");
-        if (dataPublicacao != null)
-        {
-            var data = DateTime.Parse(dataPublicacao[1].InnerText.Trim().Replace("h", ":"));
-            return data;
-        }
-        return DateTime.Now;
-    }
+		var linhas = section.SelectNodes(".//ul[contains(@class, 'itemList') and contains(@class, 'qtd3')]") ??
+			throw new Exception("Nenhum faixa de IRRF encontrada");
+
+		int sequencia = 1;
+		foreach (var linha in linhas)
+		{
+			var coluna = linha.SelectNodes(".//li");
+			if (coluna is null || coluna.Count < 3)
+				continue;
+
+			if (coluna[1].InnerText.Contains("Dedução por dependente:"))
+				continue;
+
+			var rendimento = Validar.ExtrairMaiorValor(coluna[0].InnerText.Trim());
+			var aliquota = Validar.ExtrairValor(coluna[1].InnerText.Trim());
+			var deducao = Validar.ExtrairValor(coluna[2].InnerText.TrimEnd());
+
+			double simplificado = 0.0;
+			if (sequencia == 1)
+				simplificado = rendimento * 0.25;
+
+			listTributacaoRFBObj.Add(new TributacaoRFBObj
+			{
+				Sequencia = sequencia++,
+				BaseCalculo = rendimento,
+				Aliquota = aliquota,
+				Deducao = deducao,
+			});
+		}
+		return listTributacaoRFBObj;
+	}
+	private static double ValorDependente(HtmlDocument htmlDocument)
+	{
+		var section = htmlDocument.DocumentNode.SelectSingleNode("//section[contains(@class, 'impostoRenda')]") ??
+			throw new Exception("Tabela IRRF não encontrada na página");
+
+		var linhas = section.SelectNodes(".//ul[contains(@class, 'itemList') and contains(@class, 'qtd3')]") ??
+			throw new Exception("Nenhum faixa de IRRF encontrada");
+
+		double dependente = 0.0;
+		foreach (var linha in linhas)
+		{
+			var coluna = linha.SelectNodes(".//li");
+			if (coluna is null || coluna.Count < 3)
+				continue;
+
+			if (coluna[1].InnerText.Contains("Dedução por dependente:"))
+				dependente = Validar.ExtrairValor(coluna[2].InnerText.TrimEnd());
+		}
+		return dependente;
+	}
+	private static DateTime Vigencia(HtmlDocument htmlDocument)
+	{
+		var section = htmlDocument.DocumentNode.SelectSingleNode("//section[contains(@class, 'impostoRenda')]") ??
+			throw new Exception("Tabela IRRF não encontrada na página");
+
+		var vigencia = section.SelectSingleNode(".//span") ??
+			throw new Exception("Vigência não encontrada");
+
+		DateTime dtVigencia = DateTime.Parse(vigencia.InnerText.Replace(" ", "").Trim());
+
+		return dtVigencia;
+	}
 }
