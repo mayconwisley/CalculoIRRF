@@ -47,9 +47,10 @@ public partial class FrmPrincipal : Form
         RTxtResultado.Clear();
 
         if (!DateTime.TryParse(MktCompetencia.Text.Trim(), out DateTime competencia) ||
-         !double.TryParse(TxtValorBruto.Text.Trim(), out double valorBruto) ||
-         !double.TryParse(TxtBaseInss.Text.Trim(), out double baseInss) ||
-         !int.TryParse(TxtQtdDependente.Text.Trim(), out int qtdDependente))
+            !double.TryParse(TxtValorBruto.Text.Trim(), out double valorBruto) ||
+            !double.TryParse(TxtBaseInss.Text.Trim(), out double baseInss) ||
+            !int.TryParse(TxtQtdDependente.Text.Trim(), out int qtdDependente)
+        )
         {
             MessageBox.Show("Por favor, insira valores válidos.");
             return;

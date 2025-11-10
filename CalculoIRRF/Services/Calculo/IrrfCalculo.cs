@@ -15,14 +15,14 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
         double valorDependente = await _dependenteServices.VlrDependente(_competencia);
         double baseIrrf = _valorBruto - _valorInss - _qtdDependente * valorDependente;
 
-        return baseIrrf;
+        return baseIrrf <= 0 ? 0 : baseIrrf;
     }
     public async Task<double> BaseIrrfSimplificado()
     {
         double valorDeducao = await _simplificadoServices.ValorSimplificado(_competencia);
         double baseIrrf = _valorBruto - valorDeducao;
 
-        return baseIrrf;
+        return baseIrrf <= 0 ? 0 : baseIrrf;
     }
     public async Task<double> Normal(double valorPensao = 0)
     {
