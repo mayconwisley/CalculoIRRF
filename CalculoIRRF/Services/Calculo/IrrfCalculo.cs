@@ -28,9 +28,9 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
     {
         double baseIrrf = await BaseIrrfNormal() - valorPensao;
         int faixaIrrf = await _irrfServices.FaixaIrrf(baseIrrf, _competencia);
-        double porcentagemInss = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia);
+        double porcentagemIrrf = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia);
         double deducaoIrrf = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
-        double desconto = baseIrrf * (porcentagemInss / 100) - deducaoIrrf;
+        double desconto = baseIrrf * (porcentagemIrrf / 100) - deducaoIrrf;
         desconto = Math.Round(desconto, 2);
 
         return desconto;
@@ -40,9 +40,9 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
         double valorDependente = await _dependenteServices.VlrDependente(_competencia);
         double baseIrrf = await BaseIrrfNormal();
         int faixaIrrf = await _irrfServices.FaixaIrrf(baseIrrf, _competencia);
-        double porcentagemInss = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia);
+        double porcentagemIrrf = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia);
         double deducaoIrrf = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
-        double desconto = baseIrrf * (porcentagemInss / 100) - deducaoIrrf;
+        double desconto = baseIrrf * (porcentagemIrrf / 100) - deducaoIrrf;
         desconto = Math.Round(desconto, 2);
         double aliquotaEfetiva;
 
@@ -63,7 +63,7 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
         strMensagem.Append($"Valor INSS: {_valorInss:#,##0.00}\n");
         strMensagem.Append($"Quantidade Dependente: {_qtdDependente} Valor: {valorDependente:#,##0.00} Total: {_qtdDependente * valorDependente:#,##0.00}\n");
         strMensagem.Append($"Valor Base do IR: {baseIrrf:#,##0.00}\n");
-        strMensagem.Append($"Porcentagem: {porcentagemInss:#,##0.00}% - Dedução: {deducaoIrrf:#,##0.00}\n");
+        strMensagem.Append($"Porcentagem: {porcentagemIrrf:#,##0.00}% - Dedução: {deducaoIrrf:#,##0.00}\n");
         strMensagem.Append($"Valor do Desconto: {desconto:#,##0.00}\n");
         strMensagem.Append($"Alíquota Efetiva: {aliquotaEfetiva:#,##0.00}%\n\n");
 
@@ -77,7 +77,7 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
         double valorInssAnterior = 0;
         for (int i = 1; i <= faixaIrrf; i++)
         {
-            double porcentagemInss = await _irrfServices.PorcentagemIrrf(i, _competencia);
+            double porcentagemIrrf = await _irrfServices.PorcentagemIrrf(i, _competencia);
             double valorIrrf = await _irrfServices.ValorIrrf(i, _competencia);
             double baseIrrfCalculo = valorIrrf - valorInssAnterior;
 
@@ -91,7 +91,7 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
                 baseIrrfCalculo = baseIrrf - valorInssAnterior;
             }
 
-            desconto += baseIrrfCalculo * (porcentagemInss / 100);
+            desconto += baseIrrfCalculo * (porcentagemIrrf / 100);
             valorInssAnterior = valorIrrf;
         }
         desconto = Math.Round(desconto, 2);
@@ -116,7 +116,7 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
 
         for (int i = 1; i <= faixaIrrf; i++)
         {
-            double porcentagemInss = await _irrfServices.PorcentagemIrrf(i, _competencia);
+            double porcentagemIrrf = await _irrfServices.PorcentagemIrrf(i, _competencia);
             double valorIrrf = await _irrfServices.ValorIrrf(i, _competencia);
             double baseIrrfCalculo = valorIrrf - valorInssAnterior;
 
@@ -130,14 +130,14 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
                 baseIrrfCalculo = baseIrrf - valorInssAnterior;
             }
 
-            double desconto = baseIrrfCalculo * (porcentagemInss / 100);
+            double desconto = baseIrrfCalculo * (porcentagemIrrf / 100);
             totalDesconto += desconto;
 
             valorInssAnterior = valorIrrf;
 
             strMensagem.Append($"{i}º Faixa ");
             strMensagem.Append($"Base do IR: {baseIrrfCalculo:#,##0.00} ");
-            strMensagem.Append($"Porcentagem: {porcentagemInss:#,##0.00}% ");
+            strMensagem.Append($"Porcentagem: {porcentagemIrrf:#,##0.00}% ");
             strMensagem.Append($"Imposto: {desconto:#,##0.00}\n");
         }
         strMensagem.Append($"Valor do Desconto: {totalDesconto:#,##0.00}\n\n");
@@ -160,7 +160,7 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
 
         for (int i = 1; i <= faixaIrrf; i++)
         {
-            double porcentagemInss = await _irrfServices.PorcentagemIrrf(i, _competencia);
+            double porcentagemIrrf = await _irrfServices.PorcentagemIrrf(i, _competencia);
             double valorIrrf = await _irrfServices.ValorIrrf(i, _competencia);
             double baseIrrfCalculo = valorIrrf - valorInssAnterior;
 
@@ -174,14 +174,14 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
                 baseIrrfCalculo = baseIrrf - valorInssAnterior;
             }
 
-            double desconto = baseIrrfCalculo * (porcentagemInss / 100);
+            double desconto = baseIrrfCalculo * (porcentagemIrrf / 100);
             totalDesconto += desconto;
 
             valorInssAnterior = valorIrrf;
 
             strMensagem.Append($"{i}º Faixa ");
             strMensagem.Append($"Base do IR: {baseIrrfCalculo:#,##0.00} ");
-            strMensagem.Append($"Porcentagem: {porcentagemInss:#,##0.00}% ");
+            strMensagem.Append($"Porcentagem: {porcentagemIrrf:#,##0.00}% ");
             strMensagem.Append($"Imposto: {desconto:#,##0.00}\n");
         }
         strMensagem.Append($"Valor do Desconto: {totalDesconto:#,##0.00}\n\n");
@@ -198,9 +198,9 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
         double valorDeducao = await _simplificadoServices.ValorSimplificado(_competencia);
         double baseIrrf = await BaseIrrfSimplificado() - valorPensao;
         int faixaIrrf = await _irrfServices.FaixaIrrf(baseIrrf, _competencia);
-        double porcentagemInss = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia);
+        double porcentagemIrrf = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia);
         double deducaoIrrf = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
-        double desconto = baseIrrf * (porcentagemInss / 100) - deducaoIrrf;
+        double desconto = baseIrrf * (porcentagemIrrf / 100) - deducaoIrrf;
         desconto = Math.Round(desconto, 2);
 
         return desconto;
@@ -215,9 +215,9 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
         double valorDeducao = await _simplificadoServices.ValorSimplificado(_competencia);
         double baseIrrf = await BaseIrrfSimplificado();
         int faixaIrrf = await _irrfServices.FaixaIrrf(baseIrrf, _competencia);
-        double porcentagemInss = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia);
+        double porcentagemIrrf = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia);
         double deducaoIrrf = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
-        double desconto = baseIrrf * (porcentagemInss / 100) - deducaoIrrf;
+        double desconto = baseIrrf * (porcentagemIrrf / 100) - deducaoIrrf;
         desconto = Math.Round(desconto, 2);
         double aliquotaEfetiica;
         /*Se ocorrer divisão por zero, retornar o valor 0(zero)*/
@@ -236,7 +236,7 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
         strMensagem.Append($"Valor Bruto: {_valorBruto:#,##0.00}\n");
         strMensagem.Append($"Valor Dedução: {valorDeducao:#,##0.00}\n");
         strMensagem.Append($"Valor Base do IR: {baseIrrf:#,##0.00}\n");
-        strMensagem.Append($"Porcentagem: {porcentagemInss:#,##0.00}% - Dedução: {deducaoIrrf:#,##0.00}\n");
+        strMensagem.Append($"Porcentagem: {porcentagemIrrf:#,##0.00}% - Dedução: {deducaoIrrf:#,##0.00}\n");
         strMensagem.Append($"Valor do Desconto: {desconto:#,##0.00}\n");
         strMensagem.Append($"Alíquota Efetiva: {aliquotaEfetiica:#,##0.00}%\n\n");
         return strMensagem.ToString();
