@@ -47,10 +47,10 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
         double reducao = 0;
 
         if (_competencia.Year > 2025)
-        {
             reducao = 978.62d - (0.133145 * _valorBruto);
-        }
+
         desconto -= reducao;
+
         if (desconto <= 0)
             desconto = 0;
 
@@ -243,14 +243,13 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
 
         double descontoIrrf = desconto;
         double reducao = 0;
-
         double aliquotaEfetiica;
+
         if (_competencia.Year > 2025)
-        {
             reducao = 978.62d - (0.133145 * _valorBruto);
-        }
 
         desconto -= reducao;
+
         if (desconto <= 0)
             desconto = 0;
 
