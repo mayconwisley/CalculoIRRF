@@ -43,7 +43,19 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
         double porcentagemIrrf = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia);
         double deducaoIrrf = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
         double desconto = baseIrrf * (porcentagemIrrf / 100) - deducaoIrrf;
+        double descontoIrrf = desconto;
+        double reducao = 0;
+
+        if (_competencia.Year > 2025)
+        {
+            reducao = 978.62d - (0.133145 * _valorBruto);
+        }
+        desconto -= reducao;
+        if (desconto <= 0)
+            desconto = 0;
+
         desconto = Math.Round(desconto, 2);
+        descontoIrrf = Math.Round(descontoIrrf, 2);
         double aliquotaEfetiva;
 
         /*Se ocorrer divisão por zero, retornar o valor 0(zero)*/
@@ -64,7 +76,17 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
         strMensagem.Append($"Quantidade Dependente: {_qtdDependente} Valor: {valorDependente:#,##0.00} Total: {_qtdDependente * valorDependente:#,##0.00}\n");
         strMensagem.Append($"Valor Base do IR: {baseIrrf:#,##0.00}\n");
         strMensagem.Append($"Porcentagem: {porcentagemIrrf:#,##0.00}% - Dedução: {deducaoIrrf:#,##0.00}\n");
-        strMensagem.Append($"Valor do Desconto: {desconto:#,##0.00}\n");
+
+        if (_competencia.Year > 2025)
+        {
+            strMensagem.Append($"IRRF: {descontoIrrf:#,##0.00}\n");
+            strMensagem.Append($"Redução Aplicada: {reducao:#,##0.00}\n");
+            strMensagem.Append($"Valor do Desconto: {desconto:#,##0.00}\n");
+        }
+        else
+        {
+            strMensagem.Append($"Valor do Desconto: {desconto:#,##0.00}\n");
+        }
         strMensagem.Append($"Alíquota Efetiva: {aliquotaEfetiva:#,##0.00}%\n\n");
 
         return strMensagem.ToString();
@@ -218,8 +240,23 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
         double porcentagemIrrf = await _irrfServices.PorcentagemIrrf(faixaIrrf, _competencia);
         double deducaoIrrf = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
         double desconto = baseIrrf * (porcentagemIrrf / 100) - deducaoIrrf;
-        desconto = Math.Round(desconto, 2);
+
+        double descontoIrrf = desconto;
+        double reducao = 0;
+
         double aliquotaEfetiica;
+        if (_competencia.Year > 2025)
+        {
+            reducao = 978.62d - (0.133145 * _valorBruto);
+        }
+
+        desconto -= reducao;
+        if (desconto <= 0)
+            desconto = 0;
+
+        desconto = Math.Round(desconto, 2);
+        descontoIrrf = Math.Round(descontoIrrf, 2);
+
         /*Se ocorrer divisão por zero, retornar o valor 0(zero)*/
         try
         {
@@ -237,7 +274,17 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
         strMensagem.Append($"Valor Dedução: {valorDeducao:#,##0.00}\n");
         strMensagem.Append($"Valor Base do IR: {baseIrrf:#,##0.00}\n");
         strMensagem.Append($"Porcentagem: {porcentagemIrrf:#,##0.00}% - Dedução: {deducaoIrrf:#,##0.00}\n");
-        strMensagem.Append($"Valor do Desconto: {desconto:#,##0.00}\n");
+
+        if (_competencia.Year > 2025)
+        {
+            strMensagem.Append($"IRRF: {descontoIrrf:#,##0.00}\n");
+            strMensagem.Append($"Redução Aplicada: {reducao:#,##0.00}\n");
+            strMensagem.Append($"Valor do Desconto: {desconto:#,##0.00}\n");
+        }
+        else
+        {
+            strMensagem.Append($"Valor do Desconto: {desconto:#,##0.00}\n");
+        }
         strMensagem.Append($"Alíquota Efetiva: {aliquotaEfetiica:#,##0.00}%\n\n");
         return strMensagem.ToString();
 
