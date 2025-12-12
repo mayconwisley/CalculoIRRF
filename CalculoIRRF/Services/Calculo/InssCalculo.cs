@@ -84,7 +84,7 @@ public class InssCalculo(DateTime _competencia, double _baseInss, IInssServices 
             strMensagem.Append($"Porcentagem: {porcentagemInss:#,##0.00}% ");
             strMensagem.Append($"Imposto: {desconto:#,##0.00}\n");
         }
-        strMensagem.Append($"Valor do Desconto: {totalDesconto:#,##0.00}\n\n");
+        strMensagem.Append($"\nValor do Desconto: {totalDesconto:#,##0.00}");
 
         return strMensagem.ToString();
     }

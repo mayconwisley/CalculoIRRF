@@ -13,7 +13,7 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
     public async Task<double> BaseIrrfNormal()
     {
         double valorDependente = await _dependenteServices.VlrDependente(_competencia);
-        double baseIrrf = _valorBruto - _valorInss - _qtdDependente * valorDependente;
+        double baseIrrf = _valorBruto - _valorInss - (_qtdDependente * valorDependente);
 
         return baseIrrf <= 0 ? 0 : baseIrrf;
     }
@@ -44,10 +44,9 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
         double deducaoIrrf = await _irrfServices.DeducaoIrrf(faixaIrrf, _competencia);
         double desconto = baseIrrf * (porcentagemIrrf / 100) - deducaoIrrf;
         double descontoIrrf = desconto;
-        double reducao = 0;
+        double reducao;
 
-        if (_competencia.Year > 2025)
-            reducao = 978.62d - (0.133145 * _valorBruto);
+        reducao = ReducaoIrrf();
 
         desconto -= reducao;
 
@@ -58,16 +57,7 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
         descontoIrrf = Math.Round(descontoIrrf, 2);
         double aliquotaEfetiva;
 
-        /*Se ocorrer divisão por zero, retornar o valor 0(zero)*/
-        try
-        {
-            aliquotaEfetiva = desconto / _valorBruto * 100;
-            aliquotaEfetiva = Math.Truncate(aliquotaEfetiva * 100) / 100;
-        }
-        catch
-        {
-            aliquotaEfetiva = 0d;
-        }
+        aliquotaEfetiva = AliquiotaEfetiva(desconto);
 
         StringBuilder strMensagem = new();
         strMensagem.Append("Informações de Calculo do IR Normal\n\n");
@@ -76,18 +66,19 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
         strMensagem.Append($"Quantidade Dependente: {_qtdDependente} Valor: {valorDependente:#,##0.00} Total: {_qtdDependente * valorDependente:#,##0.00}\n");
         strMensagem.Append($"Valor Base do IR: {baseIrrf:#,##0.00}\n");
         strMensagem.Append($"Porcentagem: {porcentagemIrrf:#,##0.00}% - Dedução: {deducaoIrrf:#,##0.00}\n");
+        strMensagem.Append($"Alíquota Efetiva: {aliquotaEfetiva:#,##0.00}%\n");
 
         if (_competencia.Year > 2025)
         {
             strMensagem.Append($"IRRF: {descontoIrrf:#,##0.00}\n");
-            strMensagem.Append($"Redução Aplicada: {reducao:#,##0.00}\n");
-            strMensagem.Append($"Valor do Desconto: {desconto:#,##0.00}\n");
+            strMensagem.Append($"Redução Aplicada: {reducao:#,##0.00}\n\n");
+            strMensagem.Append($"Valor do Desconto: {desconto:#,##0.00}");
         }
         else
         {
-            strMensagem.Append($"Valor do Desconto: {desconto:#,##0.00}\n");
+            strMensagem.Append($"\nValor do Desconto: {desconto:#,##0.00}");
         }
-        strMensagem.Append($"Alíquota Efetiva: {aliquotaEfetiva:#,##0.00}%\n\n");
+
 
         return strMensagem.ToString();
     }
@@ -162,7 +153,7 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
             strMensagem.Append($"Porcentagem: {porcentagemIrrf:#,##0.00}% ");
             strMensagem.Append($"Imposto: {desconto:#,##0.00}\n");
         }
-        strMensagem.Append($"Valor do Desconto: {totalDesconto:#,##0.00}\n\n");
+        strMensagem.Append($"\nValor do Desconto: {totalDesconto:#,##0.00}");
 
         return strMensagem.ToString();
     }
@@ -206,7 +197,7 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
             strMensagem.Append($"Porcentagem: {porcentagemIrrf:#,##0.00}% ");
             strMensagem.Append($"Imposto: {desconto:#,##0.00}\n");
         }
-        strMensagem.Append($"Valor do Desconto: {totalDesconto:#,##0.00}\n\n");
+        strMensagem.Append($"\nValor do Desconto: {totalDesconto:#,##0.00}");
 
         return strMensagem.ToString();
     }
@@ -231,7 +222,7 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
     {
         if (_competencia < DateTime.Parse("01/05/2023"))
         {
-            return "Calculo Simplificado é a partir de 05/2023!\n\n";
+            return "Calculo Simplificado é a partir de 05/2023!\n";
         }
 
         double valorDeducao = await _simplificadoServices.ValorSimplificado(_competencia);
@@ -242,11 +233,10 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
         double desconto = baseIrrf * (porcentagemIrrf / 100) - deducaoIrrf;
 
         double descontoIrrf = desconto;
-        double reducao = 0;
-        double aliquotaEfetiica;
+        double reducao;
+        double aliquotaEfetiva;
 
-        if (_competencia.Year > 2025)
-            reducao = 978.62d - (0.133145 * _valorBruto);
+        reducao = ReducaoIrrf();
 
         desconto -= reducao;
 
@@ -256,16 +246,7 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
         desconto = Math.Round(desconto, 2);
         descontoIrrf = Math.Round(descontoIrrf, 2);
 
-        /*Se ocorrer divisão por zero, retornar o valor 0(zero)*/
-        try
-        {
-            aliquotaEfetiica = desconto / _valorBruto * 100;
-            aliquotaEfetiica = Math.Truncate(aliquotaEfetiica * 100) / 100;
-        }
-        catch
-        {
-            aliquotaEfetiica = 0d;
-        }
+        aliquotaEfetiva = AliquiotaEfetiva(desconto);
 
         StringBuilder strMensagem = new();
         strMensagem.Append("Informações de Calculo do IR Simplificado\n\n");
@@ -273,21 +254,56 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
         strMensagem.Append($"Valor Dedução: {valorDeducao:#,##0.00}\n");
         strMensagem.Append($"Valor Base do IR: {baseIrrf:#,##0.00}\n");
         strMensagem.Append($"Porcentagem: {porcentagemIrrf:#,##0.00}% - Dedução: {deducaoIrrf:#,##0.00}\n");
+        strMensagem.Append($"Alíquota Efetiva: {aliquotaEfetiva:#,##0.00}%\n");
 
         if (_competencia.Year > 2025)
         {
             strMensagem.Append($"IRRF: {descontoIrrf:#,##0.00}\n");
-            strMensagem.Append($"Redução Aplicada: {reducao:#,##0.00}\n");
-            strMensagem.Append($"Valor do Desconto: {desconto:#,##0.00}\n");
+            strMensagem.Append($"Redução Aplicada: {reducao:#,##0.00}\n\n");
+            strMensagem.Append($"Valor do Desconto: {desconto:#,##0.00}");
         }
         else
         {
-            strMensagem.Append($"Valor do Desconto: {desconto:#,##0.00}\n");
+            strMensagem.Append($"\nValor do Desconto: {desconto:#,##0.00}");
         }
-        strMensagem.Append($"Alíquota Efetiva: {aliquotaEfetiica:#,##0.00}%\n\n");
+
         return strMensagem.ToString();
 
     }
+
+    public double AliquiotaEfetiva(double valorDesconto)
+    {
+        double aliquotaEfetiva;
+        if (_valorBruto <= 0)
+            return 0d;
+
+        aliquotaEfetiva = (valorDesconto / _valorBruto) * 100;
+
+        if (double.IsNaN(aliquotaEfetiva))
+            return 0d;
+
+        aliquotaEfetiva = Math.Truncate(aliquotaEfetiva * 100) / 100;
+
+        return aliquotaEfetiva;
+    }
+
+    public double ReducaoIrrf()
+    {
+        if (_competencia.Year > 2025 && _valorBruto <= 5000d)
+            return 312.89d;
+
+        if (_competencia.Year > 2025)
+        {
+            double reducao = 978.62d - (0.133145 * _valorBruto);
+            if (reducao <= 0)
+                reducao = 0;
+            reducao = Math.Truncate(reducao * 100) / 100;
+            return Math.Round(reducao, 2);
+        }
+
+        return 0;
+    }
+
     public async Task<string> DescricaoVantagem()
     {
         double vlrDescontoMinimo = await _descontoMinimoServices.ValorDescontoMinimo(_competencia);
@@ -303,20 +319,20 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
         if (valorNormal < vlrDescontoMinimo || valorSimplificado < vlrDescontoMinimo)
         {
             return $"Não tem desconto de IR\n\n" +
-                   $"Valor abaixo do valor de desconto minimo {vlrDescontoMinimo:#,##0.00}\n\n";
+                   $"Valor abaixo do valor de desconto minimo {vlrDescontoMinimo:#,##0.00}\n";
         }
 
         if (valorNormal > valorSimplificado)
         {
             double total = valorNormal - valorSimplificado;
-            return $"Calculo Simplificado é mais vantajoso!\n" +
-                   $"Diferença: {total:#,##0.00}\n\n";
+            return $"Calculo Simplificado é mais vantajoso!\n\n" +
+                   $"Diferença: {total:#,##0.00}";
         }
         else
         {
             double total = valorSimplificado - valorNormal;
-            return $"Calculo Normal é mais vantajoso!\n" +
-                   $"Diferença: {total:#,##0.00}\n\n";
+            return $"Calculo Normal é mais vantajoso!\n\n" +
+                   $"Diferença: {total:#,##0.00}";
         }
     }
 }

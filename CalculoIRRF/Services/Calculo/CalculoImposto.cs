@@ -29,8 +29,8 @@ public class CalculoImposto(IInssServices _inssServices, IIrrfServices _irrfServ
             (Color.Black, $"{await irrfCalculo.DescricaoCalculoNormalProgrssivo()}\n--------------------------------------------------\n"),
             (Color.Black, $"{await irrfCalculo.DescricaoCalculoSimplificadoProgrssivo()}\n--------------------------------------------------\n"),
             (Color.Black, $"{await inssCalculo.DescricaoCalculoNormalProgressivo()}\n--------------------------------------------------\n"),
-            (Color.Black, $"FGTS 8% {fgtsCalculo.Normal8():#,##0.00}\n"),
-            (Color.Black, $"FGTS 2% {fgtsCalculo.Normal2():#,##0.00}")
+            (Color.Black, $"FGTS 8%: {fgtsCalculo.Normal8():#,##0.00}\n"),
+            (Color.Black, $"FGTS 2%: {fgtsCalculo.Normal2():#,##0.00}")
         };
 
         return resultado;
