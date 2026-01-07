@@ -120,7 +120,7 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
         int faixaIrrf = await _irrfServices.FaixaIrrf(baseIrrf, _competencia);
         double totalDesconto = 0;
         double valorInssAnterior = 0;
-
+        double reducao = ReducaoIrrf();
         strMensagem.Append("Informações de Calculo do IR Normal Progressivo\n\n");
         strMensagem.Append($"Valor Bruto: {_valorBruto:#,##0.00}\n");
         strMensagem.Append($"Valor INSS: {_valorInss:#,##0.00}\n");
@@ -153,7 +153,9 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
             strMensagem.Append($"Porcentagem: {porcentagemIrrf:#,##0.00}% ");
             strMensagem.Append($"Imposto: {desconto:#,##0.00}\n");
         }
-        strMensagem.Append($"\nValor do Desconto: {totalDesconto:#,##0.00}");
+        strMensagem.Append($"\nValor da Redução: {reducao:#,##0.00}");
+        strMensagem.Append($"\nValor do IRRF: {totalDesconto:#,##0.00}");
+        strMensagem.Append($"\nValor do Desconto: {(totalDesconto - reducao):#,##0.00}");
 
         return strMensagem.ToString();
     }
@@ -166,6 +168,7 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
         int faixaIrrf = await _irrfServices.FaixaIrrf(baseIrrf, _competencia);
         double totalDesconto = 0;
         double valorInssAnterior = 0;
+        double reducao = ReducaoIrrf();
 
         strMensagem.Append("Informações de Calculo do IR Simplificado Progressivo\n\n");
         strMensagem.Append($"Valor Bruto: {_valorBruto:#,##0.00}\n");
@@ -197,7 +200,9 @@ public class IrrfCalculo(DateTime _competencia, int _qtdDependente, double _valo
             strMensagem.Append($"Porcentagem: {porcentagemIrrf:#,##0.00}% ");
             strMensagem.Append($"Imposto: {desconto:#,##0.00}\n");
         }
-        strMensagem.Append($"\nValor do Desconto: {totalDesconto:#,##0.00}");
+        strMensagem.Append($"\nValor da Redução: {reducao:#,##0.00}");
+        strMensagem.Append($"\nValor do IRRF: {totalDesconto:#,##0.00}");
+        strMensagem.Append($"\nValor do Desconto: {(totalDesconto - reducao):#,##0.00}");
 
         return strMensagem.ToString();
     }
