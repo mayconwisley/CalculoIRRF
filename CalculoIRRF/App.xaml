@@ -93,6 +93,14 @@
             <Setter Property="HorizontalContentAlignment" Value="Left" />
             <Setter Property="Padding" Value="16,10" />
         </Style>
+        <Style TargetType="ScrollBar">
+            <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+        </Style>
+        <Style TargetType="ScrollViewer">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
         <Style TargetType="ComboBox">
             <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
             <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />

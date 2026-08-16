@@ -24,8 +24,8 @@
 			<StackPanel Orientation="Horizontal">
 				<Image Source="{DynamicResource BrandLogoImage}" Width="52" Height="52" Stretch="Uniform" Margin="0,0,14,0" />
 				<StackPanel VerticalAlignment="Center">
-					<TextBlock Text="Calculadora de Imposto" FontSize="28" FontWeight="SemiBold" />
-					<TextBlock Text="Simule o imposto de renda, INSS e FGTS com as tabelas cadastradas." Foreground="{DynamicResource MutedTextBrush}" Margin="0,5,0,0" />
+					<TextBlock Text="Central de cálculos" FontSize="28" FontWeight="SemiBold" />
+					<TextBlock Text="Simulações tributárias, pensão alimentícia e indenização de estabilidade." Foreground="{DynamicResource MutedTextBrush}" Margin="0,5,0,0" />
 				</StackPanel>
 			</StackPanel>
 			<TextBlock Grid.Column="1" Text="Imposto • Brasil" Foreground="{DynamicResource AccentBrush}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,20,0" />
@@ -73,16 +73,22 @@
 			<Border Style="{StaticResource Card}">
 				<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" CanContentScroll="True">
 					<StackPanel>
-						<TextBlock Text="Tabelas e parâmetros" FontSize="16" FontWeight="SemiBold" />
-						<TextBlock Text="Gerencie os valores de referência." Foreground="{DynamicResource MutedTextBrush}" Margin="0,4,0,16" />
+						<TextBlock Text="Calculadoras" FontSize="16" FontWeight="SemiBold" />
+						<TextBlock Text="Escolha o tipo de apuração." Foreground="{DynamicResource MutedTextBrush}" Margin="0,4,0,16" />
+						<Border Padding="12" Background="{DynamicResource AdvantageBackgroundBrush}" BorderBrush="{DynamicResource AdvantageBorderBrush}" BorderThickness="1" CornerRadius="8" Margin="0,0,0,8">
+							<StackPanel><TextBlock Text="Simulação tributária" FontWeight="SemiBold" Foreground="{DynamicResource AdvantageTextBrush}" /><TextBlock Text="IRRF, INSS e FGTS" FontSize="11" Foreground="{DynamicResource MutedTextBrush}" Margin="0,3,0,0" /></StackPanel>
+						</Border>
+						<Button Style="{StaticResource NavigationButton}" Content="Cálculo de estabilidade" Command="{Binding AbrirEstabilidadeCommand}" Margin="0,0,0,8" />
+						<Button Style="{StaticResource NavigationButton}" Content="Calcular pensão" Command="{Binding AbrirPensaoCommand}" Margin="0,0,0,8" />
+						<Separator Margin="0,12,0,16" Background="{DynamicResource BorderBrush}" />
+						<TextBlock Text="Tabelas e parâmetros" FontSize="14" FontWeight="SemiBold" />
+						<TextBlock Text="Valores de referência da simulação tributária." Foreground="{DynamicResource MutedTextBrush}" FontSize="11" Margin="0,4,0,12" />
 						<Button Style="{StaticResource NavigationButton}" Content="Tabela INSS" Command="{Binding AbrirTabelaInssCommand}" Margin="0,0,0,8" />
 						<Button Style="{StaticResource NavigationButton}" Content="Tabela IRRF" Command="{Binding AbrirTabelaIrrfCommand}" Margin="0,0,0,8" />
 						<Button Style="{StaticResource NavigationButton}" Content="Valor simplificado" Command="{Binding AbrirSimplificadoCommand}" Margin="0,0,0,8" />
 						<Button Style="{StaticResource NavigationButton}" Content="Dedução por dependente" Command="{Binding AbrirDependentesCommand}" Margin="0,0,0,8" />
 						<Button Style="{StaticResource NavigationButton}" Content="Desconto mínimo" Command="{Binding AbrirDescontoMinimoCommand}" />
 						<Button Style="{StaticResource NavigationButton}" Content="Redução mensal do IRRF" Command="{Binding AbrirReducaoMensalIrrfCommand}" Margin="0,8,0,0" />
-						<Separator Margin="0,20,0,16" Background="{DynamicResource BorderBrush}" />
-						<Button Style="{StaticResource NavigationButton}" Content="Calcular pensão" Command="{Binding AbrirPensaoCommand}" />
 					</StackPanel>
 				</ScrollViewer>
 			</Border>

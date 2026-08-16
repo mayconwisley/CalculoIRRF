@@ -52,6 +52,7 @@ public sealed class MainWindowViewModel : ViewModelBase
         AbrirDescontoMinimoCommand = new RelayCommand(_ => _navegador.AbrirDescontoMinimo());
         AbrirReducaoMensalIrrfCommand = new RelayCommand(_ => _navegador.AbrirReducaoMensalIrrf());
         AbrirPensaoCommand = new RelayCommand(_ => AbrirPensao(), _ => PodeCalcularPensao);
+        AbrirEstabilidadeCommand = new RelayCommand(_ => _navegador.AbrirEstabilidade());
     }
 
     public IReadOnlyList<ThemeMode> Temas { get; } = [ThemeMode.Automatico, ThemeMode.Claro, ThemeMode.Escuro];
@@ -94,6 +95,7 @@ public sealed class MainWindowViewModel : ViewModelBase
     public ICommand AbrirDescontoMinimoCommand { get; }
     public ICommand AbrirReducaoMensalIrrfCommand { get; }
     public ICommand AbrirPensaoCommand { get; }
+    public ICommand AbrirEstabilidadeCommand { get; }
 
     private async Task CalcularAsync()
     {

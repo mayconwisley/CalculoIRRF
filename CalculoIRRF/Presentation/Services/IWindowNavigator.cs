@@ -11,4 +11,5 @@ public interface IWindowNavigator
     void AbrirDescontoMinimo();
     void AbrirReducaoMensalIrrf();
     void AbrirPensao(EntradaPensaoViewModel entrada);
+    void AbrirEstabilidade();
 }

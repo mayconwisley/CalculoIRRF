@@ -1,0 +1,106 @@
+<Window x:Class="CalculoIRRF.Views.EstabilidadeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:behaviors="clr-namespace:CalculoIRRF.Presentation.Behaviors"
+        Title="Cálculo de estabilidade" Height="790" Width="1050" MinHeight="620" MinWidth="850"
+        Background="{DynamicResource ApplicationBackgroundBrush}"
+        Foreground="{DynamicResource TextBrush}" WindowStartupLocation="CenterOwner">
+    <Grid Margin="28">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel>
+            <TextBlock Text="Cálculo de estabilidade" FontSize="24" FontWeight="SemiBold" />
+            <TextBlock Text="Apure as verbas indenizatórias do período restante de estabilidade." Foreground="{DynamicResource MutedTextBrush}" Margin="0,5,0,0" />
+        </StackPanel>
+
+        <Border Grid.Row="2" Style="{StaticResource Card}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.15*" />
+                    <ColumnDefinition Width=".7*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1.05*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Margin="0,0,12,0">
+                    <TextBlock Text="Média remuneratória" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,6" />
+                    <TextBox Text="{Binding MediaRemuneratoria, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right" behaviors:FormatacaoNumerica.Formato="N2" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Margin="0,0,12,0">
+                    <TextBlock Text="Dias-base" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,6" />
+                    <TextBox Text="{Binding DiasBase, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" />
+                </StackPanel>
+                <StackPanel Grid.Column="2" Margin="0,0,12,0">
+                    <TextBlock Text="Data de demissão" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,6" />
+                    <TextBox Text="{Binding Demissao, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" />
+                </StackPanel>
+                <StackPanel Grid.Column="3" Margin="0,0,12,0">
+                    <TextBlock Text="Fim da estabilidade" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,6" />
+                    <TextBox Text="{Binding FimEstabilidade, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" />
+                </StackPanel>
+                <StackPanel Grid.Column="4" Margin="0,0,12,0">
+                    <TextBlock Text="Complementos" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,6" />
+                    <TextBox Text="{Binding Complementos, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right" behaviors:FormatacaoNumerica.Formato="N2" />
+                </StackPanel>
+                <Button Grid.Column="5" Style="{StaticResource PrimaryButton}" Content="Calcular" Command="{Binding CalcularCommand}" Margin="0,25,0,0" MinWidth="118" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="4" Style="{StaticResource Card}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Resultado da apuração" FontSize="16" FontWeight="SemiBold" />
+                            <TextBlock Text="{Binding DiasRestantes}" Foreground="{DynamicResource AccentBrush}" FontWeight="SemiBold" Margin="0,5,0,0" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="Valores estimados" Foreground="{DynamicResource MutedTextBrush}" VerticalAlignment="Center" Margin="0,0,12,0" />
+                            <Button Style="{StaticResource PrimaryButton}" Content="Gerar PDF" Command="{Binding ExportarPdfCommand}" MinWidth="112" />
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Visibility="{Binding TemResultado, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,20,0,0">
+                        <TextBlock Text="Resumo executivo" FontSize="15" FontWeight="SemiBold" />
+                        <ItemsControl ItemsSource="{Binding IndicadoresResumo}" Margin="0,10,0,20">
+                            <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Width="220" Margin="0,0,10,10" Padding="14" Background="{DynamicResource ResultBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="10">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Rotulo}" Foreground="{DynamicResource MutedTextBrush}" FontSize="12" />
+                                            <TextBlock Text="{Binding Valor}" FontSize="18" FontWeight="SemiBold" Margin="0,4,0,0" />
+                                            <TextBlock Text="{Binding Complemento}" Foreground="{DynamicResource MutedTextBrush}" FontSize="11" Margin="0,4,0,0" />
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <TextBlock Text="Memória de cálculo" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,10" />
+                        <ItemsControl ItemsSource="{Binding MemoriaCalculo}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Padding="14" Background="{DynamicResource ResultBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="10" Margin="0,0,0,10">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Titulo}" FontWeight="SemiBold" />
+                                            <TextBlock Text="{Binding Formula}" FontFamily="Cascadia Mono" FontSize="12" Foreground="{DynamicResource MutedTextBrush}" TextWrapping="Wrap" Margin="0,5,0,0" />
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</Window>

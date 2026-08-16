@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  Aplicação desktop para simular IRRF, INSS, FGTS e pensão alimentícia a partir de tabelas tributárias por competência.
+  Aplicação desktop para simular IRRF, INSS, FGTS, pensão alimentícia e indenização de estabilidade.
 </p>
 
 <p align="center">
@@ -22,7 +22,7 @@
 
 ## Visão geral
 
-A **Calculadora de Imposto** centraliza simulações de encargos sobre rendimentos no Brasil em uma experiência local, rápida e auditável. A aplicação usa as tabelas cadastradas para a competência informada, detalha a memória de cálculo e permite manter os parâmetros tributários sem depender de uma base remota em tempo de execução.
+A **Calculadora de Imposto** é uma central de cálculos trabalhistas e tributários executados localmente. Ela reúne a simulação de IRRF, INSS e FGTS, a pensão alimentícia e a indenização por estabilidade, com memória de cálculo e relatórios em PDF para conferência.
 
 > Os resultados têm caráter de simulação. A conferência com a legislação vigente, o vínculo empregatício e os dados da competência continua sendo indispensável.
 
@@ -43,6 +43,14 @@ A **Calculadora de Imposto** centraliza simulações de encargos sobre rendiment
 - Compara os resultados das modalidades de tributação na composição da pensão.
 - Exporta relatórios em PDF com resumo executivo e memória de cálculo.
 
+### Cálculo de estabilidade
+
+- Apura indenização proporcional aos dias restantes de estabilidade.
+- Calcula 13º salário e férias proporcionais, incluindo o adicional de um terço.
+- Calcula FGTS de 8% e multa rescisória de 40%, com complementos informados pelo usuário.
+- Exibe a memória de cálculo para conferência dos valores.
+- Gera um demonstrativo em PDF inspirado no relatório legado, com as verbas, os dados considerados e o **Total a Receber**.
+
 ### Gestão de tabelas
 
 - Mantém localmente faixas de INSS e IRRF, dedução por dependente, desconto simplificado, desconto mínimo e redução mensal.
@@ -53,6 +61,7 @@ A **Calculadora de Imposto** centraliza simulações de encargos sobre rendiment
 ### Experiência de uso
 
 - Tema claro, escuro e automático, seguindo a preferência do Windows no modo automático.
+- Controles de rolagem utilizam a aparência nativa do WPF, preservando a visibilidade e a usabilidade em todos os temas.
 - Preferência de tema persistida no perfil do usuário.
 - Processamento e persistência locais em SQLite.
 - Identidade visual adaptada aos dois temas, com ícones Windows multirresolução.
@@ -75,7 +84,7 @@ O projeto aplica uma separação pragmática em camadas. O domínio não depende
 
 ```text
 CalculoIRRF/
-├── Domain/              Regras de cálculo progressivo e objetos do domínio
+├── Domain/              Regras tributárias e de estabilidade independentes de UI e infraestrutura
 ├── Application/         Casos de uso, DTOs e portas de entrada/saída
 ├── Infrastructure/      EF Core, SQLite, atualizadores oficiais e relatórios PDF
 ├── Presentation/        MVVM, serviços WPF, comportamentos e gerenciamento de tema
@@ -84,13 +93,20 @@ CalculoIRRF/
 └── BancoDados/          Banco SQLite distribuído com a aplicação
 ```
 
-### Fluxo de uma simulação
+### Fluxo da simulação tributária
 
 1. A tela WPF encaminha os valores ao `MainWindowViewModel`.
 2. O caso de uso na camada `Application` valida e orquestra a simulação.
 3. A porta de consulta obtém o perfil tributário adequado à competência.
 4. As calculadoras do `Domain` executam as regras sem conhecimento de infraestrutura.
 5. A `Presentation` transforma o resultado em indicadores, comparativos e memória de cálculo.
+
+### Fluxo do cálculo de estabilidade
+
+1. A tela coleta média remuneratória, dias-base, demissão, término da estabilidade e complementos.
+2. `SimularEstabilidadeUseCase` valida e encaminha os dados ao domínio.
+3. `CalculadoraEstabilidade` calcula indenização proporcional, 13º, férias, adicional de 1/3, FGTS e multa de 40%.
+4. A apresentação exibe a memória de cálculo e permite gerar o demonstrativo PDF.
 
 ## Pré-requisitos
 
@@ -130,7 +146,7 @@ Para uma distribuição sem pré-requisito do runtime .NET, altere `--self-conta
 | --- | --- | --- |
 | Tabelas tributárias | `CalculoIRRF\BancoDados\calculoIrrf.db` | Copiado para a saída; armazena faixas e parâmetros por competência. |
 | Tema | `%LOCALAPPDATA%\CalculoIRRF\settings.json` | Mantém a opção Claro, Escuro ou Automático. |
-| PDFs | Diretório escolhido pelo usuário | Gerados somente mediante ação de exportação. |
+| PDFs | Diretório escolhido pelo usuário | Gerados sob demanda para simulações tributárias, pensão e estabilidade. |
 
 O nome `calculoIrrf.db` é mantido para preservar compatibilidade com instalações existentes.
 
@@ -152,4 +168,5 @@ O aplicativo seleciona automaticamente a logo apropriada ao tema ativo. Os arqui
 
 - A aplicação não substitui sistemas de folha de pagamento, contadores ou orientação jurídica.
 - A exatidão da simulação depende da competência e dos parâmetros tributários mantidos no banco local.
+- No cálculo de estabilidade, cabe ao usuário informar corretamente as datas, a média remuneratória, os dias-base e os complementos aplicáveis ao vínculo.
 - Atualizações online dependem da disponibilidade e da estrutura das páginas das fontes oficiais.

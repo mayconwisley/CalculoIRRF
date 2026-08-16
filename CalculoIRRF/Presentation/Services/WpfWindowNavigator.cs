@@ -7,7 +7,7 @@ using System.Windows;
 namespace CalculoIRRF.Presentation.Services;
 
 /// <summary>Detalhe de navegação WPF, isolado dos ViewModels.</summary>
-public sealed class WpfWindowNavigator(ITabelaManutencaoViewModelFactory tabelaViewModelFactory, IPensaoViewModelFactory pensaoViewModelFactory) : IWindowNavigator
+public sealed class WpfWindowNavigator(ITabelaManutencaoViewModelFactory tabelaViewModelFactory, IPensaoViewModelFactory pensaoViewModelFactory, IEstabilidadeViewModelFactory estabilidadeViewModelFactory) : IWindowNavigator
 {
     public void AbrirTabelaInss() => Abrir(new TabelaManutencaoWindow(tabelaViewModelFactory.Criar(TipoTabelaTributaria.Inss)));
     public void AbrirTabelaIrrf() => Abrir(new TabelaManutencaoWindow(tabelaViewModelFactory.Criar(TipoTabelaTributaria.Irrf)));
@@ -16,6 +16,7 @@ public sealed class WpfWindowNavigator(ITabelaManutencaoViewModelFactory tabelaV
     public void AbrirDescontoMinimo() => Abrir(new TabelaManutencaoWindow(tabelaViewModelFactory.Criar(TipoTabelaTributaria.DescontoMinimo)));
     public void AbrirReducaoMensalIrrf() => Abrir(new TabelaManutencaoWindow(tabelaViewModelFactory.Criar(TipoTabelaTributaria.ReducaoMensalIrrf)));
     public void AbrirPensao(EntradaPensaoViewModel entrada) => Abrir(new PensaoWindow(pensaoViewModelFactory.Criar(entrada)));
+    public void AbrirEstabilidade() => Abrir(new EstabilidadeWindow(estabilidadeViewModelFactory.Criar()));
 
     private static void Abrir(Window janela)
     {

@@ -45,12 +45,14 @@ public partial class App : System.Windows.Application
         .AddScoped<MainWindowViewModel>()
         .AddScoped<ITabelaManutencaoViewModelFactory, TabelaManutencaoViewModelFactory>()
         .AddScoped<IPensaoViewModelFactory, PensaoViewModelFactory>()
+        .AddScoped<IEstabilidadeViewModelFactory, EstabilidadeViewModelFactory>()
         .AddSingleton<IUserNotifier, WpfUserNotifier>()
         .AddSingleton<IArquivoDialogService, WpfArquivoDialogService>()
         .AddSingleton<IRelatorioPdfService, QuestPdfRelatorioPdfService>()
         .AddScoped<IWindowNavigator, WpfWindowNavigator>()
         .AddScoped<ISimularImpostoUseCase, SimularImpostoUseCase>()
         .AddScoped<ISimularPensaoUseCase, SimularPensaoUseCase>()
+        .AddScoped<ISimularEstabilidadeUseCase, SimularEstabilidadeUseCase>()
         .AddInfrastructure()
         .BuildServiceProvider();
 }
