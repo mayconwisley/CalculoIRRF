@@ -21,9 +21,12 @@
 				<ColumnDefinition Width="Auto" />
 				<ColumnDefinition Width="Auto" />
 			</Grid.ColumnDefinitions>
-			<StackPanel>
-				<TextBlock Text="Calculadora de Imposto" FontSize="28" FontWeight="SemiBold" />
-				<TextBlock Text="Simule o imposto de renda, INSS e FGTS com as tabelas cadastradas." Foreground="{DynamicResource MutedTextBrush}" Margin="0,5,0,0" />
+			<StackPanel Orientation="Horizontal">
+				<Image Source="{DynamicResource BrandLogoImage}" Width="52" Height="52" Stretch="Uniform" Margin="0,0,14,0" />
+				<StackPanel VerticalAlignment="Center">
+					<TextBlock Text="Calculadora de Imposto" FontSize="28" FontWeight="SemiBold" />
+					<TextBlock Text="Simule o imposto de renda, INSS e FGTS com as tabelas cadastradas." Foreground="{DynamicResource MutedTextBrush}" Margin="0,5,0,0" />
+				</StackPanel>
 			</StackPanel>
 			<TextBlock Grid.Column="1" Text="Imposto • Brasil" Foreground="{DynamicResource AccentBrush}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,20,0" />
 			<StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
@@ -91,10 +94,16 @@
 					</Grid.RowDefinitions>
 					<Grid>
 						<Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
-						<StackPanel Orientation="Horizontal">
-							<TextBlock Text="Resultado da simulação" FontSize="16" FontWeight="SemiBold" />
-							<TextBlock Text="  •  cálculo detalhado" Foreground="{DynamicResource MutedTextBrush}" VerticalAlignment="Bottom" />
-						</StackPanel>
+						<Grid VerticalAlignment="Center">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="Auto" />
+								<ColumnDefinition Width="Auto" />
+								<ColumnDefinition Width="*" />
+							</Grid.ColumnDefinitions>
+							<TextBlock Text="Resultado da simulação" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" />
+							<TextBlock Grid.Column="1" Text="•" Foreground="{DynamicResource MutedTextBrush}" Margin="10,0,0,0" VerticalAlignment="Center" />
+							<TextBlock Grid.Column="2" Text="cálculo detalhado" Foreground="{DynamicResource MutedTextBrush}" Margin="6,0,0,0" VerticalAlignment="Center" />
+						</Grid>
 						<Button Grid.Column="1" Style="{StaticResource PrimaryButton}" Content="Gerar PDF" Command="{Binding ExportarPdfCommand}" MinWidth="112" />
 					</Grid>
 					<ScrollViewer Grid.Row="1" Margin="0,16,0,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">

@@ -5,6 +5,7 @@ using System.Runtime.Versioning;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace CalculoIRRF.Presentation;
 
@@ -28,9 +29,16 @@ public static class ThemeManager
     public static void Apply(ThemeMode mode, bool persist = true)
     {
         CurrentMode = mode;
-        var palette = mode == ThemeMode.Escuro || mode == ThemeMode.Automatico && IsWindowsUsingDarkTheme() ? Dark : Light;
+        var isDarkTheme = mode == ThemeMode.Escuro || mode == ThemeMode.Automatico && IsWindowsUsingDarkTheme();
+        var palette = isDarkTheme ? Dark : Light;
         foreach (var (key, color) in palette)
             System.Windows.Application.Current.Resources[key] = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+
+        System.Windows.Application.Current.Resources["BrandLogoImage"] = new BitmapImage(new Uri(
+            isDarkTheme
+                ? "pack://application:,,,/Assets/logo-dark.png"
+                : "pack://application:,,,/Assets/logo-light.png",
+            UriKind.Absolute));
 
         if (persist) SaveMode(mode);
     }

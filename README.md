@@ -1,50 +1,155 @@
 # Calculadora de Imposto
 
-Aplicação desktop WPF em .NET 9 para simular os encargos incidentes sobre rendimentos no Brasil. O cálculo considera IRRF, INSS e FGTS, com parâmetros locais por competência e atualização das tabelas oficiais.
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="CalculoIRRF/Assets/logo-dark.png" />
+    <img src="CalculoIRRF/Assets/logo-light.png" width="180" alt="Logo da Calculadora de Imposto" />
+  </picture>
+</p>
 
-## Funcionalidades
+<p align="center">
+  Aplicação desktop para simular IRRF, INSS, FGTS e pensão alimentícia a partir de tabelas tributárias por competência.
+</p>
 
-- Simulação de IRRF pelas modalidades normal e simplificada, incluindo redução mensal e dependentes.
-- Cálculo progressivo do INSS, FGTS padrão de 8% e FGTS de 2% específico para Jovem Aprendiz.
-- Exportação dos resultados de imposto e pensão para PDF profissional, com resumo e detalhamento das faixas calculadas.
-- Comparação entre as modalidades de IRRF para indicar a mais vantajosa.
-- Simulação de pensão alimentícia a partir do resultado tributário.
-- Manutenção local das tabelas de INSS, IRRF, dedução simplificada, dependentes, desconto mínimo e redução mensal.
-- Atualização online das tabelas oficiais de INSS e IRRF.
-- Dados persistidos localmente em SQLite e preferência de tema armazenada no computador.
-- Seed idempotente com as competências de 2017 a 2026 do INSS e do IRRF, preservando dados mantidos manualmente pelo usuário.
+<p align="center">
+  <img src="https://img.shields.io/badge/.NET-9.0-512BD4?logo=dotnet&logoColor=white" alt=".NET 9" />
+  <img src="https://img.shields.io/badge/C%23-13-239120?logo=csharp&logoColor=white" alt="C# 13" />
+  <img src="https://img.shields.io/badge/WPF-Windows-0078D4?logo=windows&logoColor=white" alt="WPF para Windows" />
+  <img src="https://img.shields.io/badge/Entity%20Framework%20Core-9.0-512BD4?logo=dotnet&logoColor=white" alt="Entity Framework Core 9" />
+  <img src="https://img.shields.io/badge/SQLite-Local%20database-003B57?logo=sqlite&logoColor=white" alt="SQLite" />
+  <img src="https://img.shields.io/badge/QuestPDF-2025.12-FF4B4B" alt="QuestPDF" />
+</p>
+
+## Visão geral
+
+A **Calculadora de Imposto** centraliza simulações de encargos sobre rendimentos no Brasil em uma experiência local, rápida e auditável. A aplicação usa as tabelas cadastradas para a competência informada, detalha a memória de cálculo e permite manter os parâmetros tributários sem depender de uma base remota em tempo de execução.
+
+> Os resultados têm caráter de simulação. A conferência com a legislação vigente, o vínculo empregatício e os dados da competência continua sendo indispensável.
+
+## Recursos
+
+### Simulação tributária
+
+- Calcula **IRRF** pelas modalidades normal e simplificada.
+- Considera dependentes, desconto simplificado, desconto mínimo e redução mensal do IRRF quando aplicável.
+- Calcula **INSS** por faixas: alíquota única nas competências anteriores a março de 2020 e modelo progressivo nas posteriores.
+- Calcula **FGTS padrão (8%)** e **FGTS para Jovem Aprendiz (2%)**.
+- Compara as modalidades de IRRF e destaca a alternativa mais vantajosa.
+- Exibe indicadores, faixas utilizadas e fórmulas na memória de cálculo.
+
+### Pensão alimentícia e documentos
+
+- Simula pensão alimentícia com percentual e outros descontos configuráveis.
+- Compara os resultados das modalidades de tributação na composição da pensão.
+- Exporta relatórios em PDF com resumo executivo e memória de cálculo.
+
+### Gestão de tabelas
+
+- Mantém localmente faixas de INSS e IRRF, dedução por dependente, desconto simplificado, desconto mínimo e redução mensal.
+- Permite incluir, editar e remover registros por competência.
+- Inicializa dados históricos de forma idempotente, sem sobrescrever manutenções locais.
+- Atualiza tabelas de INSS e IRRF a partir das fontes oficiais configuradas na aplicação; em caso de falha, preserva os dados locais.
+
+### Experiência de uso
+
+- Tema claro, escuro e automático, seguindo a preferência do Windows no modo automático.
+- Preferência de tema persistida no perfil do usuário.
+- Processamento e persistência locais em SQLite.
+- Identidade visual adaptada aos dois temas, com ícones Windows multirresolução.
+
+## Tecnologias
+
+| Tecnologia | Versão | Uso no projeto |
+| --- | --- | --- |
+| [.NET](https://dotnet.microsoft.com/) | 9 | Plataforma de execução e compilação. |
+| C# | 13 | Linguagem principal da aplicação. |
+| [WPF](https://learn.microsoft.com/dotnet/desktop/wpf/) | .NET 9 | Interface desktop, recursos e temas. |
+| [Entity Framework Core](https://learn.microsoft.com/ef/core/) | 9.0.2 | Acesso a dados e mapeamento da persistência. |
+| [SQLite](https://www.sqlite.org/) | — | Banco de dados local das tabelas tributárias. |
+| [QuestPDF](https://www.questpdf.com/) | 2025.12.1 | Geração dos relatórios PDF. |
+| [Html Agility Pack](https://html-agility-pack.net/) | 1.11.74 | Leitura das fontes HTML usadas nas atualizações oficiais. |
 
 ## Arquitetura
 
-O projeto é organizado em camadas, mantendo as regras tributárias independentes de interface e persistência:
+O projeto aplica uma separação pragmática em camadas. O domínio não depende de WPF, EF Core, SQLite ou bibliotecas de PDF.
 
-- `Domain/`: cálculos progressivos e regras tributárias puras.
-- `Application/`: casos de uso, DTOs e contratos.
-- `Infrastructure/`: EF Core, SQLite e atualizadores das fontes oficiais.
-- `Presentation/`: MVVM, navegação, notificações e tema.
-- `Views/`: telas WPF e code-behind mínimo.
+```text
+CalculoIRRF/
+├── Domain/              Regras de cálculo progressivo e objetos do domínio
+├── Application/         Casos de uso, DTOs e portas de entrada/saída
+├── Infrastructure/      EF Core, SQLite, atualizadores oficiais e relatórios PDF
+├── Presentation/        MVVM, serviços WPF, comportamentos e gerenciamento de tema
+├── Views/               Janelas e composição visual em XAML
+├── Assets/              Logos e ícones para os temas claro e escuro
+└── BancoDados/          Banco SQLite distribuído com a aplicação
+```
 
-Os nomes técnicos que contêm `IRRF` permanecem intencionalmente nas regras, entidades e tabelas referentes especificamente a esse tributo. Eles não representam o nome do produto.
+### Fluxo de uma simulação
 
-## Requisitos
+1. A tela WPF encaminha os valores ao `MainWindowViewModel`.
+2. O caso de uso na camada `Application` valida e orquestra a simulação.
+3. A porta de consulta obtém o perfil tributário adequado à competência.
+4. As calculadoras do `Domain` executam as regras sem conhecimento de infraestrutura.
+5. A `Presentation` transforma o resultado em indicadores, comparativos e memória de cálculo.
+
+## Pré-requisitos
 
 - Windows 10 ou superior.
-- .NET 9 SDK para compilar ou .NET 9 Desktop Runtime para executar a aplicação publicada.
+- **.NET 9 SDK** para compilar e desenvolver.
+- **.NET 9 Desktop Runtime** para executar uma publicação dependente do framework.
 
-## Executar
+## Executar localmente
 
-No diretório da solução:
+No diretório raiz da solução:
 
 ```powershell
 dotnet restore
-dotnet build
+dotnet build .\CalculoIRRF.sln
 dotnet run --project .\CalculoIRRF\CalculoIRRF.csproj
 ```
 
-O executável gerado chama-se `CalculadoraDeImposto.exe`. O banco de dados SQLite é copiado para a saída em `BancoDados\calculoIrrf.db`; o nome do arquivo foi preservado para manter compatibilidade com as instalações existentes.
+O executável de desenvolvimento é gerado como `CalculadoraDeImposto.exe` em `CalculoIRRF\bin\<configuração>\net9.0-windows`.
 
-## Observações
+## Publicar para Windows
 
-- Os resultados são simulações e devem ser conferidos com a legislação e os dados aplicáveis à competência.
-- A atualização online depende da disponibilidade e do formato das páginas oficiais. Caso a consulta falhe, os dados locais são preservados.
-- Para competências anteriores a março de 2020, o INSS é calculado pelo regime de alíquota única; a partir dessa competência, é aplicado o regime progressivo.
+Exemplo de publicação dependente do runtime para Windows 64 bits:
+
+```powershell
+dotnet publish .\CalculoIRRF\CalculoIRRF.csproj `
+  --configuration Release `
+  --runtime win-x64 `
+  --self-contained false `
+  --output .\publish
+```
+
+Para uma distribuição sem pré-requisito do runtime .NET, altere `--self-contained` para `true`.
+
+## Dados locais e configurações
+
+| Item | Localização | Comportamento |
+| --- | --- | --- |
+| Tabelas tributárias | `CalculoIRRF\BancoDados\calculoIrrf.db` | Copiado para a saída; armazena faixas e parâmetros por competência. |
+| Tema | `%LOCALAPPDATA%\CalculoIRRF\settings.json` | Mantém a opção Claro, Escuro ou Automático. |
+| PDFs | Diretório escolhido pelo usuário | Gerados somente mediante ação de exportação. |
+
+O nome `calculoIrrf.db` é mantido para preservar compatibilidade com instalações existentes.
+
+## Atualização das tabelas oficiais
+
+A atualização online consulta as fontes oficiais configuradas para INSS e IRRF. Como a estrutura das páginas públicas pode mudar, a operação é tratada como complementar: uma falha de consulta não substitui, apaga nem invalida os registros locais já existentes.
+
+Revise os valores atualizados antes de utilizá-los em cálculos que exijam precisão legal ou contábil.
+
+## Identidade visual
+
+O aplicativo seleciona automaticamente a logo apropriada ao tema ativo. Os arquivos também podem ser reutilizados em instaladores e materiais de distribuição:
+
+| Tema claro | Tema escuro |
+| --- | --- |
+| [Logo PNG](CalculoIRRF/Assets/logo-light.png) · [Ícone ICO](CalculoIRRF/Assets/icon-light.ico) | [Logo PNG](CalculoIRRF/Assets/logo-dark.png) · [Ícone ICO](CalculoIRRF/Assets/icon-dark.ico) |
+
+## Limitações e responsabilidade
+
+- A aplicação não substitui sistemas de folha de pagamento, contadores ou orientação jurídica.
+- A exatidão da simulação depende da competência e dos parâmetros tributários mantidos no banco local.
+- Atualizações online dependem da disponibilidade e da estrutura das páginas das fontes oficiais.

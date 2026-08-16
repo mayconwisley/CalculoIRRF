@@ -4,7 +4,7 @@
     <OutputType>WinExe</OutputType>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>calculator.ico</ApplicationIcon>
+    <ApplicationIcon>Assets\icon-light.ico</ApplicationIcon>
     <AssemblyName>CalculadoraDeImposto</AssemblyName>
     <AssemblyTitle>Calculadora de Imposto</AssemblyTitle>
     <Product>Calculadora de Imposto</Product>
@@ -12,6 +12,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="calculator.ico" />
+    <Content Include="Assets\icon-light.ico" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="Assets\icon-dark.ico" CopyToOutputDirectory="PreserveNewest" />
+    <Resource Include="Assets\logo-light.png" />
+    <Resource Include="Assets\logo-dark.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" />
