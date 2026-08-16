@@ -1,42 +1,42 @@
-﻿using CalculoIRRF.DataBase;
+using CalculoIRRF.DataBase;
 using CalculoIRRF.Repository;
 using CalculoIRRF.Repository.Interface;
+using CalculoIRRF.Presentation;
 using CalculoIRRF.Services;
 using CalculoIRRF.Services.Calculo;
 using CalculoIRRF.Services.Interface;
+using CalculoIRRF.Views;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Runtime.Versioning;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace CalculoIRRF;
+
 [SupportedOSPlatform("windows")]
-internal static class Program
+public partial class App : Application
 {
-    /// <summary>
-    /// The main entry point for the application.
-    /// </summary>
-    [STAThread]
-    static void Main()
+    private ServiceProvider _serviceProvider = null!;
+
+    protected override void OnStartup(StartupEventArgs e)
     {
-        ServiceProvider serviceProvider = SettingsService();
-        Application.EnableVisualStyles();
-        Application.SetCompatibleTextRenderingDefault(false);
-        FrmPrincipal frmPrincipal = serviceProvider.GetRequiredService<FrmPrincipal>();
-        Application.Run(frmPrincipal);
+        base.OnStartup(e);
+        ThemeManager.Initialize();
+        _serviceProvider = ConfigureServices();
+        _serviceProvider.GetRequiredService<MainWindow>().Show();
     }
 
-    static ServiceProvider SettingsService()
+    protected override void OnExit(ExitEventArgs e)
     {
-        var serviceProvider = new ServiceCollection()
-        .AddDbContext<CalculoImpostoContext>(op => op.UseSqlite("Data Source = BancoDados/calculoIrrf.db"))
-        .AddSingleton<FrmPrincipal>()
-        .AddSingleton<FrmDeducaoSimplificada>()
-        .AddSingleton<FrmDependente>()
-        .AddSingleton<FrmPensao>()
-        .AddSingleton<FrmTabelaINSS>()
-        .AddSingleton<FrmTabelaIRRF>()
+        ThemeManager.Dispose();
+        _serviceProvider?.Dispose();
+        base.OnExit(e);
+    }
+
+    private static ServiceProvider ConfigureServices() => new ServiceCollection()
+        .AddDbContext<CalculoImpostoContext>(options => options.UseSqlite("Data Source=BancoDados/calculoIrrf.db"))
+        .AddSingleton<MainWindow>()
         .AddScoped<IDependenteRepository, DependenteRepository>()
         .AddScoped<IDescontoMinimoRepository, DescontoMinimoRepository>()
         .AddScoped<IInssRepository, InssRepository>()
@@ -49,7 +49,4 @@ internal static class Program
         .AddScoped<ISimplificadoServices, SimplificadoServices>()
         .AddScoped<CalculoImposto>()
         .BuildServiceProvider();
-
-        return serviceProvider;
-    }
 }

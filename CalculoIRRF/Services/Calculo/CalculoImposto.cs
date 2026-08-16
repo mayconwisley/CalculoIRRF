@@ -1,7 +1,6 @@
 ﻿using CalculoIRRF.Services.Interface;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Threading.Tasks;
 
 namespace CalculoIRRF.Services.Calculo;
@@ -10,7 +9,7 @@ public class CalculoImposto(IInssServices _inssServices, IIrrfServices _irrfServ
                             ISimplificadoServices _simplificadoServices, IDescontoMinimoServices _descontoMinimoServices,
                             IDependenteServices _dependenteServices)
 {
-    public async Task<List<(Color, string)>> Calcular(DateTime competencia, double valorBruto, double baseInss, int qtdDependente)
+    public async Task<IReadOnlyList<ResultadoCalculo>> Calcular(DateTime competencia, double valorBruto, double baseInss, int qtdDependente)
     {
         var inssCalculo = new InssCalculo(competencia, baseInss, _inssServices);
         double valorInss = await inssCalculo.NormalProgressivo();
@@ -21,18 +20,22 @@ public class CalculoImposto(IInssServices _inssServices, IIrrfServices _irrfServ
 
         var fgtsCalculo = new FgtsCalculo(baseInss);
 
-        var resultado = new List<(Color, string)>
+        IReadOnlyList<ResultadoCalculo> resultado = new List<ResultadoCalculo>
         {
-            (Color.Blue, $"{await irrfCalculo.DescricaoCalculoNormal()}\n--------------------------------------------------\n"),
-            (Color.Red, $"{await irrfCalculo.DescricaoCalculoSimplificado()}\n--------------------------------------------------\n"),
-            (Color.Green, $"{await irrfCalculo.DescricaoVantagem()}\n--------------------------------------------------\n"),
-            (Color.Black, $"{await irrfCalculo.DescricaoCalculoNormalProgrssivo()}\n--------------------------------------------------\n"),
-            (Color.Black, $"{await irrfCalculo.DescricaoCalculoSimplificadoProgrssivo()}\n--------------------------------------------------\n"),
-            (Color.Black, $"{await inssCalculo.DescricaoCalculoNormalProgressivo()}\n--------------------------------------------------\n"),
-            (Color.Black, $"FGTS 8% {fgtsCalculo.Normal8():#,##0.00}\n"),
-            (Color.Black, $"FGTS 2% {fgtsCalculo.Normal2():#,##0.00}")
+            new(ResultadoCalculoTipo.Normal, $"{await irrfCalculo.DescricaoCalculoNormal()}\n--------------------------------------------------\n"),
+            new(ResultadoCalculoTipo.Simplificado, $"{await irrfCalculo.DescricaoCalculoSimplificado()}\n--------------------------------------------------\n"),
+            new(ResultadoCalculoTipo.Vantagem, $"{await irrfCalculo.DescricaoVantagem()}\n--------------------------------------------------\n"),
+            new(ResultadoCalculoTipo.Neutro, $"{await irrfCalculo.DescricaoCalculoNormalProgrssivo()}\n--------------------------------------------------\n"),
+            new(ResultadoCalculoTipo.Neutro, $"{await irrfCalculo.DescricaoCalculoSimplificadoProgrssivo()}\n--------------------------------------------------\n"),
+            new(ResultadoCalculoTipo.Neutro, $"{await inssCalculo.DescricaoCalculoNormalProgressivo()}\n--------------------------------------------------\n"),
+            new(ResultadoCalculoTipo.Neutro, $"FGTS 8% {fgtsCalculo.Normal8():#,##0.00}\n"),
+            new(ResultadoCalculoTipo.Neutro, $"FGTS 2% {fgtsCalculo.Normal2():#,##0.00}")
         };
 
         return resultado;
     }
 }
+
+public enum ResultadoCalculoTipo { Normal, Simplificado, Vantagem, Neutro }
+
+public sealed record ResultadoCalculo(ResultadoCalculoTipo Tipo, string Texto);
