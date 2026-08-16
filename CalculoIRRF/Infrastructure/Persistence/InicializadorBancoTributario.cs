@@ -1,31 +1,145 @@
+using CalculoIRRF.Infrastructure.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CalculoIRRF.Infrastructure.Persistence;
 
-/// <summary>Aplica alterações incrementais ao banco SQLite distribuído com a aplicação.</summary>
+/// <summary>
+/// Popula de forma idempotente as tabelas históricas do INSS e do IRRF.
+/// Os registros existentes são preservados para não sobrescrever manutenções locais.
+/// </summary>
 public sealed class InicializadorBancoTributario(CalculoIrrfDbContext context) : IInicializadorBancoTributario
 {
+    private const double LimiteUltimaFaixaIrrf = 9_999_999_999_999.99d;
+
+    private static readonly SementeFaixa[] FaixasInss =
+    [
+        new(2017, 1, 1, 1, 1_659.38d, 8d), new(2017, 1, 1, 2, 2_765.66d, 9d), new(2017, 1, 1, 3, 5_531.31d, 11d),
+        new(2018, 1, 1, 1, 1_693.72d, 8d), new(2018, 1, 1, 2, 2_822.90d, 9d), new(2018, 1, 1, 3, 5_645.80d, 11d),
+        new(2019, 1, 1, 1, 1_751.81d, 8d), new(2019, 1, 1, 2, 2_919.72d, 9d), new(2019, 1, 1, 3, 5_839.45d, 11d),
+        new(2020, 1, 1, 1, 1_830.29d, 8d), new(2020, 1, 1, 2, 3_050.52d, 9d), new(2020, 1, 1, 3, 6_101.06d, 11d),
+        new(2020, 3, 1, 1, 1_045.00d, 7.5d), new(2020, 3, 1, 2, 2_089.60d, 9d), new(2020, 3, 1, 3, 3_134.40d, 12d), new(2020, 3, 1, 4, 6_101.06d, 14d),
+        new(2021, 1, 1, 1, 1_100.00d, 7.5d), new(2021, 1, 1, 2, 2_203.48d, 9d), new(2021, 1, 1, 3, 3_305.22d, 12d), new(2021, 1, 1, 4, 6_433.57d, 14d),
+        new(2022, 1, 1, 1, 1_212.00d, 7.5d), new(2022, 1, 1, 2, 2_452.67d, 9d), new(2022, 1, 1, 3, 3_679.00d, 12d), new(2022, 1, 1, 4, 7_087.22d, 14d),
+        new(2023, 1, 1, 1, 1_302.00d, 7.5d), new(2023, 1, 1, 2, 2_571.29d, 9d), new(2023, 1, 1, 3, 3_856.94d, 12d), new(2023, 1, 1, 4, 7_507.49d, 14d),
+        new(2023, 5, 1, 1, 1_320.00d, 7.5d), new(2023, 5, 1, 2, 2_571.29d, 9d), new(2023, 5, 1, 3, 3_856.94d, 12d), new(2023, 5, 1, 4, 7_507.49d, 14d),
+        new(2024, 1, 1, 1, 1_412.00d, 7.5d), new(2024, 1, 1, 2, 2_666.68d, 9d), new(2024, 1, 1, 3, 4_000.03d, 12d), new(2024, 1, 1, 4, 7_786.02d, 14d),
+        new(2025, 1, 1, 1, 1_518.00d, 7.5d), new(2025, 1, 1, 2, 2_793.88d, 9d), new(2025, 1, 1, 3, 4_190.83d, 12d), new(2025, 1, 1, 4, 8_157.41d, 14d),
+        new(2026, 1, 1, 1, 1_621.00d, 7.5d), new(2026, 1, 1, 2, 2_902.84d, 9d), new(2026, 1, 1, 3, 4_354.27d, 12d), new(2026, 1, 1, 4, 8_475.55d, 14d)
+    ];
+
+    private static readonly SementeIrrf[] FaixasIrrf =
+    [
+        new(2017, 1, 1, 1, 1_903.98d, 0d, 0d), new(2017, 1, 1, 2, 2_826.65d, 7.5d, 142.80d), new(2017, 1, 1, 3, 3_751.05d, 15d, 354.80d), new(2017, 1, 1, 4, 4_664.68d, 22.5d, 636.13d), new(2017, 1, 1, 5, LimiteUltimaFaixaIrrf, 27.5d, 869.36d),
+        new(2023, 5, 1, 1, 2_112.00d, 0d, 0d), new(2023, 5, 1, 2, 2_826.65d, 7.5d, 158.40d), new(2023, 5, 1, 3, 3_751.05d, 15d, 370.40d), new(2023, 5, 1, 4, 4_664.68d, 22.5d, 651.73d), new(2023, 5, 1, 5, LimiteUltimaFaixaIrrf, 27.5d, 884.96d),
+        new(2024, 2, 1, 1, 2_259.20d, 0d, 0d), new(2024, 2, 1, 2, 2_826.65d, 7.5d, 169.44d), new(2024, 2, 1, 3, 3_751.05d, 15d, 381.44d), new(2024, 2, 1, 4, 4_664.68d, 22.5d, 662.77d), new(2024, 2, 1, 5, LimiteUltimaFaixaIrrf, 27.5d, 896.00d),
+        new(2025, 5, 1, 1, 2_428.80d, 0d, 0d), new(2025, 5, 1, 2, 2_826.65d, 7.5d, 182.16d), new(2025, 5, 1, 3, 3_751.05d, 15d, 394.16d), new(2025, 5, 1, 4, 4_664.68d, 22.5d, 675.49d), new(2025, 5, 1, 5, LimiteUltimaFaixaIrrf, 27.5d, 908.73d),
+        new(2026, 1, 1, 1, 2_428.80d, 0d, 0d), new(2026, 1, 1, 2, 2_826.65d, 7.5d, 182.16d), new(2026, 1, 1, 3, 3_751.05d, 15d, 394.16d), new(2026, 1, 1, 4, 4_664.68d, 22.5d, 675.49d), new(2026, 1, 1, 5, LimiteUltimaFaixaIrrf, 27.5d, 908.73d)
+    ];
+
+    private static readonly SementeParametro[] DeducoesPorDependente = [new(2017, 1, 1, 189.59d)];
+    private static readonly SementeParametro[] DescontosSimplificados = [new(2017, 1, 1, 0d), new(2023, 5, 1, 528.00d), new(2024, 2, 1, 564.80d), new(2025, 5, 1, 607.20d), new(2026, 1, 1, 607.20d)];
+    private static readonly SementeParametro[] DescontosMinimos = [new(2017, 1, 1, 0d)];
+
     public async Task InicializarAsync(CancellationToken cancellationToken)
     {
-        await context.Database.ExecuteSqlRawAsync("""
-            CREATE TABLE IF NOT EXISTS "ReducaoMensalIrrf" (
-                "Id" INTEGER NOT NULL CONSTRAINT "PK_ReducaoMensalIrrf" PRIMARY KEY AUTOINCREMENT,
-                "Competencia" TEXT NOT NULL,
-                "Faixa" INTEGER NOT NULL,
-                "LimiteRendimentos" REAL NOT NULL,
-                "Multiplicador" REAL NOT NULL,
-                "ValorBase" REAL NOT NULL
-            );
-            """, cancellationToken);
+        await CriarTabelaReducaoMensalAsync(cancellationToken);
+        await CorrigirOuInserirReducaoMensal2026Async(cancellationToken);
+        await InserirFaixasInssAusentesAsync(cancellationToken);
+        await InserirFaixasIrrfAusentesAsync(cancellationToken);
+        await InserirParametrosAusentesAsync(cancellationToken);
+    }
 
-        await context.Database.ExecuteSqlRawAsync("""
-            INSERT INTO "ReducaoMensalIrrf" ("Competencia", "Faixa", "LimiteRendimentos", "Multiplicador", "ValorBase")
-            SELECT '2026-01-01 00:00:00', 1, 5000.00, 0.000000, 312.89
-            WHERE NOT EXISTS (SELECT 1 FROM "ReducaoMensalIrrf" WHERE "Competencia" = '2026-01-01 00:00:00' AND "Faixa" = 1);
+    private Task CriarTabelaReducaoMensalAsync(CancellationToken cancellationToken) => context.Database.ExecuteSqlRawAsync("""
+        CREATE TABLE IF NOT EXISTS "ReducaoMensalIrrf" (
+            "Id" INTEGER NOT NULL CONSTRAINT "PK_ReducaoMensalIrrf" PRIMARY KEY AUTOINCREMENT,
+            "Competencia" TEXT NOT NULL,
+            "Faixa" INTEGER NOT NULL,
+            "LimiteRendimentos" REAL NOT NULL,
+            "Multiplicador" REAL NOT NULL,
+            "ValorBase" REAL NOT NULL
+        );
+        """, cancellationToken);
 
-            INSERT INTO "ReducaoMensalIrrf" ("Competencia", "Faixa", "LimiteRendimentos", "Multiplicador", "ValorBase")
-            SELECT '2026-01-01 00:00:00', 2, 7350.00, 0.133145, 978.62
-            WHERE NOT EXISTS (SELECT 1 FROM "ReducaoMensalIrrf" WHERE "Competencia" = '2026-01-01 00:00:00' AND "Faixa" = 2);
-            """, cancellationToken);
+    private Task CorrigirOuInserirReducaoMensal2026Async(CancellationToken cancellationToken) => context.Database.ExecuteSqlRawAsync("""
+        INSERT INTO "ReducaoMensalIrrf" ("Competencia", "Faixa", "LimiteRendimentos", "Multiplicador", "ValorBase")
+        SELECT '2026-01-01 00:00:00', 1, 5000.00, 0.000000, 312.89
+        WHERE NOT EXISTS (SELECT 1 FROM "ReducaoMensalIrrf" WHERE "Competencia" = '2026-01-01 00:00:00' AND "Faixa" = 1);
+
+        INSERT INTO "ReducaoMensalIrrf" ("Competencia", "Faixa", "LimiteRendimentos", "Multiplicador", "ValorBase")
+        SELECT '2026-01-01 00:00:00', 2, 7350.00, 0.133145, 978.62
+        WHERE NOT EXISTS (SELECT 1 FROM "ReducaoMensalIrrf" WHERE "Competencia" = '2026-01-01 00:00:00' AND "Faixa" = 2);
+
+        UPDATE "ReducaoMensalIrrf"
+        SET "ValorBase" = 978.62
+        WHERE "Competencia" = '2026-01-01 00:00:00'
+          AND "Faixa" = 2
+          AND "LimiteRendimentos" = 7350.00
+          AND "Multiplicador" = 0.133145
+          AND "ValorBase" = 7350.00;
+        """, cancellationToken);
+
+    private async Task InserirFaixasInssAusentesAsync(CancellationToken cancellationToken)
+    {
+        var existentes = (await context.FaixasInss.AsNoTracking().Select(item => new { item.Competencia, item.Faixa }).ToListAsync(cancellationToken))
+            .Select(item => (item.Competencia, item.Faixa)).ToHashSet();
+        var pendentes = FaixasInss.Where(item => !existentes.Contains((item.Competencia, item.Faixa)))
+            .Select(item => new FaixaInssEntity { Competencia = item.Competencia, Faixa = item.Faixa, Valor = item.Limite, Porcentagem = item.Aliquota });
+
+        context.FaixasInss.AddRange(pendentes);
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task InserirFaixasIrrfAusentesAsync(CancellationToken cancellationToken)
+    {
+        var existentes = (await context.FaixasIrrf.AsNoTracking().Select(item => new { item.Competencia, item.Faixa }).ToListAsync(cancellationToken))
+            .Select(item => (item.Competencia, item.Faixa)).ToHashSet();
+        var pendentes = FaixasIrrf.Where(item => !existentes.Contains((item.Competencia, item.Faixa)))
+            .Select(item => new FaixaIrrfEntity { Competencia = item.Competencia, Faixa = item.Faixa, Valor = item.Limite, Porcentagem = item.Aliquota, Deducao = item.Deducao });
+
+        context.FaixasIrrf.AddRange(pendentes);
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task InserirParametrosAusentesAsync(CancellationToken cancellationToken)
+    {
+        await InserirDependentesAusentesAsync(cancellationToken);
+        await InserirSimplificadosAusentesAsync(cancellationToken);
+        await InserirDescontosMinimosAusentesAsync(cancellationToken);
+    }
+
+    private async Task InserirDependentesAusentesAsync(CancellationToken cancellationToken)
+    {
+        var existentes = (await context.ParametrosDependentes.AsNoTracking().Select(item => item.Competencia).ToListAsync(cancellationToken)).ToHashSet();
+        context.ParametrosDependentes.AddRange(DeducoesPorDependente.Where(item => !existentes.Contains(item.Competencia)).Select(item => new ParametroDependenteEntity { Competencia = item.Competencia, Valor = item.Valor }));
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task InserirSimplificadosAusentesAsync(CancellationToken cancellationToken)
+    {
+        var existentes = (await context.ParametrosSimplificados.AsNoTracking().Select(item => item.Competencia).ToListAsync(cancellationToken)).ToHashSet();
+        context.ParametrosSimplificados.AddRange(DescontosSimplificados.Where(item => !existentes.Contains(item.Competencia)).Select(item => new ParametroSimplificadoEntity { Competencia = item.Competencia, Valor = item.Valor }));
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task InserirDescontosMinimosAusentesAsync(CancellationToken cancellationToken)
+    {
+        var existentes = (await context.ParametrosDescontoMinimo.AsNoTracking().Select(item => item.Competencia).ToListAsync(cancellationToken)).ToHashSet();
+        context.ParametrosDescontoMinimo.AddRange(DescontosMinimos.Where(item => !existentes.Contains(item.Competencia)).Select(item => new ParametroDescontoMinimoEntity { Competencia = item.Competencia, Valor = item.Valor }));
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
+    private sealed record SementeFaixa(int Ano, int Mes, int Dia, int Faixa, double Limite, double Aliquota)
+    {
+        public DateTime Competencia => new(Ano, Mes, Dia);
+    }
+
+    private sealed record SementeIrrf(int Ano, int Mes, int Dia, int Faixa, double Limite, double Aliquota, double Deducao)
+    {
+        public DateTime Competencia => new(Ano, Mes, Dia);
+    }
+
+    private sealed record SementeParametro(int Ano, int Mes, int Dia, double Valor)
+    {
+        public DateTime Competencia => new(Ano, Mes, Dia);
     }
 }

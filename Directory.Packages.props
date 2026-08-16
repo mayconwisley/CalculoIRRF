@@ -13,6 +13,7 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.2" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.2" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.2" />
+    <PackageVersion Include="QuestPDF" Version="2025.12.1" />
     <PackageVersion Include="SQLite" Version="3.13.0" />
     <PackageVersion Include="System.Data.SQLite.EF6" Version="1.0.119.0" />
   </ItemGroup>

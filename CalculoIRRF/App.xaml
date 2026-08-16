@@ -13,6 +13,9 @@
         <SolidColorBrush x:Key="AccentBrush" Color="#1570EF" />
         <SolidColorBrush x:Key="AccentHoverBrush" Color="#175CD3" />
         <SolidColorBrush x:Key="AccentForegroundBrush" Color="#FFFFFF" />
+        <SolidColorBrush x:Key="AdvantageBackgroundBrush" Color="#ECFDF3" />
+        <SolidColorBrush x:Key="AdvantageBorderBrush" Color="#86EFAC" />
+        <SolidColorBrush x:Key="AdvantageTextBrush" Color="#027A48" />
         <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#F9FAFB" />
         <SolidColorBrush x:Key="ButtonHoverBrush" Color="#F2F4F7" />
         <SolidColorBrush x:Key="DisabledBrush" Color="#EAECF0" />

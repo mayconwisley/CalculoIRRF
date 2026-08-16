@@ -117,10 +117,16 @@ public sealed class AtualizadorTabelaIrrfDaReceitaFederal(
                 indice + 1,
                 ExtrairUltimoValor(colunas[0]),
                 indice == 0 ? 0m : ExtrairMultiplicadorReducao(colunas[1]),
-                ExtrairUltimoValor(colunas[1])))
+                ExtrairPrimeiroValor(colunas[1])))
             .ToArray();
 
-        if (reducoes.Length != 2 || reducoes[0].LimiteRendimentos != 5_000m || reducoes[0].ValorBase <= 0m || reducoes[1].LimiteRendimentos != 7_350m || reducoes[1].Multiplicador <= 0m || reducoes[1].ValorBase <= 0m)
+        if (reducoes.Length != 2 ||
+            reducoes[0].LimiteRendimentos != 5_000m ||
+            reducoes[0].ValorBase <= 0m ||
+            reducoes[1].LimiteRendimentos != 7_350m ||
+            reducoes[1].Multiplicador <= 0m ||
+            reducoes[1].ValorBase <= 0m ||
+            Math.Abs(reducoes[1].ValorBase - reducoes[1].Multiplicador * reducoes[1].LimiteRendimentos) > 0.01m)
             throw new InvalidOperationException("A página oficial retornou uma estrutura de redução mensal inválida. Nenhum dado foi alterado.");
 
         return reducoes;
@@ -194,6 +200,12 @@ public sealed class AtualizadorTabelaIrrfDaReceitaFederal(
     {
         var valores = ValorMonetario.Matches(texto).Select(match => decimal.Parse(match.Value, Cultura)).ToArray();
         return valores.LastOrDefault();
+    }
+
+    private static decimal ExtrairPrimeiroValor(string texto)
+    {
+        var match = ValorMonetario.Match(texto);
+        return match.Success ? decimal.Parse(match.Value, Cultura) : 0m;
     }
 
     private static decimal ExtrairPercentual(string texto)

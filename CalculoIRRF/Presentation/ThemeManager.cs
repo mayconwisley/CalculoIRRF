@@ -70,12 +70,12 @@ public static class ThemeManager
 
     private static readonly (string Key, string Color)[] Light =
     [
-        ("ApplicationBackgroundBrush", "#F8FAFC"), ("SurfaceBrush", "#FFFFFF"), ("InputBackgroundBrush", "#FFFFFF"), ("ResultBackgroundBrush", "#F8FAFC"), ("BorderBrush", "#E2E8F0"), ("TextBrush", "#101828"), ("MutedTextBrush", "#667085"), ("AccentBrush", "#1570EF"), ("AccentHoverBrush", "#175CD3"), ("AccentForegroundBrush", "#FFFFFF"), ("ButtonBackgroundBrush", "#F9FAFB"), ("ButtonHoverBrush", "#F2F4F7"), ("DisabledBrush", "#EAECF0"), ("DataGridAlternateBrush", "#F9FAFB")
+        ("ApplicationBackgroundBrush", "#F8FAFC"), ("SurfaceBrush", "#FFFFFF"), ("InputBackgroundBrush", "#FFFFFF"), ("ResultBackgroundBrush", "#F8FAFC"), ("BorderBrush", "#E2E8F0"), ("TextBrush", "#101828"), ("MutedTextBrush", "#667085"), ("AccentBrush", "#1570EF"), ("AccentHoverBrush", "#175CD3"), ("AccentForegroundBrush", "#FFFFFF"), ("AdvantageBackgroundBrush", "#ECFDF3"), ("AdvantageBorderBrush", "#86EFAC"), ("AdvantageTextBrush", "#027A48"), ("ButtonBackgroundBrush", "#F9FAFB"), ("ButtonHoverBrush", "#F2F4F7"), ("DisabledBrush", "#EAECF0"), ("DataGridAlternateBrush", "#F9FAFB")
     ];
 
     private static readonly (string Key, string Color)[] Dark =
     [
-        ("ApplicationBackgroundBrush", "#101828"), ("SurfaceBrush", "#182230"), ("InputBackgroundBrush", "#101828"), ("ResultBackgroundBrush", "#101828"), ("BorderBrush", "#344054"), ("TextBrush", "#F9FAFB"), ("MutedTextBrush", "#98A2B3"), ("AccentBrush", "#2E90FA"), ("AccentHoverBrush", "#53B1FD"), ("AccentForegroundBrush", "#FFFFFF"), ("ButtonBackgroundBrush", "#25354D"), ("ButtonHoverBrush", "#344054"), ("DisabledBrush", "#25354D"), ("DataGridAlternateBrush", "#1D2939")
+        ("ApplicationBackgroundBrush", "#101828"), ("SurfaceBrush", "#182230"), ("InputBackgroundBrush", "#101828"), ("ResultBackgroundBrush", "#101828"), ("BorderBrush", "#344054"), ("TextBrush", "#F9FAFB"), ("MutedTextBrush", "#98A2B3"), ("AccentBrush", "#2E90FA"), ("AccentHoverBrush", "#53B1FD"), ("AccentForegroundBrush", "#FFFFFF"), ("AdvantageBackgroundBrush", "#123B2A"), ("AdvantageBorderBrush", "#32D583"), ("AdvantageTextBrush", "#6CE9A6"), ("ButtonBackgroundBrush", "#25354D"), ("ButtonHoverBrush", "#344054"), ("DisabledBrush", "#25354D"), ("DataGridAlternateBrush", "#1D2939")
     ];
 
     private sealed class ThemeSettings { public string Theme { get; set; } = ThemeMode.Automatico.ToString(); }

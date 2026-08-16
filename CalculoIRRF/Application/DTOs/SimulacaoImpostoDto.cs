@@ -1,3 +1,5 @@
+#nullable enable
+
 namespace CalculoIRRF.Application.DTOs;
 
 public sealed record DetalheFaixaDto(int Faixa, decimal BaseCalculada, decimal Aliquota, decimal Imposto);
@@ -23,4 +25,5 @@ public sealed record SimulacaoImpostoDto(
     decimal FgtsOitoPorCento,
     decimal FgtsDoisPorCento,
     string MensagemVantagem,
+    string? ModalidadeMaisVantajosa,
     IReadOnlyList<DetalheFaixaDto> DetalhesInss);

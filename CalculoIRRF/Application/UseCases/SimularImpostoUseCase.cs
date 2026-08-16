@@ -1,3 +1,5 @@
+#nullable enable
+
 using CalculoIRRF.Application.Abstractions;
 using CalculoIRRF.Application.DTOs;
 using CalculoIRRF.Domain.Tributacao;
@@ -17,7 +19,7 @@ public sealed class SimularImpostoUseCase(ITributacaoConsulta tributacaoConsulta
         var regrasReducao = Converter(perfil.ReducoesMensaisIrrf);
         var tetoInss = faixasInss.Max(item => item.Limite);
         var baseInss = Math.Min(request.BaseInss, tetoInss);
-        var detalhesInss = CalculadoraTributacao.CalcularProgressivo(baseInss, faixasInss);
+        var detalhesInss = CalculadoraInss.CalcularDetalhes(request.Competencia, baseInss, faixasInss);
         var valorInss = CalculadoraTributacao.Arredondar(detalhesInss.Sum(item => item.Imposto));
 
         var baseNormal = Math.Max(0m, request.ValorBruto - valorInss - request.QuantidadeDependentes * perfil.DeducaoPorDependente);
@@ -28,7 +30,8 @@ public sealed class SimularImpostoUseCase(ITributacaoConsulta tributacaoConsulta
             ? CalcularModalidade("Simplificado", request.ValorBruto, baseSimplificada, faixasIrrf, regrasReducao)
             : new ModalidadeIrrfDto("Simplificado", 0m, 0m, 0m, 0m, 0m, 0m, 0m, []);
 
-        var vantagem = CriarMensagemVantagem(normal.Imposto, simplificada.Imposto, perfil.DescontoMinimo, simplificadoDisponivel);
+        var vantagem = CriarMensagemVantagem(normal.Imposto, simplificada.Imposto, simplificadoDisponivel);
+        var modalidadeMaisVantajosa = ObterModalidadeMaisVantajosa(normal, simplificada, simplificadoDisponivel);
         return new SimulacaoImpostoDto(
             request,
             baseInss,
@@ -39,6 +42,7 @@ public sealed class SimularImpostoUseCase(ITributacaoConsulta tributacaoConsulta
             CalculadoraTributacao.Arredondar(baseInss * .08m),
             CalculadoraTributacao.Arredondar(baseInss * .02m),
             vantagem,
+            modalidadeMaisVantajosa,
             detalhesInss.Select(Mapear).ToArray());
     }
 
@@ -67,17 +71,25 @@ public sealed class SimularImpostoUseCase(ITributacaoConsulta tributacaoConsulta
             throw new ArgumentException("Os valores monetários e a quantidade de dependentes não podem ser negativos.");
     }
 
-    private static string CriarMensagemVantagem(decimal normal, decimal simplificado, decimal descontoMinimo, bool simplificadoDisponivel)
+    private static string CriarMensagemVantagem(decimal normal, decimal simplificado, bool simplificadoDisponivel)
     {
         if (!simplificadoDisponivel)
             return "O desconto simplificado está disponível a partir de 05/2023.";
-        if (normal < descontoMinimo || simplificado < descontoMinimo)
-            return $"Não há desconto de IR: valor abaixo do desconto mínimo de {descontoMinimo:N2}.";
+        if (normal == 0m && simplificado == 0m)
+            return "Não há IRRF a recolher nas modalidades calculadas.";
         if (normal == simplificado)
             return "As modalidades normal e simplificada possuem o mesmo resultado.";
         var diferenca = Math.Abs(normal - simplificado);
         return normal > simplificado
             ? $"O cálculo simplificado é mais vantajoso. Diferença: {diferenca:N2}."
             : $"O cálculo normal é mais vantajoso. Diferença: {diferenca:N2}.";
+    }
+
+    private static string? ObterModalidadeMaisVantajosa(ModalidadeIrrfDto normal, ModalidadeIrrfDto simplificada, bool simplificadoDisponivel)
+    {
+        if (!simplificadoDisponivel || normal.Imposto == simplificada.Imposto)
+            return null;
+
+        return normal.Imposto < simplificada.Imposto ? normal.Nome : simplificada.Nome;
     }
 }

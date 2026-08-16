@@ -1,4 +1,7 @@
+#nullable enable
+
 using CalculoIRRF.Application.DTOs;
+using CalculoIRRF.Application.Abstractions;
 using CalculoIRRF.Application.UseCases;
 using CalculoIRRF.Presentation.Mvvm;
 using CalculoIRRF.Presentation.Services;
@@ -16,6 +19,8 @@ public sealed class MainWindowViewModel : ViewModelBase
     private readonly ISimularImpostoUseCase _simularImposto;
     private readonly IUserNotifier _notificador;
     private readonly IWindowNavigator _navegador;
+    private readonly IRelatorioPdfService _relatorioPdf;
+    private readonly IArquivoDialogService _arquivoDialog;
     private string _competencia = DateTime.Today.ToString("MM/yyyy");
     private string _valorBruto = "0,00";
     private string _baseInss = "0,00";
@@ -23,13 +28,22 @@ public sealed class MainWindowViewModel : ViewModelBase
     private string _resultado = "Informe os valores e selecione Calcular.";
     private bool _podeCalcularPensao;
     private ThemeMode _temaSelecionado = ThemeManager.CurrentMode;
+    private SimulacaoImpostoDto? _ultimaSimulacao;
+    private bool _temResultado;
+    private IReadOnlyList<IndicadorResumoViewModel> _indicadoresResumo = [];
+    private IReadOnlyList<ComparativoIrrfViewModel> _comparativoIrrf = [];
+    private IReadOnlyList<SecaoMemoriaIrrfViewModel> _memoriaIrrf = [];
+    private IReadOnlyList<SecaoMemoriaTributariaViewModel> _memoriaTributaria = [];
 
-    public MainWindowViewModel(ISimularImpostoUseCase simularImposto, IUserNotifier notificador, IWindowNavigator navegador)
+    public MainWindowViewModel(ISimularImpostoUseCase simularImposto, IUserNotifier notificador, IWindowNavigator navegador, IRelatorioPdfService relatorioPdf, IArquivoDialogService arquivoDialog)
     {
         _simularImposto = simularImposto;
         _notificador = notificador;
         _navegador = navegador;
+        _relatorioPdf = relatorioPdf;
+        _arquivoDialog = arquivoDialog;
         CalcularCommand = new AsyncRelayCommand(CalcularAsync);
+        ExportarPdfCommand = new AsyncRelayCommand(ExportarPdfAsync, () => _ultimaSimulacao is not null);
         AtualizarBaseInssCommand = new AsyncRelayCommand(AtualizarBaseInssAsync);
         AbrirTabelaInssCommand = new RelayCommand(_ => _navegador.AbrirTabelaInss());
         AbrirTabelaIrrfCommand = new RelayCommand(_ => _navegador.AbrirTabelaIrrf());
@@ -54,6 +68,11 @@ public sealed class MainWindowViewModel : ViewModelBase
     public string BaseInss { get => _baseInss; set => SetProperty(ref _baseInss, value); }
     public string Dependentes { get => _dependentes; set => SetProperty(ref _dependentes, value); }
     public string Resultado { get => _resultado; private set => SetProperty(ref _resultado, value); }
+    public bool TemResultado { get => _temResultado; private set => SetProperty(ref _temResultado, value); }
+    public IReadOnlyList<IndicadorResumoViewModel> IndicadoresResumo { get => _indicadoresResumo; private set => SetProperty(ref _indicadoresResumo, value); }
+    public IReadOnlyList<ComparativoIrrfViewModel> ComparativoIrrf { get => _comparativoIrrf; private set => SetProperty(ref _comparativoIrrf, value); }
+    public IReadOnlyList<SecaoMemoriaIrrfViewModel> MemoriaIrrf { get => _memoriaIrrf; private set => SetProperty(ref _memoriaIrrf, value); }
+    public IReadOnlyList<SecaoMemoriaTributariaViewModel> MemoriaTributaria { get => _memoriaTributaria; private set => SetProperty(ref _memoriaTributaria, value); }
     public bool PodeCalcularPensao { get => _podeCalcularPensao; private set { if (SetProperty(ref _podeCalcularPensao, value)) ((RelayCommand)AbrirPensaoCommand).RaiseCanExecuteChanged(); } }
     public ThemeMode TemaSelecionado
     {
@@ -66,6 +85,7 @@ public sealed class MainWindowViewModel : ViewModelBase
     }
 
     public ICommand CalcularCommand { get; }
+    public ICommand ExportarPdfCommand { get; }
     public ICommand AtualizarBaseInssCommand { get; }
     public ICommand AbrirTabelaInssCommand { get; }
     public ICommand AbrirTabelaIrrfCommand { get; }
@@ -83,12 +103,34 @@ public sealed class MainWindowViewModel : ViewModelBase
         try
         {
             var resultado = await _simularImposto.ExecutarAsync(entrada, CancellationToken.None);
+            _ultimaSimulacao = resultado;
             Resultado = Formatar(resultado);
+            AtualizarApresentacao(resultado);
             PodeCalcularPensao = true;
+            ((AsyncRelayCommand)ExportarPdfCommand).RaiseCanExecuteChanged();
         }
         catch (Exception exception)
         {
             _notificador.MostrarErro("Não foi possível concluir o cálculo.", exception);
+        }
+    }
+
+    private async Task ExportarPdfAsync()
+    {
+        if (_ultimaSimulacao is null)
+            return;
+
+        var caminhoArquivo = _arquivoDialog.SolicitarDestinoPdf($"relatorio-simulacao-tributaria-{_ultimaSimulacao.Entrada.Competencia:MM-yyyy}.pdf");
+        if (caminhoArquivo is null)
+            return;
+
+        try
+        {
+            await _relatorioPdf.GerarRelatorioImpostoAsync(_ultimaSimulacao, caminhoArquivo, CancellationToken.None);
+        }
+        catch (Exception exception)
+        {
+            _notificador.MostrarErro("Não foi possível gerar o relatório em PDF.", exception);
         }
     }
 
@@ -134,6 +176,61 @@ public sealed class MainWindowViewModel : ViewModelBase
 
     private static bool TentarLerDecimal(string valor, out decimal resultado) => decimal.TryParse(valor, NumberStyles.Number, CulturaPtBr, out resultado);
 
+    private void AtualizarApresentacao(SimulacaoImpostoDto simulacao)
+    {
+        IndicadoresResumo =
+        [
+            new("Valor bruto", Moeda(simulacao.Entrada.ValorBruto), $"Competência {simulacao.Entrada.Competencia:MM/yyyy}"),
+            new("INSS", Moeda(simulacao.ValorInss), $"Base: {Moeda(simulacao.BaseInssConsiderada)}"),
+            new("IRRF normal", Moeda(simulacao.Normal.Imposto), $"Alíquota efetiva: {Percentual(simulacao.Normal.AliquotaEfetiva)}"),
+            new("IRRF simplificado", Moeda(simulacao.Simplificada.Imposto), $"Alíquota efetiva: {Percentual(simulacao.Simplificada.AliquotaEfetiva)}"),
+            new("FGTS padrão", Moeda(simulacao.FgtsOitoPorCento), "Alíquota de 8%"),
+            new("FGTS Jovem Aprendiz", Moeda(simulacao.FgtsDoisPorCento), "Alíquota de 2%")
+        ];
+
+        ComparativoIrrf =
+        [
+            CriarComparativo(simulacao.Normal, simulacao.ModalidadeMaisVantajosa),
+            CriarComparativo(simulacao.Simplificada, simulacao.ModalidadeMaisVantajosa)
+        ];
+
+        MemoriaIrrf =
+        [
+            CriarMemoriaIrrf(simulacao.Normal),
+            CriarMemoriaIrrf(simulacao.Simplificada)
+        ];
+
+        MemoriaTributaria =
+        [
+            CriarSecaoMemoria("INSS progressivo", simulacao.DetalhesInss),
+            CriarSecaoMemoria("IRRF normal - cálculo progressivo", simulacao.Normal.DetalhesProgressivos),
+            CriarSecaoMemoria("IRRF simplificado - cálculo progressivo", simulacao.Simplificada.DetalhesProgressivos)
+        ];
+        TemResultado = true;
+    }
+
+    private static ComparativoIrrfViewModel CriarComparativo(ModalidadeIrrfDto modalidade, string? modalidadeMaisVantajosa) =>
+        new(
+            modalidade.Nome,
+            Moeda(modalidade.BaseCalculo),
+            Moeda(modalidade.ReducaoMensal),
+            Moeda(modalidade.Imposto),
+            modalidade.Nome.Equals(modalidadeMaisVantajosa, StringComparison.OrdinalIgnoreCase));
+
+    private static SecaoMemoriaTributariaViewModel CriarSecaoMemoria(string titulo, IReadOnlyList<DetalheFaixaDto> detalhes) =>
+        new(titulo, Moeda(detalhes.Sum(detalhe => detalhe.Imposto)), detalhes.Select(detalhe => new LinhaFaixaTributariaViewModel($"Faixa {detalhe.Faixa}", Moeda(detalhe.BaseCalculada), Percentual(detalhe.Aliquota), Moeda(detalhe.Imposto))).ToArray());
+
+    private static SecaoMemoriaIrrfViewModel CriarMemoriaIrrf(ModalidadeIrrfDto modalidade) =>
+        new($"IRRF {modalidade.Nome}", $"IRRF final: {Moeda(modalidade.Imposto)}",
+        [
+            new("Base de cálculo", Moeda(modalidade.BaseCalculo)),
+            new("IR progressivo", $"{Moeda(modalidade.BaseCalculo)} x {Percentual(modalidade.Aliquota)} - {Moeda(modalidade.Deducao)} = {Moeda(modalidade.ImpostoAntesReducao)}"),
+            new("Redução mensal", $"{Moeda(modalidade.ImpostoAntesReducao)} - {Moeda(modalidade.ReducaoMensal)} = {Moeda(modalidade.Imposto)}")
+        ]);
+
+    private static string Moeda(decimal valor) => valor.ToString("C2", CulturaPtBr);
+    private static string Percentual(decimal valor) => valor.ToString("N2", CulturaPtBr) + "%";
+
     private static string Formatar(SimulacaoImpostoDto simulacao)
     {
         var texto = new StringBuilder();
@@ -148,7 +245,7 @@ public sealed class MainWindowViewModel : ViewModelBase
         AdicionarDetalhes(texto, "IR simplificado progressivo", simulacao.Simplificada.DetalhesProgressivos);
         AdicionarDetalhes(texto, "INSS progressivo", simulacao.DetalhesInss);
         texto.AppendLine($"FGTS 8%: {simulacao.FgtsOitoPorCento:N2}");
-        texto.AppendLine($"FGTS 2%: {simulacao.FgtsDoisPorCento:N2}");
+        texto.AppendLine($"FGTS Jovem Aprendiz (2%): {simulacao.FgtsDoisPorCento:N2}");
         return texto.ToString();
     }
 

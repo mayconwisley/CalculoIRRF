@@ -16,7 +16,7 @@ public sealed class SimularPensaoUseCase(ITributacaoConsulta tributacaoConsulta)
         var irrf = perfil.FaixasIrrf.Select(x => new FaixaTributaria(x.Numero, x.Limite, x.Aliquota, x.Deducao)).ToArray();
         var regrasReducao = perfil.ReducoesMensaisIrrf.Select(x => new RegraReducaoMensalIrrf(x.Faixa, x.LimiteRendimentos, x.Multiplicador, x.ValorBase)).ToArray();
         var baseInss = Math.Min(request.BaseInss, inss.Max(x => x.Limite));
-        var valorInss = CalculadoraTributacao.Arredondar(CalculadoraTributacao.CalcularProgressivo(baseInss, inss).Sum(x => x.Imposto));
+        var valorInss = CalculadoraTributacao.Arredondar(CalculadoraInss.CalcularDetalhes(request.Competencia, baseInss, inss).Sum(x => x.Imposto));
         var rendimentos = request.ValorBruto - request.OutrosDescontos;
         var basePensao = rendimentos - valorInss;
         var normal = Calcular("Normal", rendimentos, rendimentos - valorInss - request.Dependentes * perfil.DeducaoPorDependente, basePensao, request.PercentualPensao, irrf, regrasReducao);

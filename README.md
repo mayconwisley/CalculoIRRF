@@ -5,12 +5,14 @@ Aplicação desktop WPF em .NET 9 para simular os encargos incidentes sobre rend
 ## Funcionalidades
 
 - Simulação de IRRF pelas modalidades normal e simplificada, incluindo redução mensal e dependentes.
-- Cálculo progressivo do INSS e estimativas de FGTS de 8% e 2%.
+- Cálculo progressivo do INSS, FGTS padrão de 8% e FGTS de 2% específico para Jovem Aprendiz.
+- Exportação dos resultados de imposto e pensão para PDF profissional, com resumo e detalhamento das faixas calculadas.
 - Comparação entre as modalidades de IRRF para indicar a mais vantajosa.
 - Simulação de pensão alimentícia a partir do resultado tributário.
 - Manutenção local das tabelas de INSS, IRRF, dedução simplificada, dependentes, desconto mínimo e redução mensal.
 - Atualização online das tabelas oficiais de INSS e IRRF.
 - Dados persistidos localmente em SQLite e preferência de tema armazenada no computador.
+- Seed idempotente com as competências de 2017 a 2026 do INSS e do IRRF, preservando dados mantidos manualmente pelo usuário.
 
 ## Arquitetura
 
@@ -45,3 +47,4 @@ O executável gerado chama-se `CalculadoraDeImposto.exe`. O banco de dados SQLit
 
 - Os resultados são simulações e devem ser conferidos com a legislação e os dados aplicáveis à competência.
 - A atualização online depende da disponibilidade e do formato das páginas oficiais. Caso a consulta falhe, os dados locais são preservados.
+- Para competências anteriores a março de 2020, o INSS é calculado pelo regime de alíquota única; a partir dessa competência, é aplicado o regime progressivo.

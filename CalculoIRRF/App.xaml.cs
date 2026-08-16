@@ -1,5 +1,7 @@
 using CalculoIRRF.Application.UseCases;
+using CalculoIRRF.Application.Abstractions;
 using CalculoIRRF.Infrastructure;
+using CalculoIRRF.Infrastructure.Reporting;
 using CalculoIRRF.Infrastructure.Persistence;
 using CalculoIRRF.Presentation;
 using CalculoIRRF.Presentation.Services;
@@ -21,6 +23,7 @@ public partial class App : System.Windows.Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
         ThemeManager.Initialize();
         _serviceProvider = ConfigureServices();
         _applicationScope = _serviceProvider.CreateScope();
@@ -43,6 +46,8 @@ public partial class App : System.Windows.Application
         .AddScoped<ITabelaManutencaoViewModelFactory, TabelaManutencaoViewModelFactory>()
         .AddScoped<IPensaoViewModelFactory, PensaoViewModelFactory>()
         .AddSingleton<IUserNotifier, WpfUserNotifier>()
+        .AddSingleton<IArquivoDialogService, WpfArquivoDialogService>()
+        .AddSingleton<IRelatorioPdfService, QuestPdfRelatorioPdfService>()
         .AddScoped<IWindowNavigator, WpfWindowNavigator>()
         .AddScoped<ISimularImpostoUseCase, SimularImpostoUseCase>()
         .AddScoped<ISimularPensaoUseCase, SimularPensaoUseCase>()
