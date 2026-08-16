@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="{Binding Titulo}" Height="720" Width="1060" MinHeight="600" MinWidth="900"
         Background="{DynamicResource ApplicationBackgroundBrush}"
-        Foreground="{DynamicResource TextBrush}">
+        Foreground="{DynamicResource TextBrush}" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid Margin="32" Background="{DynamicResource ApplicationBackgroundBrush}">
         <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="20"/><RowDefinition Height="Auto"/><RowDefinition Height="20"/><RowDefinition Height="*"/></Grid.RowDefinitions>
         <Grid>
@@ -54,9 +54,9 @@
                     <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                     <StackPanel VerticalAlignment="Center">
                         <TextBlock Text="{Binding StatusAtualizacao}" Foreground="{DynamicResource MutedTextBrush}" TextWrapping="Wrap"/>
-                        <Button Content="Abrir página de tabelas da Receita Federal ↗" Command="{Binding AbrirFonteOficialCommand}" Padding="0,6" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Left"/>
+                        <Button Content="{Binding TextoLinkFonteOficial}" Command="{Binding AbrirFonteOficialCommand}" Padding="0,6" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Left"/>
                     </StackPanel>
-                    <Button Grid.Column="1" Content="Atualizar da Receita" Command="{Binding AtualizarDaReceitaCommand}" Style="{StaticResource PrimaryButton}" MinWidth="184"/>
+                    <Button Grid.Column="1" Content="Atualizar tabela oficial" Command="{Binding AtualizarDaReceitaCommand}" Style="{StaticResource PrimaryButton}" MinWidth="202"/>
                 </Grid>
             </Grid>
         </Border>

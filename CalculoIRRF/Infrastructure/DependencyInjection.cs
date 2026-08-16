@@ -16,5 +16,6 @@ public static class DependencyInjection
         .AddScoped<ITributacaoConsulta, EfTributacaoConsulta>()
         .AddScoped<ITabelaTributariaService, EfTabelaTributariaService>()
         .AddScoped<IAtualizadorTabelaIrrf, AtualizadorTabelaIrrfDaReceitaFederal>()
+        .AddScoped<IAtualizadorTabelaInss, AtualizadorTabelaInssDoGoverno>()
         .AddScoped<IInicializadorBancoTributario, InicializadorBancoTributario>();
 }

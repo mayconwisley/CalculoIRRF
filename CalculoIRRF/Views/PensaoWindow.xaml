@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Cálculo de pensão alimentícia" Height="680" Width="880" MinHeight="560" MinWidth="700"
         Background="{DynamicResource ApplicationBackgroundBrush}"
-        Foreground="{DynamicResource TextBrush}">
+        Foreground="{DynamicResource TextBrush}" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid Margin="28" Background="{DynamicResource ApplicationBackgroundBrush}">
         <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="16" /><RowDefinition Height="Auto" /><RowDefinition Height="16" /><RowDefinition Height="*" /></Grid.RowDefinitions>
         <StackPanel>

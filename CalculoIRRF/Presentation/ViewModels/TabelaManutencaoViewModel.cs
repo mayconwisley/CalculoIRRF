@@ -15,6 +15,7 @@ public sealed class TabelaManutencaoViewModel : ViewModelBase
     private static readonly CultureInfo Cultura = CultureInfo.GetCultureInfo("pt-BR");
     private readonly ITabelaTributariaService _service;
     private readonly IAtualizadorTabelaIrrf _atualizadorIrrf;
+    private readonly IAtualizadorTabelaInss _atualizadorInss;
     private readonly IUserNotifier _notificador;
     private RegistroTabelaDto? _selecionado;
     private string _competencia = DateTime.Today.ToString("MM/yyyy");
@@ -28,9 +29,10 @@ public sealed class TabelaManutencaoViewModel : ViewModelBase
         TipoTabelaTributaria tipo,
         ITabelaTributariaService service,
         IAtualizadorTabelaIrrf atualizadorIrrf,
+        IAtualizadorTabelaInss atualizadorInss,
         IUserNotifier notificador)
     {
-        Tipo = tipo; _service = service; _atualizadorIrrf = atualizadorIrrf; _notificador = notificador;
+        Tipo = tipo; _service = service; _atualizadorIrrf = atualizadorIrrf; _atualizadorInss = atualizadorInss; _notificador = notificador;
         SalvarCommand = new AsyncRelayCommand(SalvarAsync);
         ExcluirCommand = new AsyncRelayCommand(ExcluirAsync, () => Selecionado is not null);
         CarregarCommand = new AsyncRelayCommand(CarregarAsync);
@@ -48,8 +50,10 @@ public sealed class TabelaManutencaoViewModel : ViewModelBase
     public string LabelDeducao => Tipo == TipoTabelaTributaria.ReducaoMensalIrrf ? "Valor-base da redução (R$)" : "Parcela a deduzir (R$)";
     public bool ExibeFaixa => Tipo is TipoTabelaTributaria.Inss or TipoTabelaTributaria.Irrf or TipoTabelaTributaria.ReducaoMensalIrrf;
     public bool ExibeDeducao => Tipo is TipoTabelaTributaria.Irrf or TipoTabelaTributaria.ReducaoMensalIrrf;
-    public bool ExibeAtualizacaoOnline => Tipo is TipoTabelaTributaria.Irrf or TipoTabelaTributaria.ReducaoMensalIrrf;
-    public string FonteOficial => _atualizadorIrrf.FonteOficial.AbsoluteUri;
+    public bool ExibeAtualizacaoOnline => Tipo is TipoTabelaTributaria.Inss or TipoTabelaTributaria.Irrf or TipoTabelaTributaria.Simplificado or TipoTabelaTributaria.Dependente or TipoTabelaTributaria.ReducaoMensalIrrf;
+    public string NomeFonteOficial => Tipo == TipoTabelaTributaria.Inss ? "INSS" : "Receita Federal";
+    public string TextoLinkFonteOficial => $"Abrir página oficial do {NomeFonteOficial} ↗";
+    public string FonteOficial => (Tipo == TipoTabelaTributaria.Inss ? _atualizadorInss.FonteOficial : _atualizadorIrrf.FonteOficial).AbsoluteUri;
     public ObservableCollection<RegistroTabelaDto> Registros { get; } = [];
     public RegistroTabelaDto? Selecionado { get => _selecionado; set { if (SetProperty(ref _selecionado, value) && value is not null) Preencher(value); ((AsyncRelayCommand)ExcluirCommand).RaiseCanExecuteChanged(); } }
     public string Competencia { get => _competencia; set => SetProperty(ref _competencia, value); }
@@ -74,20 +78,32 @@ public sealed class TabelaManutencaoViewModel : ViewModelBase
     {
         try
         {
-            StatusAtualizacao = "Consultando a tabela oficial da Receita Federal...";
-            var resultado = await _atualizadorIrrf.AtualizarAsync(CancellationToken.None);
+            StatusAtualizacao = "Consultando a tabela oficial...";
+            var resultado = Tipo == TipoTabelaTributaria.Inss
+                ? await AtualizarInssAsync()
+                : await AtualizarIrrfAsync();
             await CarregarAsync();
-            StatusAtualizacao = $"Tabelas de {resultado.Competencia:MM/yyyy} atualizadas pela Receita Federal ({resultado.QuantidadeFaixas} faixas de IRRF).";
+            StatusAtualizacao = $"Dados de {resultado.Competencia:MM/yyyy} atualizados pela fonte oficial ({resultado.QuantidadeFaixas} faixas tributárias importadas).";
         }
         catch (Exception ex)
         {
             StatusAtualizacao = "A atualização não foi concluída; os dados locais foram preservados.";
-            _notificador.MostrarErro("Não foi possível atualizar a tabela pelo site oficial da Receita Federal.", ex);
+            _notificador.MostrarErro("Não foi possível atualizar a tabela pelo site oficial.", ex);
         }
     }
     private void AbrirFonteOficial()
     {
         Process.Start(new ProcessStartInfo(FonteOficial) { UseShellExecute = true });
+    }
+    private async Task<AtualizacaoOnlineResultado> AtualizarIrrfAsync()
+    {
+        var resultado = await _atualizadorIrrf.AtualizarAsync(CancellationToken.None);
+        return new AtualizacaoOnlineResultado(resultado.Competencia, resultado.QuantidadeFaixas);
+    }
+    private async Task<AtualizacaoOnlineResultado> AtualizarInssAsync()
+    {
+        var resultado = await _atualizadorInss.AtualizarAsync(CancellationToken.None);
+        return new AtualizacaoOnlineResultado(resultado.Competencia, resultado.QuantidadeFaixas);
     }
     private async Task SalvarAsync()
     {
@@ -119,4 +135,5 @@ public sealed class TabelaManutencaoViewModel : ViewModelBase
     {
         Competencia = item.Competencia.ToString("MM/yyyy"); Faixa = item.Faixa?.ToString() ?? "1"; Valor = item.Valor.ToString("N2", Cultura); Aliquota = item.Aliquota?.ToString("N2", Cultura) ?? "0,00"; Deducao = item.Deducao?.ToString("N2", Cultura) ?? "0,00";
     }
+    private sealed record AtualizacaoOnlineResultado(DateOnly Competencia, int QuantidadeFaixas);
 }

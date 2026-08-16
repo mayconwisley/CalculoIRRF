@@ -8,5 +8,5 @@ public sealed class WpfUserNotifier : IUserNotifier
         MessageBox.Show(mensagem, titulo, MessageBoxButton.OK, MessageBoxImage.Warning);
 
     public void MostrarErro(string mensagem, Exception exception) =>
-        MessageBox.Show($"{mensagem}\n\n{exception.Message}", "Calculadora IRRF", MessageBoxButton.OK, MessageBoxImage.Error);
+        MessageBox.Show($"{mensagem}\n\n{exception.Message}", "Calculadora de Imposto", MessageBoxButton.OK, MessageBoxImage.Error);
 }

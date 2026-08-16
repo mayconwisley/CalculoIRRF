@@ -2,9 +2,13 @@
   <PropertyGroup>
     <TargetFramework>net9.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>calculator.ico</ApplicationIcon>
+    <AssemblyName>CalculadoraDeImposto</AssemblyName>
+    <AssemblyTitle>Calculadora de Imposto</AssemblyTitle>
+    <Product>Calculadora de Imposto</Product>
+    <Description>Calculadora de imposto de renda, INSS e FGTS.</Description>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="calculator.ico" />
