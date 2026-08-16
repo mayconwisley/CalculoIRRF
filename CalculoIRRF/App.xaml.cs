@@ -1,12 +1,10 @@
-using CalculoIRRF.DataBase;
-using CalculoIRRF.Repository;
-using CalculoIRRF.Repository.Interface;
+using CalculoIRRF.Application.UseCases;
+using CalculoIRRF.Infrastructure;
+using CalculoIRRF.Infrastructure.Persistence;
 using CalculoIRRF.Presentation;
-using CalculoIRRF.Services;
-using CalculoIRRF.Services.Calculo;
-using CalculoIRRF.Services.Interface;
+using CalculoIRRF.Presentation.Services;
+using CalculoIRRF.Presentation.ViewModels;
 using CalculoIRRF.Views;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Runtime.Versioning;
@@ -15,38 +13,39 @@ using System.Windows;
 namespace CalculoIRRF;
 
 [SupportedOSPlatform("windows")]
-public partial class App : Application
+public partial class App : System.Windows.Application
 {
     private ServiceProvider _serviceProvider = null!;
+    private IServiceScope _applicationScope = null!;
 
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
         ThemeManager.Initialize();
         _serviceProvider = ConfigureServices();
-        _serviceProvider.GetRequiredService<MainWindow>().Show();
+        _applicationScope = _serviceProvider.CreateScope();
+        _applicationScope.ServiceProvider.GetRequiredService<IInicializadorBancoTributario>()
+            .InicializarAsync(CancellationToken.None).GetAwaiter().GetResult();
+        _applicationScope.ServiceProvider.GetRequiredService<MainWindow>().Show();
     }
 
     protected override void OnExit(ExitEventArgs e)
     {
         ThemeManager.Dispose();
+        _applicationScope?.Dispose();
         _serviceProvider?.Dispose();
         base.OnExit(e);
     }
 
     private static ServiceProvider ConfigureServices() => new ServiceCollection()
-        .AddDbContext<CalculoImpostoContext>(options => options.UseSqlite("Data Source=BancoDados/calculoIrrf.db"))
-        .AddSingleton<MainWindow>()
-        .AddScoped<IDependenteRepository, DependenteRepository>()
-        .AddScoped<IDescontoMinimoRepository, DescontoMinimoRepository>()
-        .AddScoped<IInssRepository, InssRepository>()
-        .AddScoped<IIrrfRepository, IrrfRepository>()
-        .AddScoped<ISimplificadoRepository, SimplificadoRepository>()
-        .AddScoped<IDependenteServices, DependenteServices>()
-        .AddScoped<IDescontoMinimoServices, DescontoMinimoServices>()
-        .AddScoped<IInssServices, InssServices>()
-        .AddScoped<IIrrfServices, IrrfServices>()
-        .AddScoped<ISimplificadoServices, SimplificadoServices>()
-        .AddScoped<CalculoImposto>()
+        .AddScoped<MainWindow>()
+        .AddScoped<MainWindowViewModel>()
+        .AddScoped<ITabelaManutencaoViewModelFactory, TabelaManutencaoViewModelFactory>()
+        .AddScoped<IPensaoViewModelFactory, PensaoViewModelFactory>()
+        .AddSingleton<IUserNotifier, WpfUserNotifier>()
+        .AddScoped<IWindowNavigator, WpfWindowNavigator>()
+        .AddScoped<ISimularImpostoUseCase, SimularImpostoUseCase>()
+        .AddScoped<ISimularPensaoUseCase, SimularPensaoUseCase>()
+        .AddInfrastructure()
         .BuildServiceProvider();
 }

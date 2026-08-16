@@ -30,7 +30,7 @@ public static class ThemeManager
         CurrentMode = mode;
         var palette = mode == ThemeMode.Escuro || mode == ThemeMode.Automatico && IsWindowsUsingDarkTheme() ? Dark : Light;
         foreach (var (key, color) in palette)
-            Application.Current.Resources[key] = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+            System.Windows.Application.Current.Resources[key] = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
 
         if (persist) SaveMode(mode);
     }
@@ -38,7 +38,7 @@ public static class ThemeManager
     private static void OnUserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
     {
         if (CurrentMode == ThemeMode.Automatico)
-            Application.Current.Dispatcher.BeginInvoke(() => Apply(CurrentMode, false));
+            System.Windows.Application.Current.Dispatcher.BeginInvoke(() => Apply(CurrentMode, false));
     }
 
     private static bool IsWindowsUsingDarkTheme()

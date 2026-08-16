@@ -1,0 +1,27 @@
+<Window x:Class="CalculoIRRF.Views.PensaoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Cálculo de pensão alimentícia" Height="680" Width="880" MinHeight="560" MinWidth="700"
+        Background="{DynamicResource ApplicationBackgroundBrush}"
+        Foreground="{DynamicResource TextBrush}">
+    <Grid Margin="28" Background="{DynamicResource ApplicationBackgroundBrush}">
+        <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="16" /><RowDefinition Height="Auto" /><RowDefinition Height="16" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+        <StackPanel>
+            <TextBlock Text="Cálculo de pensão alimentícia" FontSize="24" FontWeight="SemiBold" />
+            <TextBlock Text="Comparação entre os modelos normal e simplificado." Foreground="{DynamicResource MutedTextBrush}" Margin="0,5,0,0" />
+        </StackPanel>
+        <Border Grid.Row="2" Style="{StaticResource Card}">
+            <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition /><ColumnDefinition /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                <StackPanel Margin="0,0,12,0"><TextBlock Text="Rendimentos" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,6"/><TextBox Text="{Binding ValorBruto, Mode=OneWay}" IsReadOnly="True" TextAlignment="Right" /></StackPanel>
+                <StackPanel Grid.Column="1" Margin="0,0,12,0"><TextBlock Text="Percentual da pensão" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,6"/><TextBox Text="{Binding Percentual, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right" /></StackPanel>
+                <StackPanel Grid.Column="2" Margin="0,0,12,0"><TextBlock Text="Outros descontos" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,6"/><TextBox Text="{Binding OutrosDescontos, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right" /></StackPanel>
+                <Button Grid.Column="3" Content="Resumo" Margin="0,25,8,0" Command="{Binding CalcularResumoCommand}" />
+                <Button Grid.Column="4" Style="{StaticResource PrimaryButton}" Content="Detalhar" Margin="0,25,0,0" Command="{Binding CalcularDetalheCommand}" />
+            </Grid>
+        </Border>
+        <Border Grid.Row="4" Style="{StaticResource Card}">
+            <TextBox Text="{Binding Resultado, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Background="{DynamicResource ResultBackgroundBrush}" Foreground="{DynamicResource TextBrush}" FontFamily="Cascadia Mono" FontSize="13" Padding="16" VerticalScrollBarVisibility="Auto" />
+        </Border>
+    </Grid>
+</Window>

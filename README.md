@@ -1,6 +1,6 @@
 # Calculo IRRF
 
-Descrição completa do projeto "Calculo IRRF" — uma aplicação desktop (Windows Forms) em .NET 9 para cálculo do Imposto de Renda Retido na Fonte (IRRF), com suporte a tabelas locais e atualização online (scraping) das tabelas públicas.
+Aplicação desktop WPF em .NET 9 para cálculo do Imposto de Renda Retido na Fonte (IRRF), com tabelas locais e atualização online das tabelas públicas.
 
 Sumário
 - Visão geral
@@ -17,7 +17,7 @@ Sumário
 
 Visão geral
 ----------
-Aplicação Windows Forms que calcula IRRF considerando:
+Aplicação WPF que calcula IRRF considerando:
 - Cálculo normal (com dependentes e INSS)
 - Cálculo simplificado (dedução fixa)
 - Cálculo progressivo por faixas
@@ -45,7 +45,7 @@ Tecnologias e dependências
 --------------------------
 - .NET 9 (Target Framework — verificar no arquivo de projeto)
 - C# 11 (construção com sintaxe de record-like DI em classes)
-- Windows Forms (WinForms) — app desktop com atributo `[SupportedOSPlatform("windows")]`
+- WPF — app desktop com atributo `[SupportedOSPlatform("windows")]`
 - Entity Framework Core (provider SQLite)
   - `Microsoft.EntityFrameworkCore`
   - `Microsoft.EntityFrameworkCore.Sqlite`
@@ -56,7 +56,7 @@ Tecnologias e dependências
 
 Requisitos do sistema
 ---------------------
-- Windows 10/11 (aplicação WinForms)
+- Windows 10/11 (aplicação WPF)
 - .NET 9 Runtime instalado
 - Visual Studio 2022 com workload de .NET Desktop Development (se for abrir/compilar na IDE)
 - Conexão com internet para usar a funcionalidade de atualização online (scraping)
@@ -64,10 +64,13 @@ Requisitos do sistema
 Estrutura do projeto (resumo)
 -----------------------------
 - `CalculoIRRF/` — projeto principal
-  - `FrmDeducaoSimplificada.cs`, `FrmDescontoMinimo.cs` — forms de manutenção
-  - `Services/` — lógica de negócio e serviços (ex.: `DescontoMinimoServices.cs`, `Calculo/IrrfCalculo.cs`)
-  - `Repository/Interface/` — interfaces dos repositórios (ex.: `IIrrfRepository.cs`, `IDependenteRepository.cs`)
-  - `Model/` — entidades EF Core (ex.: `Dependente.cs`, `DescontoMinimo.cs`, `Irrf.cs`, `IrrfRfb.cs`, `Simplificado.cs`)
+  - `Domain/` — regras tributárias puras, sem EF Core, WPF ou I/O.
+  - `Application/` — casos de uso, DTOs (`record`) e portas de entrada/saída.
+  - `Infrastructure/` — adaptadores de persistência EF Core para as portas da aplicação.
+  - `Presentation/` — MVVM, serviços de navegação/notificação e temas.
+  - `Views/` — XAML e code-behind mínimo; a tela principal usa `MainWindowViewModel`.
+  - `Model/` — entidades EF Core legadas que representam o banco atual.
+  - `Services/` e `Repository/` — compatibilidade para as telas de manutenção existentes; não devem receber novas regras de cálculo.
   - `Migrations/` — migrations EF Core e snapshot (seed incluído)
   - `Tributacao/IRRF/` — scraping e transformação (`TributacaoRFB.cs`, `TributacaoRFBObj.cs`)
   - `DataBase/` — (esperado) contexto `CalculoImpostoContext` (usado pelo EF)
