@@ -107,32 +107,28 @@ public sealed class TabelaManutencaoViewModel : ViewModelBase
     {
         try
         {
-            StatusAtualizacao = "Consultando a tabela oficial...";
+            StatusAtualizacao = "Consultando a fonte oficial e as fontes alternativas...";
             var resultado = Tipo == TipoTabelaTributaria.Inss
-                ? await AtualizarInssAsync()
-                : await AtualizarIrrfAsync();
+                ? await _atualizadorInss.AtualizarAsync(CancellationToken.None)
+                : await _atualizadorIrrf.AtualizarAsync(CancellationToken.None);
             await CarregarAsync(Selecionado?.Id);
-            StatusAtualizacao = $"Dados de {resultado.Competencia:MM/yyyy} atualizados pela fonte oficial ({resultado.QuantidadeFaixas} faixas tributárias importadas).";
+            StatusAtualizacao = DescreverAtualizacao(resultado);
         }
         catch (Exception ex)
         {
             StatusAtualizacao = "A atualização não foi concluída; os dados locais foram preservados.";
-            _notificador.MostrarErro("Não foi possível atualizar a tabela pelo site oficial.", ex);
+            _notificador.MostrarErro("Não foi possível atualizar a tabela pela internet.", ex);
         }
+    }
+    private static string DescreverAtualizacao(AtualizacaoTabelaResultado resultado)
+    {
+        var origem = resultado.Oficial ? "pela fonte oficial" : $"por {string.Join(" e ", resultado.Fontes)}, que já publicaram a tabela";
+        var texto = $"Dados de {resultado.Competencia:MM/yyyy} atualizados {origem} ({resultado.QuantidadeFaixas} faixas tributárias importadas).";
+        return resultado.Observacoes.Count == 0 ? texto : $"{texto} {string.Join(" ", resultado.Observacoes)}";
     }
     private void AbrirFonteOficial()
     {
         Process.Start(new ProcessStartInfo(FonteOficial) { UseShellExecute = true });
-    }
-    private async Task<AtualizacaoOnlineResultado> AtualizarIrrfAsync()
-    {
-        var resultado = await _atualizadorIrrf.AtualizarAsync(CancellationToken.None);
-        return new AtualizacaoOnlineResultado(resultado.Competencia, resultado.QuantidadeFaixas);
-    }
-    private async Task<AtualizacaoOnlineResultado> AtualizarInssAsync()
-    {
-        var resultado = await _atualizadorInss.AtualizarAsync(CancellationToken.None);
-        return new AtualizacaoOnlineResultado(resultado.Competencia, resultado.QuantidadeFaixas);
     }
     private async Task SalvarAsync()
     {
@@ -171,5 +167,4 @@ public sealed class TabelaManutencaoViewModel : ViewModelBase
     {
         Competencia = item.Competencia.ToString("MM/yyyy"); Faixa = item.Faixa?.ToString() ?? "1"; Valor = item.Valor.ToString("N2", Cultura); Aliquota = item.Aliquota?.ToString(FormatoAliquota, Cultura) ?? "0,00"; Deducao = item.Deducao?.ToString("N2", Cultura) ?? "0,00";
     }
-    private sealed record AtualizacaoOnlineResultado(DateOnly Competencia, int QuantidadeFaixas);
 }

@@ -27,9 +27,9 @@ A Calculadora de Imposto reúne, em um único aplicativo para Windows, os cálcu
 - **Simulação tributária:** IRRF pelas modalidades normal e simplificada, INSS por faixas e FGTS de 8% e de 2% (Jovem Aprendiz), com indicação da modalidade de IRRF mais vantajosa.
 - **Pensão alimentícia:** cálculo da pensão e do IRRF considerando que a pensão reduz a base do imposto, nas duas modalidades.
 - **Estabilidade:** indenização do período de estabilidade restante, com 13º salário, férias, adicional de 1/3, FGTS e multa de 40%.
-- **Tabelas e parâmetros:** consulta e manutenção das faixas de INSS e IRRF e dos valores usados nos cálculos, com atualização a partir das fontes oficiais.
+- **Tabelas e parâmetros:** consulta e manutenção das faixas de INSS e IRRF e dos valores usados nos cálculos, com atualização pela internet a partir das fontes oficiais e de fontes alternativas que publicam as tabelas antes.
 
-Todos os cálculos são feitos **no seu computador**. Os dados digitados não são enviados para nenhum servidor; a internet só é usada quando você pede a atualização das tabelas oficiais.
+Todos os cálculos são feitos **no seu computador**. Os dados digitados não são enviados para nenhum servidor; a internet só é usada quando você pede a atualização das tabelas.
 
 ## 2. Antes de começar
 
@@ -198,7 +198,7 @@ O botão **Gerar PDF** cria um demonstrativo com as verbas, os dados considerado
 
 ## 8. Tabelas e parâmetros
 
-As tabelas definem as faixas e os valores usados em todos os cálculos. Elas já vêm preenchidas com o histórico desde 2017, e você pode consultá-las, corrigi-las, incluir novos períodos ou atualizá-las pela fonte oficial.
+As tabelas definem as faixas e os valores usados em todos os cálculos. Elas já vêm preenchidas com o histórico desde 2017, e você pode consultá-las, corrigi-las, incluir novos períodos ou atualizá-las pela internet.
 
 ### 8.1 Conhecendo a janela de uma tabela
 
@@ -212,8 +212,8 @@ As tabelas definem as faixas e os valores usados em todos os cálculos. Elas já
 | 4 | Novo registro | Limpa a seleção e o formulário para você incluir um registro. |
 | 5 | Recarregar lista | Lê novamente os registros do banco, mantendo a linha selecionada. Alterações digitadas e não salvas são descartadas. |
 | 6 | Excluir selecionado | Remove a linha selecionada. Fica desabilitado quando nenhuma linha está selecionada. |
-| 7 | Atualizar tabela oficial | Busca a tabela vigente no site oficial e grava no banco local. |
-| 8 | Abrir página oficial | Abre no navegador a página oficial usada na atualização. |
+| 7 | Atualizar pela internet | Busca a tabela mais recente na fonte oficial e em fontes alternativas e grava no banco local. Veja a seção 8.3. |
+| 8 | Abrir página oficial | Abre no navegador a página oficial consultada na atualização. |
 
 ### 8.2 Incluindo, editando e excluindo registros
 
@@ -225,21 +225,31 @@ O botão de gravação muda de nome conforme a situação, para deixar claro o q
 
 ![Linha selecionada para edição](imagens/11-tabela-inss-edicao.png)
 
-> **Dica:** se uma linha selecionada deixar de existir, por exemplo quando a atualização oficial substitui a tabela da competência, o formulário é limpo e volta ao modo **Incluir registro**. Assim, valores antigos nunca ficam no formulário sem uma linha correspondente.
+> **Dica:** se uma linha selecionada deixar de existir, por exemplo quando a atualização pela internet substitui a tabela da competência, o formulário é limpo e volta ao modo **Incluir registro**. Assim, valores antigos nunca ficam no formulário sem uma linha correspondente.
 
 As alterações passam a valer imediatamente para os próximos cálculos.
 
-### 8.3 Atualizando pela fonte oficial
+### 8.3 Atualizando pela internet
 
-Clique em **Atualizar tabela oficial** com o computador conectado à internet. O aplicativo consulta a página oficial, valida os valores encontrados e só então grava os dados. Ao final, a mensagem abaixo da lista informa a competência importada e a quantidade de faixas:
+Clique em **Atualizar pela internet** com o computador conectado à internet. O aplicativo consulta ao mesmo tempo a fonte oficial e duas fontes alternativas, valida os valores encontrados e só então grava os dados. Ao final, a mensagem abaixo da lista informa a competência importada, de onde ela veio e a quantidade de faixas:
 
-![Atualização pela fonte oficial concluída](imagens/12-atualizacao-oficial.png)
+![Atualização pela internet concluída](imagens/12-atualizacao-oficial.png)
 
-- **Tabela INSS:** a atualização usa a página de contribuição mensal do INSS (gov.br).
-- **Tabela IRRF, Valor simplificado, Dedução por dependente e Redução mensal do IRRF:** a atualização usa a página de tabelas da Receita Federal. Por isso, em qualquer uma dessas telas, a atualização importa de uma só vez as faixas do IRRF, o desconto simplificado, a dedução por dependente e a redução mensal da competência publicada.
-- **Desconto mínimo:** não possui atualização online; mantenha-o manualmente.
+| Tabela | Fonte oficial | Fontes alternativas |
+| --- | --- | --- |
+| Tabela INSS | Página de contribuição mensal do INSS (gov.br) | debit.com.br e contabeis.com.br |
+| Tabela IRRF, Valor simplificado, Dedução por dependente e Redução mensal do IRRF | Página de tabelas da Receita Federal | debit.com.br e contabeis.com.br |
+| Desconto mínimo | Não possui atualização online; mantenha-o manualmente. | — |
 
-Se a página oficial estiver indisponível ou tiver mudado de formato, a atualização é cancelada **sem alterar nenhum dado local**, e uma mensagem explica o motivo.
+**Por que fontes alternativas?** No começo do ano, esses sites costumam publicar as novas tabelas antes das páginas do governo. Para a calculadora não ficar atrasada sem abrir mão da segurança, a atualização segue estas regras:
+
+- A tabela da fonte oficial é usada sempre que for a mais recente.
+- Uma competência mais nova que a da fonte oficial só é importada quando **as duas** fontes alternativas trazem exatamente os mesmos valores. Se apenas uma delas publicou a tabela nova, ou se as duas divergem, ela não é gravada, e a mensagem avisa qual fonte já a mostra.
+- A mensagem sempre informa a origem dos dados, por exemplo: "Dados de 01/2027 atualizados por debit.com.br e contabeis.com.br, que já publicaram a tabela (4 faixas tributárias importadas). A página oficial ainda mostra a tabela de 01/2026."
+
+**Particularidades do IRRF:** a Receita Federal publica de uma só vez as faixas, o desconto simplificado, a dedução por dependente e a redução mensal. Por isso, em qualquer uma dessas telas, a atualização importa todos esses valores da competência publicada. As fontes alternativas publicam apenas as faixas. Quando a tabela vem delas, o desconto simplificado é calculado em 25% do limite da faixa isenta, como determina a lei, e a dedução por dependente e a redução mensal continuam com os valores já cadastrados. Quando a Receita Federal publicar a tabela, atualize novamente para conferir esses valores.
+
+Se nenhuma tabela puder ser confirmada, por exemplo sem conexão ou com páginas fora do ar, a atualização é cancelada **sem alterar nenhum dado local**, e uma mensagem explica o que aconteceu com cada fonte.
 
 ### 8.4 As tabelas disponíveis
 
@@ -301,7 +311,7 @@ Por padrão, o aplicativo desenha a interface sem usar a placa de vídeo, o que 
 | "Os parâmetros da pensão são inválidos." | O percentual deve estar entre 0 e 100, e os outros descontos não podem superar os rendimentos. |
 | "Não há dados de INSS cadastrados para a competência informada." (ou de IRRF e demais tabelas) | Não existe tabela vigente para a competência. Informe uma competência a partir de 01/2017 ou cadastre a tabela correspondente. |
 | "Informe valores válidos para competência e campos numéricos." | Na manutenção de tabelas, confira a competência (MM/AAAA), a faixa (inteiro maior que zero) e os valores. |
-| "Não foi possível atualizar a tabela pelo site oficial." | Verifique a conexão com a internet e tente novamente mais tarde. Os dados locais não foram alterados. Se persistir, a página oficial pode ter mudado de formato: cadastre os valores manualmente. |
+| "Não foi possível atualizar a tabela pela internet." | A mensagem lista o que aconteceu com cada fonte. Verifique a conexão com a internet e tente novamente mais tarde; os dados locais não foram alterados. Se uma fonte alternativa já mostra a tabela nova sem a confirmação da outra, aguarde ou cadastre os valores manualmente. Se o problema persistir, as páginas podem ter mudado de formato: cadastre os valores manualmente. |
 | O botão **Calcular pensão** está desabilitado | Faça primeiro uma simulação tributária na tela principal. |
 | O botão **Gerar PDF** está desabilitado | Faça um cálculo na tela antes de gerar o relatório. |
 | "Não foi possível gerar o relatório em PDF." | Escolha outra pasta, verifique se o arquivo não está aberto em outro programa e se há permissão de gravação. |
@@ -310,7 +320,7 @@ Por padrão, o aplicativo desenha a interface sem usar a placa de vídeo, o que 
 ## 12. Perguntas frequentes
 
 **Os meus dados são enviados para a internet?**
-Não. Os cálculos e as tabelas ficam no seu computador. A internet só é usada quando você clica em **Atualizar tabela oficial** ou em links para páginas oficiais.
+Não. Os cálculos e as tabelas ficam no seu computador. A internet só é usada quando você clica em **Atualizar pela internet**, que apenas lê as páginas das fontes, ou em links para páginas oficiais.
 
 **Por que o total das faixas do IRRF difere em centavos do IRRF final?**
 No detalhamento por faixas, o imposto de cada faixa é arredondado separadamente. O IRRF final é calculado pela fórmula da tabela progressiva (base × alíquota − parcela a deduzir). Por isso pode haver diferença de alguns centavos entre os dois.
@@ -328,7 +338,7 @@ Não. O instalador só copia o banco de dados na primeira instalação; nas atua
 Não. A alteração vale para o próximo cálculo.
 
 **Como volto aos valores originais de uma tabela?**
-Use **Atualizar tabela oficial**, quando disponível, ou corrija os valores manualmente. Ter uma cópia de segurança do arquivo `BancoDados\calculoIrrf.db` permite restaurar o estado anterior.
+Use **Atualizar pela internet**, quando disponível, ou corrija os valores manualmente. Ter uma cópia de segurança do arquivo `BancoDados\calculoIrrf.db` permite restaurar o estado anterior.
 
 ## 13. Atalhos de teclado
 

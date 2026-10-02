@@ -64,7 +64,7 @@
                         <TextBlock Text="{Binding StatusAtualizacao}" Foreground="{DynamicResource MutedTextBrush}" TextWrapping="Wrap"/>
                         <Button Style="{StaticResource LinkButton}" Content="{Binding TextoLinkFonteOficial}" Command="{Binding AbrirFonteOficialCommand}" Margin="0,4,0,0"/>
                     </StackPanel>
-                    <Button Grid.Column="1" Content="Atualizar tabela oficial" Command="{Binding AtualizarDaReceitaCommand}" Style="{StaticResource PrimaryButton}" VerticalAlignment="Center" MinWidth="202"/>
+                    <Button Grid.Column="1" Content="Atualizar pela internet" Command="{Binding AtualizarDaReceitaCommand}" Style="{StaticResource PrimaryButton}" VerticalAlignment="Center" MinWidth="202"/>
                 </Grid>
             </Grid>
         </Border>

@@ -74,7 +74,7 @@ dotnet run --project .\tools\GeradorManual
 - Mantém localmente faixas de INSS e IRRF, dedução por dependente, desconto simplificado, desconto mínimo e redução mensal.
 - Permite incluir, editar e remover registros por competência.
 - Inicializa dados históricos de forma idempotente, sem sobrescrever manutenções locais.
-- Atualiza tabelas de INSS e IRRF a partir das fontes oficiais configuradas na aplicação; em caso de falha, preserva os dados locais.
+- Atualiza tabelas de INSS e IRRF pela fonte oficial ou, quando ela ainda não publicou a tabela do ano, por duas fontes alternativas que concordem entre si; em caso de falha, preserva os dados locais.
 
 ### Experiência de uso
 
@@ -97,7 +97,7 @@ dotnet run --project .\tools\GeradorManual
 | [SQLite](https://www.sqlite.org/) | — | Banco de dados local das tabelas tributárias. |
 | [Microsoft.Data.Sqlite](https://learn.microsoft.com/dotnet/standard/data/sqlite/) | 9.0.2 | Acesso direto ao SQLite, com as tabelas mantidas em memória entre os cálculos. |
 | [QuestPDF](https://www.questpdf.com/) | 2025.12.1 | Geração dos relatórios PDF. |
-| [Html Agility Pack](https://html-agility-pack.net/) | 1.11.74 | Leitura das fontes HTML usadas nas atualizações oficiais. |
+| [Html Agility Pack](https://html-agility-pack.net/) | 1.11.74 | Leitura das páginas HTML usadas na atualização das tabelas. |
 
 ## Arquitetura
 
@@ -107,7 +107,7 @@ O projeto aplica uma separação pragmática em camadas. O domínio não depende
 CalculoIRRF/
 ├── Domain/              Regras tributárias e de estabilidade independentes de UI e infraestrutura
 ├── Application/         Casos de uso, DTOs e portas de entrada/saída
-├── Infrastructure/      SQLite, atualizadores oficiais e relatórios PDF
+├── Infrastructure/      SQLite, atualização das tabelas pela internet e relatórios PDF
 ├── Presentation/        MVVM, serviços WPF, comportamentos e gerenciamento de tema
 ├── Views/               Janelas e composição visual em XAML
 ├── Assets/              Logos e ícones para os temas claro e escuro
@@ -211,9 +211,23 @@ Se a tag já estiver no GitHub sem o release, por exemplo porque a conexão caiu
 
 O nome `calculoIrrf.db` é mantido para preservar compatibilidade com instalações existentes.
 
-## Atualização das tabelas oficiais
+## Atualização das tabelas pela internet
 
-A atualização online consulta as fontes oficiais configuradas para INSS e IRRF. Como a estrutura das páginas públicas pode mudar, a operação é tratada como complementar: uma falha de consulta não substitui, apaga nem invalida os registros locais já existentes.
+No começo do ano, alguns sites publicam as novas tabelas de INSS e IRRF antes das páginas do governo. Para a calculadora não ficar atrasada, a atualização consulta em paralelo a fonte oficial e duas fontes alternativas:
+
+| Tabela | Fonte oficial | Fontes alternativas |
+| --- | --- | --- |
+| INSS | [gov.br/inss](https://www.gov.br/inss/pt-br/direitos-e-deveres/inscricao-e-contribuicao/tabela-de-contribuicao-mensal) | [debit.com.br](https://www.debit.com.br/tabelas/tabelas-inss) e [contabeis.com.br](https://www.contabeis.com.br/tabelas/inss/) |
+| IRRF | [Receita Federal](https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas) | [debit.com.br](https://www.debit.com.br/tabelas/tabelas-irrf) e [contabeis.com.br](https://www.contabeis.com.br/tabelas/imposto-renda/) |
+
+A tabela gravada é a de competência mais recente que tenha sido confirmada:
+
+- a da fonte oficial vale sozinha;
+- sem ela, a tabela só é aceita quando as duas fontes alternativas trazem exatamente os mesmos valores. Uma fonte sozinha, ou fontes que divergem, não alteram o banco, e a mensagem avisa qual fonte já tem a tabela nova.
+
+As fontes alternativas do IRRF publicam apenas as faixas. Nesse caso, o desconto simplificado é calculado em 25% do limite da faixa isenta, como determina a Lei 9.250/1995, e a dedução por dependente e a redução mensal continuam com os valores cadastrados.
+
+Cada fonte é lida por uma classe em `Infrastructure/Tributacao/Fontes`, e a escolha entre elas fica em `ConsultaDeFontes`. Como a estrutura das páginas públicas pode mudar, uma fonte com falha é apenas ignorada; se nenhuma tabela for confirmada, nada é gravado e a mensagem explica o que aconteceu com cada fonte.
 
 Revise os valores atualizados antes de utilizá-los em cálculos que exijam precisão legal ou contábil.
 
@@ -230,4 +244,4 @@ O aplicativo seleciona automaticamente a logo apropriada ao tema ativo. Os arqui
 - A aplicação não substitui sistemas de folha de pagamento, contadores ou orientação jurídica.
 - A exatidão da simulação depende da competência e dos parâmetros tributários mantidos no banco local.
 - No cálculo de estabilidade, cabe ao usuário informar corretamente as datas, a média remuneratória, os dias-base e os complementos aplicáveis ao vínculo.
-- Atualizações online dependem da disponibilidade e da estrutura das páginas das fontes oficiais.
+- Atualizações online dependem da disponibilidade e da estrutura das páginas das fontes oficiais e alternativas.

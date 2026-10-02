@@ -5,7 +5,5 @@ public interface IAtualizadorTabelaInss
 {
     Uri FonteOficial { get; }
 
-    Task<AtualizacaoTabelaInssResultado> AtualizarAsync(CancellationToken cancellationToken);
+    Task<AtualizacaoTabelaResultado> AtualizarAsync(CancellationToken cancellationToken);
 }
-
-public sealed record AtualizacaoTabelaInssResultado(DateOnly Competencia, int QuantidadeFaixas, Uri Fonte);
