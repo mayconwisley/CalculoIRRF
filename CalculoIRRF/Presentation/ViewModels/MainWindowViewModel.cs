@@ -7,7 +7,6 @@ using CalculoIRRF.Presentation.Mvvm;
 using CalculoIRRF.Presentation.Services;
 using System.Globalization;
 using System.Runtime.Versioning;
-using System.Text;
 using System.Windows.Input;
 
 namespace CalculoIRRF.Presentation.ViewModels;
@@ -25,7 +24,6 @@ public sealed class MainWindowViewModel : ViewModelBase
     private string _valorBruto = "0,00";
     private string _baseInss = "0,00";
     private string _dependentes = "0";
-    private string _resultado = "Informe os valores e selecione Calcular.";
     private bool _podeCalcularPensao;
     private ThemeMode _temaSelecionado = ThemeManager.CurrentMode;
     private SimulacaoImpostoDto? _ultimaSimulacao;
@@ -68,7 +66,6 @@ public sealed class MainWindowViewModel : ViewModelBase
     }
     public string BaseInss { get => _baseInss; set => SetProperty(ref _baseInss, value); }
     public string Dependentes { get => _dependentes; set => SetProperty(ref _dependentes, value); }
-    public string Resultado { get => _resultado; private set => SetProperty(ref _resultado, value); }
     public bool TemResultado { get => _temResultado; private set => SetProperty(ref _temResultado, value); }
     public IReadOnlyList<IndicadorResumoViewModel> IndicadoresResumo { get => _indicadoresResumo; private set => SetProperty(ref _indicadoresResumo, value); }
     public IReadOnlyList<ComparativoIrrfViewModel> ComparativoIrrf { get => _comparativoIrrf; private set => SetProperty(ref _comparativoIrrf, value); }
@@ -106,7 +103,6 @@ public sealed class MainWindowViewModel : ViewModelBase
         {
             var resultado = await _simularImposto.ExecutarAsync(entrada, CancellationToken.None);
             _ultimaSimulacao = resultado;
-            Resultado = Formatar(resultado);
             AtualizarApresentacao(resultado);
             PodeCalcularPensao = true;
             ((AsyncRelayCommand)ExportarPdfCommand).RaiseCanExecuteChanged();
@@ -232,48 +228,4 @@ public sealed class MainWindowViewModel : ViewModelBase
 
     private static string Moeda(decimal valor) => valor.ToString("C2", CulturaPtBr);
     private static string Percentual(decimal valor) => valor.ToString("N2", CulturaPtBr) + "%";
-
-    private static string Formatar(SimulacaoImpostoDto simulacao)
-    {
-        var texto = new StringBuilder();
-        texto.AppendLine("INFORMAÇÕES DO CÁLCULO").AppendLine();
-        texto.AppendLine($"Valor bruto: {simulacao.Entrada.ValorBruto:N2}");
-        texto.AppendLine($"Base INSS considerada: {simulacao.BaseInssConsiderada:N2}");
-        texto.AppendLine($"Valor INSS: {simulacao.ValorInss:N2}").AppendLine();
-        AdicionarModalidade(texto, simulacao.Normal, simulacao.Entrada.QuantidadeDependentes, simulacao.Entrada.ValorBruto);
-        AdicionarModalidade(texto, simulacao.Simplificada, 0, simulacao.Entrada.ValorBruto);
-        texto.AppendLine($"Vantagem: {simulacao.MensagemVantagem}").AppendLine();
-        AdicionarDetalhes(texto, "IR normal progressivo", simulacao.Normal.DetalhesProgressivos);
-        AdicionarDetalhes(texto, "IR simplificado progressivo", simulacao.Simplificada.DetalhesProgressivos);
-        AdicionarDetalhes(texto, "INSS progressivo", simulacao.DetalhesInss);
-        texto.AppendLine($"FGTS 8%: {simulacao.FgtsOitoPorCento:N2}");
-        texto.AppendLine($"FGTS Jovem Aprendiz (2%): {simulacao.FgtsDoisPorCento:N2}");
-        return texto.ToString();
-    }
-
-    private static void AdicionarModalidade(StringBuilder texto, ModalidadeIrrfDto modalidade, int dependentes, decimal valorBruto)
-    {
-        texto.AppendLine($"IR {modalidade.Nome}");
-        texto.AppendLine($"Base de cálculo: {modalidade.BaseCalculo:N2}");
-        texto.AppendLine($"Alíquota: {modalidade.Aliquota:N2}% | Dedução: {modalidade.Deducao:N2}");
-        texto.AppendLine($"Imposto pela tabela progressiva: {modalidade.ImpostoAntesReducao:N2}");
-        texto.AppendLine($"Redução mensal do IRRF: {modalidade.ReducaoMensal:N2}");
-        texto.AppendLine($"Imposto final: {modalidade.Imposto:N2} | Alíquota efetiva: {modalidade.AliquotaEfetiva:N2}%").AppendLine();
-    }
-
-    private static void AdicionarDetalhes(StringBuilder texto, string titulo, IReadOnlyList<DetalheFaixaDto> detalhes)
-    {
-        texto.AppendLine(titulo.ToUpperInvariant());
-        if (detalhes.Count == 0)
-            texto.AppendLine("Sem cálculo aplicável.").AppendLine();
-        else
-        {
-            foreach (var detalhe in detalhes)
-                texto.AppendLine($"Faixa {detalhe.Faixa}: base {detalhe.BaseCalculada:N2} | {detalhe.Aliquota:N2}% | imposto {detalhe.Imposto:N2}");
-
-            var totalImposto = detalhes.Sum(detalhe => detalhe.Imposto);
-            texto.AppendLine($"Total do imposto: {totalImposto:N2}");
-            texto.AppendLine();
-        }
-    }
 }

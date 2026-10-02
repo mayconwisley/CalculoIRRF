@@ -6,7 +6,6 @@ using CalculoIRRF.Application.UseCases;
 using CalculoIRRF.Presentation.Mvvm;
 using CalculoIRRF.Presentation.Services;
 using System.Globalization;
-using System.Text;
 using System.Windows.Input;
 
 namespace CalculoIRRF.Presentation.ViewModels;
@@ -21,7 +20,6 @@ public sealed class PensaoViewModel : ViewModelBase
     private readonly IArquivoDialogService _arquivoDialog;
     private string _percentual = "0,00";
     private string _outrosDescontos = "0,00";
-    private string _resultado = "Informe o percentual da pensão para calcular.";
     private SimulacaoPensaoDto? _ultimaSimulacao;
     private EntradaPensaoDto? _ultimaEntrada;
     private bool _ultimoCalculoDetalhado;
@@ -42,7 +40,6 @@ public sealed class PensaoViewModel : ViewModelBase
     public string Percentual { get => _percentual; set => SetProperty(ref _percentual, value); }
     public string OutrosDescontos { get => _outrosDescontos; set => SetProperty(ref _outrosDescontos, value); }
     public string ValorBruto => _entrada.ValorBruto.ToString("N2", Cultura);
-    public string Resultado { get => _resultado; private set => SetProperty(ref _resultado, value); }
     public bool TemResultado { get => _temResultado; private set => SetProperty(ref _temResultado, value); }
     public bool TemMemoria { get => _temMemoria; private set => SetProperty(ref _temMemoria, value); }
     public string MensagemMemoria { get => _mensagemMemoria; private set => SetProperty(ref _mensagemMemoria, value); }
@@ -61,7 +58,6 @@ public sealed class PensaoViewModel : ViewModelBase
             _ultimaSimulacao = resultado;
             _ultimaEntrada = new EntradaPensaoDto(_entrada.Competencia, _entrada.ValorBruto, _entrada.BaseInss, _entrada.Dependentes, percentual, descontos);
             _ultimoCalculoDetalhado = detalhar;
-            Resultado = Formatar(resultado, detalhar);
             AtualizarApresentacao(resultado, _ultimaEntrada, detalhar);
             ((AsyncRelayCommand)ExportarPdfCommand).RaiseCanExecuteChanged();
         }
@@ -139,21 +135,5 @@ public sealed class PensaoViewModel : ViewModelBase
         {
             _notificador.MostrarErro("Não foi possível gerar o relatório em PDF.", exception);
         }
-    }
-    private static string Formatar(SimulacaoPensaoDto resultado, bool detalhar)
-    {
-        var texto = new StringBuilder($"INSS: {resultado.ValorInss:N2}\n\n");
-        foreach (var item in new[] { resultado.Normal, resultado.Simplificada })
-        {
-            texto.AppendLine($"{item.Nome}\nIRRF progressivo: {item.ImpostoAntesReducao:N2}\nRedução mensal: {item.ReducaoMensal:N2}\nIRRF final: {item.Imposto:N2}\nPensão: {item.Pensao:N2}\nTotal: {item.Total:N2}\nIterações: {item.Iteracoes}");
-            if (detalhar)
-            {
-                texto.AppendLine();
-                foreach (var detalhe in item.Detalhes)
-                    texto.AppendLine($"{detalhe.Sequencia}º: Base IR {detalhe.BaseIrrf:N2} | {detalhe.Aliquota:N2}% | Dedução {detalhe.Deducao:N2}\n    IR progressivo {detalhe.ImpostoAntesReducao:N2} | Redução {detalhe.ReducaoMensal:N2} | IR final {detalhe.Imposto:N2}\n    Base pensão {detalhe.BasePensao:N2} | Pensão {detalhe.Pensao:N2}");
-            }
-            texto.AppendLine();
-        }
-        return texto.Append($"{resultado.MensagemVantagem}").ToString();
     }
 }

@@ -85,6 +85,8 @@ public sealed class QuestPdfRelatorioPdfService : IRelatorioPdfService
         return Task.Run(() =>
         {
             cancellationToken.ThrowIfCancellationRequested();
+            // Definida aqui, e não na abertura do app, para que o QuestPDF e sua biblioteca nativa só sejam carregados ao gerar um PDF.
+            QuestPDF.Settings.License = LicenseType.Community;
             Document.Create(criarDocumento).GeneratePdf(caminhoArquivo);
         }, cancellationToken);
     }

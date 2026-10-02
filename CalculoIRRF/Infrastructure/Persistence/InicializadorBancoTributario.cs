@@ -6,9 +6,12 @@ namespace CalculoIRRF.Infrastructure.Persistence;
 /// <summary>
 /// Popula de forma idempotente as tabelas históricas do INSS e do IRRF.
 /// Os registros existentes são preservados para não sobrescrever manutenções locais.
+/// A carga só é executada quando o banco ainda não está na <see cref="VersaoSementes"/> atual.
 /// </summary>
 public sealed class InicializadorBancoTributario(CalculoIrrfDbContext context) : IInicializadorBancoTributario
 {
+    /// <summary>Incremente ao alterar as sementes ou os scripts abaixo, para que bancos existentes recebam a nova carga.</summary>
+    private const int VersaoSementes = 1;
     private const double LimiteUltimaFaixaIrrf = 9_999_999_999_999.99d;
 
     private static readonly SementeFaixa[] FaixasInss =
@@ -42,11 +45,31 @@ public sealed class InicializadorBancoTributario(CalculoIrrfDbContext context) :
 
     public async Task InicializarAsync(CancellationToken cancellationToken)
     {
+        if (await ObterVersaoBancoAsync(cancellationToken) >= VersaoSementes)
+            return;
+
         await CriarTabelaReducaoMensalAsync(cancellationToken);
         await CorrigirOuInserirReducaoMensal2026Async(cancellationToken);
         await InserirFaixasInssAusentesAsync(cancellationToken);
         await InserirFaixasIrrfAusentesAsync(cancellationToken);
         await InserirParametrosAusentesAsync(cancellationToken);
+        await context.Database.ExecuteSqlRawAsync($"PRAGMA user_version = {VersaoSementes}", cancellationToken);
+    }
+
+    // Lido por ADO.NET para não construir o modelo nem compilar consultas do EF Core na abertura quando não há carga a fazer.
+    private async Task<int> ObterVersaoBancoAsync(CancellationToken cancellationToken)
+    {
+        await context.Database.OpenConnectionAsync(cancellationToken);
+        try
+        {
+            await using var comando = context.Database.GetDbConnection().CreateCommand();
+            comando.CommandText = "PRAGMA user_version";
+            return Convert.ToInt32(await comando.ExecuteScalarAsync(cancellationToken));
+        }
+        finally
+        {
+            await context.Database.CloseConnectionAsync();
+        }
     }
 
     private Task CriarTabelaReducaoMensalAsync(CancellationToken cancellationToken) => context.Database.ExecuteSqlRawAsync("""
