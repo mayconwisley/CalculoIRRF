@@ -14,6 +14,7 @@
     <Content Include="calculator.ico" />
     <Content Include="Assets\icon-light.ico" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="Assets\icon-dark.ico" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\docs\ManualDoUsuario.pdf" Link="Manual\ManualDoUsuario.pdf" CopyToOutputDirectory="PreserveNewest" Condition="Exists('..\docs\ManualDoUsuario.pdf')" />
     <Resource Include="Assets\logo-light.png" />
     <Resource Include="Assets\logo-dark.png" />
   </ItemGroup>

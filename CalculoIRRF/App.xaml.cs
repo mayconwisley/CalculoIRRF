@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Runtime.Versioning;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Markup;
 using System.Windows.Media;
@@ -32,6 +33,9 @@ public partial class App : System.Windows.Application
         if (!ThemeManager.UseHardwareAcceleration)
             RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
         _serviceProvider = ConfigureServices();
+        // ApplicationCommands.Help já responde ao F1; registrado em Window, vale para todas as janelas e para o botão "Manual".
+        var manual = _serviceProvider.GetRequiredService<IManualUsuarioService>();
+        CommandManager.RegisterClassCommandBinding(typeof(Window), new CommandBinding(ApplicationCommands.Help, (_, _) => manual.Abrir()));
         _applicationScope = _serviceProvider.CreateScope();
         _applicationScope.ServiceProvider.GetRequiredService<IInicializadorBancoTributario>()
             .InicializarAsync(CancellationToken.None).GetAwaiter().GetResult();
@@ -54,6 +58,7 @@ public partial class App : System.Windows.Application
         .AddScoped<IEstabilidadeViewModelFactory, EstabilidadeViewModelFactory>()
         .AddSingleton<IUserNotifier, WpfUserNotifier>()
         .AddSingleton<IArquivoDialogService, WpfArquivoDialogService>()
+        .AddSingleton<IManualUsuarioService, WpfManualUsuarioService>()
         .AddSingleton<IRelatorioPdfService, QuestPdfRelatorioPdfService>()
         .AddScoped<IWindowNavigator, WpfWindowNavigator>()
         .AddScoped<ISimularImpostoUseCase, SimularImpostoUseCase>()

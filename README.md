@@ -25,6 +25,16 @@ A **Calculadora de Imposto** é uma central de cálculos trabalhistas e tributá
 
 > Os resultados têm caráter de simulação. A conferência com a legislação vigente, o vínculo empregatício e os dados da competência continua sendo indispensável.
 
+## Manual do usuário
+
+O passo a passo completo de cada tela, com prints, está no **[Manual do Usuário](docs/MANUAL.md)**, também disponível em **[PDF](docs/ManualDoUsuario.pdf)**. No aplicativo, o manual abre pelo botão **Manual do usuário** ou pela tecla **F1**, em qualquer janela.
+
+O PDF é gerado a partir do Markdown. Depois de editar `docs/MANUAL.md` ou as imagens em `docs/imagens`, regenere-o na raiz do repositório:
+
+```powershell
+dotnet run --project .\tools\GeradorManual
+```
+
 ## Recursos
 
 ### Simulação tributária
@@ -59,6 +69,7 @@ A **Calculadora de Imposto** é uma central de cálculos trabalhistas e tributá
 
 ### Experiência de uso
 
+- Manual do usuário integrado: botão no cabeçalho e tecla F1 em qualquer janela.
 - Tema claro, escuro e automático, seguindo a preferência do Windows no modo automático.
 - Barras de rolagem finas e arredondadas, no padrão atual do Windows, com cores ajustadas a cada tema.
 - Valores formatados no padrão brasileiro em todas as telas, inclusive nas tabelas de manutenção.
