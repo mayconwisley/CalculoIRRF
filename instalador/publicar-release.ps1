@@ -34,8 +34,21 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-# IDEs e ferramentas do git leem a saída do hook por pipe, em UTF-8; no console, o PowerShell já escreve em Unicode.
-if ([Console]::IsOutputRedirected) { [Console]::OutputEncoding = New-Object Text.UTF8Encoding $false }
+# No console, o PowerShell escreve em Unicode e os acentos aparecem normalmente. Por pipe, cada programa decodifica
+# a saída do hook de um jeito: o VS Code usa UTF-8, e o Console do Gerenciador de Pacotes do Visual Studio usa a
+# página de código ANSI. Para ficar legível em todos, as mensagens saem sem acentos nesse caso.
+if ([Console]::IsOutputRedirected) {
+    [Console]::OutputEncoding = New-Object Text.UTF8Encoding $false
+    function Remove-Acentos([string] $texto) { $texto.Normalize([Text.NormalizationForm]::FormD) -replace '\p{Mn}', '' }
+    # Valem também para gerar-instalador.ps1, que roda neste mesmo processo.
+    function Write-Host {
+        param([Parameter(Position = 0, ValueFromRemainingArguments = $true)] [object[]] $Object, [ConsoleColor] $ForegroundColor)
+        Microsoft.PowerShell.Utility\Write-Host (Remove-Acentos "$Object")
+    }
+    function Write-Warning([string] $Message) { Microsoft.PowerShell.Utility\Write-Warning (Remove-Acentos $Message) }
+    # Repassa a saída do dotnet, do git e do Inno Setup, que pode vir em português.
+    function Out-Host { process { Microsoft.PowerShell.Core\Out-Host -InputObject (Remove-Acentos "$_") } }
+}
 $raiz = Split-Path $PSScriptRoot -Parent
 $artefatos = Join-Path $raiz 'artefatos'
 $padraoTag = '^v(\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?)$'

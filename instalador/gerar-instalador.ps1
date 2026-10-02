@@ -18,7 +18,8 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-# IDEs e ferramentas do git leem a saída do hook por pipe, em UTF-8; no console, o PowerShell já escreve em Unicode.
+# Por pipe, a saída vai em UTF-8; no console, o PowerShell já escreve em Unicode.
+# Quando roda pelo hook, publicar-release.ps1 também tira os acentos das mensagens.
 if ([Console]::IsOutputRedirected) { [Console]::OutputEncoding = New-Object Text.UTF8Encoding $false }
 # No Windows PowerShell 5.1, $PSScriptRoot ainda não existe nos valores padrão do bloco param.
 if (-not $Raiz) { $Raiz = Split-Path $PSScriptRoot -Parent }
@@ -70,7 +71,7 @@ try {
 
     New-Item -ItemType Directory -Force -Path $Saida | Out-Null
     Write-Host "==> Compilando o instalador com $iscc..."
-    & $iscc /Qp "/DAppVersion=$Versao" "/DAppVersionNumeric=$versaoNumerica" "/DPublishDir=$publicacao" "/DOutputDir=$Saida" $script | Out-Host
+    & $iscc /Q "/DAppVersion=$Versao" "/DAppVersionNumeric=$versaoNumerica" "/DPublishDir=$publicacao" "/DOutputDir=$Saida" $script | Out-Host
     if ($LASTEXITCODE -ne 0) { throw "O Inno Setup não conseguiu compilar o instalador (código $LASTEXITCODE)." }
 }
 finally {
