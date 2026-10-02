@@ -196,8 +196,8 @@ public sealed class MainWindowViewModel : ViewModelBase
 
         MemoriaIrrf =
         [
-            CriarMemoriaIrrf(simulacao.Normal),
-            CriarMemoriaIrrf(simulacao.Simplificada)
+            CriarMemoriaIrrf(simulacao.Normal, FormulaBaseIrrf.Normal(simulacao, Moeda)),
+            CriarMemoriaIrrf(simulacao.Simplificada, FormulaBaseIrrf.Simplificada(simulacao, Moeda))
         ];
 
         MemoriaTributaria =
@@ -220,10 +220,10 @@ public sealed class MainWindowViewModel : ViewModelBase
     private static SecaoMemoriaTributariaViewModel CriarSecaoMemoria(string titulo, IReadOnlyList<DetalheFaixaDto> detalhes) =>
         new(titulo, Moeda(detalhes.Sum(detalhe => detalhe.Imposto)), detalhes.Select(detalhe => new LinhaFaixaTributariaViewModel($"Faixa {detalhe.Faixa}", Moeda(detalhe.BaseCalculada), Percentual(detalhe.Aliquota), Moeda(detalhe.Imposto))).ToArray());
 
-    private static SecaoMemoriaIrrfViewModel CriarMemoriaIrrf(ModalidadeIrrfDto modalidade) =>
+    private static SecaoMemoriaIrrfViewModel CriarMemoriaIrrf(ModalidadeIrrfDto modalidade, string formulaBase) =>
         new($"IRRF {modalidade.Nome}", $"IRRF final: {Moeda(modalidade.Imposto)}",
         [
-            new("Base de cálculo", Moeda(modalidade.BaseCalculo)),
+            new("Base de cálculo", formulaBase),
             new("IR progressivo", $"{Moeda(modalidade.BaseCalculo)} x {Percentual(modalidade.Aliquota)} - {Moeda(modalidade.Deducao)} = {Moeda(modalidade.ImpostoAntesReducao)}"),
             new("Redução mensal", $"{Moeda(modalidade.ImpostoAntesReducao)} - {Moeda(modalidade.ReducaoMensal)} = {Moeda(modalidade.Imposto)}")
         ]);

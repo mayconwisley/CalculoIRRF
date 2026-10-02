@@ -115,7 +115,7 @@ Role a área de resultado para ver a **memória de cálculo**, que mostra passo 
 
 Para cada modalidade de IRRF são exibidos:
 
-- **Base de cálculo:** o valor sobre o qual o imposto incide.
+- **Base de cálculo:** o valor sobre o qual o imposto incide, com cada dedução identificada. Na modalidade normal, o valor bruto menos o INSS e a dedução por dependente multiplicada pela quantidade de dependentes; na simplificada, o valor bruto menos o desconto simplificado. A base nunca fica negativa: quando as deduções superam o valor bruto, ela é zero.
 - **IR progressivo:** base × alíquota da faixa − parcela a deduzir.
 - **Redução mensal:** desconto aplicado ao imposto, quando previsto para a competência.
 

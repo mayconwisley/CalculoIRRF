@@ -30,8 +30,8 @@ public sealed class QuestPdfRelatorioPdfService : IRelatorioPdfService
                 coluna.Spacing(16);
                 coluna.Item().Element(container => CriarResumoImposto(container, simulacao));
                 coluna.Item().Element(container => CriarComparativoIrrf(container, simulacao));
-                coluna.Item().Element(container => CriarMemoriaIrrf(container, simulacao, simulacao.Normal));
-                coluna.Item().Element(container => CriarMemoriaIrrf(container, simulacao, simulacao.Simplificada));
+                coluna.Item().Element(container => CriarMemoriaIrrf(container, simulacao.Normal, FormulaBaseIrrf.Normal(simulacao, Moeda)));
+                coluna.Item().Element(container => CriarMemoriaIrrf(container, simulacao.Simplificada, FormulaBaseIrrf.Simplificada(simulacao, Moeda)));
                 coluna.Item().Element(container => CriarDetalhesFaixas(container, "Detalhamento do INSS", simulacao.DetalhesInss));
                 coluna.Item().Element(container => CriarDetalhesFaixas(container, "IRRF normal - cálculo progressivo", simulacao.Normal.DetalhesProgressivos));
                 coluna.Item().Element(container => CriarDetalhesFaixas(container, "IRRF simplificado - cálculo progressivo", simulacao.Simplificada.DetalhesProgressivos));
@@ -217,24 +217,15 @@ public sealed class QuestPdfRelatorioPdfService : IRelatorioPdfService
         CelulaTabela(tabela.Cell(), Moeda(modalidade.Imposto), ehMaisVantajosa);
     }
 
-    private static void CriarMemoriaIrrf(IContainer container, SimulacaoImpostoDto simulacao, ModalidadeIrrfDto modalidade)
+    private static void CriarMemoriaIrrf(IContainer container, ModalidadeIrrfDto modalidade, string formulaBase)
     {
-        var ehNormal = modalidade.Nome.Equals("Normal", StringComparison.OrdinalIgnoreCase);
-        var deducaoDaBase = ehNormal
-            ? simulacao.Entrada.ValorBruto - simulacao.ValorInss - modalidade.BaseCalculo
-            : simulacao.Entrada.ValorBruto - modalidade.BaseCalculo;
-        var formulaBase = ehNormal
-            ? $"{Moeda(simulacao.Entrada.ValorBruto)} - {Moeda(simulacao.ValorInss)} - {Moeda(deducaoDaBase)} = {Moeda(modalidade.BaseCalculo)}"
-            : $"{Moeda(simulacao.Entrada.ValorBruto)} - {Moeda(deducaoDaBase)} = {Moeda(modalidade.BaseCalculo)}";
-        var tituloBase = ehNormal ? "Valor bruto - INSS - dedução por dependentes" : "Valor bruto - desconto simplificado";
-
         CriarSecao(container, $"Memória de cálculo do IRRF - {modalidade.Nome}", secao => secao.Border(1).BorderColor(CinzaBorda).Column(cartao =>
         {
             cartao.Item().Background(AzulPrimario).Padding(6).Text("Cálculo consolidado").FontColor(Colors.White).SemiBold();
             cartao.Item().Padding(8).Column(memoria =>
             {
                 memoria.Spacing(3);
-                AdicionarFormulaIrrf(memoria, tituloBase, formulaBase);
+                AdicionarFormulaIrrf(memoria, "Base de cálculo", formulaBase);
                 AdicionarFormulaIrrf(memoria, "IR progressivo", $"{Moeda(modalidade.BaseCalculo)} x {Percentual(modalidade.Aliquota)} - {Moeda(modalidade.Deducao)} = {Moeda(modalidade.ImpostoAntesReducao)}");
                 AdicionarFormulaIrrf(memoria, "IRRF após redução mensal", $"{Moeda(modalidade.ImpostoAntesReducao)} - {Moeda(modalidade.ReducaoMensal)} = {Moeda(modalidade.Imposto)}");
             });

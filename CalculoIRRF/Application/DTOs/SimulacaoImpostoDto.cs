@@ -15,6 +15,8 @@ public sealed record ModalidadeIrrfDto(
     decimal AliquotaEfetiva,
     IReadOnlyList<DetalheFaixaDto> DetalhesProgressivos);
 
+/// <param name="DeducaoPorDependente">Valor da tabela deduzido da base normal para cada dependente.</param>
+/// <param name="DescontoSimplificado">Valor da tabela deduzido da base simplificada; nulo antes de 05/2023, quando a modalidade não existia.</param>
 public sealed record SimulacaoImpostoDto(
     SimularImpostoRequest Entrada,
     decimal BaseInssConsiderada,
@@ -26,4 +28,6 @@ public sealed record SimulacaoImpostoDto(
     decimal FgtsDoisPorCento,
     string MensagemVantagem,
     string? ModalidadeMaisVantajosa,
-    IReadOnlyList<DetalheFaixaDto> DetalhesInss);
+    IReadOnlyList<DetalheFaixaDto> DetalhesInss,
+    decimal DeducaoPorDependente,
+    decimal? DescontoSimplificado);

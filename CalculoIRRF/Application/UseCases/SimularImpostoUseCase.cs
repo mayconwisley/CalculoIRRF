@@ -44,7 +44,9 @@ public sealed class SimularImpostoUseCase(ITributacaoConsulta tributacaoConsulta
             CalculadoraTributacao.Arredondar(request.BaseInss * .02m),
             vantagem,
             modalidadeMaisVantajosa,
-            detalhesInss.Select(Mapear).ToArray());
+            detalhesInss.Select(Mapear).ToArray(),
+            perfil.DeducaoPorDependente,
+            simplificadoDisponivel ? perfil.DeducaoSimplificada : null);
     }
 
     private static ModalidadeIrrfDto CalcularModalidade(
