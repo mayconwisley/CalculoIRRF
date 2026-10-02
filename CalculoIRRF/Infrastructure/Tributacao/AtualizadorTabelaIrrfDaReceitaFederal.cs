@@ -17,24 +17,37 @@ namespace CalculoIRRF.Infrastructure.Tributacao;
 /// Adaptador da fonte pública oficial. A gravação só ocorre após a página e todos os valores
 /// obrigatórios serem validados, preservando a última tabela local em caso de falha da fonte.
 /// </summary>
-public sealed class AtualizadorTabelaIrrfDaReceitaFederal(
-    HttpClient httpClient,
-    CalculoIrrfDbContext context) : IAtualizadorTabelaIrrf
+public sealed partial class AtualizadorTabelaIrrfDaReceitaFederal(
+    Func<HttpClient> criarHttpClient,
+    IDbContextFactory<CalculoIrrfDbContext> contextFactory,
+    ICacheTabelasTributarias cache) : IAtualizadorTabelaIrrf
 {
     private const string CatalogoUrl = "https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas";
     private const decimal LimiteUltimaFaixa = 9_999_999_999_999.99m;
     private static readonly CultureInfo Cultura = CultureInfo.GetCultureInfo("pt-BR");
-    private static readonly Regex AnoNaUrl = new(@"/tabelas/(?<ano>20\d{2})/?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-    private static readonly Regex ValorMonetario = new(@"\d{1,3}(?:\.\d{3})*,\d{2}", RegexOptions.Compiled);
-    private static readonly Regex Percentual = new(@"\d{1,2}(?:,\d+)?", RegexOptions.Compiled);
-    private static readonly Regex MultiplicadorReducao = new(@"0,\d{3,6}", RegexOptions.Compiled);
+
+    [GeneratedRegex(@"/tabelas/(?<ano>20\d{2})/?$", RegexOptions.IgnoreCase)]
+    private static partial Regex AnoNaUrl { get; }
+
+    [GeneratedRegex(@"\d{1,3}(?:\.\d{3})*,\d{2}")]
+    private static partial Regex ValorMonetario { get; }
+
+    [GeneratedRegex(@"\d{1,2}(?:,\d+)?")]
+    private static partial Regex Percentual { get; }
+
+    [GeneratedRegex(@"0,\d{3,6}")]
+    private static partial Regex MultiplicadorReducao { get; }
+
+    [GeneratedRegex(@"a partir de (?:janeiro de )?(?<ano>20\d{2})", RegexOptions.IgnoreCase)]
+    private static partial Regex VigenciaAPartirDe { get; }
 
     public Uri FonteOficial => new(CatalogoUrl);
 
     public async Task<AtualizacaoTabelaIrrfResultado> AtualizarAsync(CancellationToken cancellationToken)
     {
-        var fonte = await ObterPaginaMaisRecenteAsync(cancellationToken);
-        var documento = await ObterDocumentoAsync(fonte, cancellationToken);
+        using var httpClient = criarHttpClient();
+        var fonte = await ObterPaginaMaisRecenteAsync(httpClient, cancellationToken);
+        var documento = await ObterDocumentoAsync(httpClient, fonte, cancellationToken);
         var tabela = ExtrairTabela(documento, fonte);
 
         await PersistirAsync(tabela, cancellationToken);
@@ -42,9 +55,9 @@ public sealed class AtualizadorTabelaIrrfDaReceitaFederal(
         return new AtualizacaoTabelaIrrfResultado(tabela.Competencia, tabela.Faixas.Count, fonte);
     }
 
-    private async Task<Uri> ObterPaginaMaisRecenteAsync(CancellationToken cancellationToken)
+    private async Task<Uri> ObterPaginaMaisRecenteAsync(HttpClient httpClient, CancellationToken cancellationToken)
     {
-        var catalogo = await ObterDocumentoAsync(FonteOficial, cancellationToken);
+        var catalogo = await ObterDocumentoAsync(httpClient, FonteOficial, cancellationToken);
         var fontes = (catalogo.DocumentNode.SelectNodes("//a[@href]") ?? Enumerable.Empty<HtmlNode>())
             .Select(link => link.GetAttributeValue("href", string.Empty))
             .Select(CriarUriAbsoluta)
@@ -63,7 +76,7 @@ public sealed class AtualizadorTabelaIrrfDaReceitaFederal(
         return fontes[0];
     }
 
-    private async Task<HtmlDocument> ObterDocumentoAsync(Uri uri, CancellationToken cancellationToken)
+    private static async Task<HtmlDocument> ObterDocumentoAsync(HttpClient httpClient, Uri uri, CancellationToken cancellationToken)
     {
         using var resposta = await httpClient.GetAsync(uri, cancellationToken);
         resposta.EnsureSuccessStatusCode();
@@ -135,6 +148,7 @@ public sealed class AtualizadorTabelaIrrfDaReceitaFederal(
     private async Task PersistirAsync(TabelaIrrfOnline tabela, CancellationToken cancellationToken)
     {
         var competencia = tabela.Competencia.ToDateTime(TimeOnly.MinValue);
+        await using var context = await contextFactory.CreateDbContextAsync(cancellationToken);
         await using var transacao = await context.Database.BeginTransactionAsync(cancellationToken);
 
         var existentes = await context.FaixasIrrf.Where(item => item.Competencia == competencia).ToListAsync(cancellationToken);
@@ -164,6 +178,7 @@ public sealed class AtualizadorTabelaIrrfDaReceitaFederal(
 
         await context.SaveChangesAsync(cancellationToken);
         await transacao.CommitAsync(cancellationToken);
+        cache.Invalidar();
     }
 
     private static async Task AtualizarParametroAsync(DbSet<ParametroDependenteEntity> parametros, DateTime competencia, decimal valor, CancellationToken cancellationToken)
@@ -186,7 +201,7 @@ public sealed class AtualizadorTabelaIrrfDaReceitaFederal(
 
     private static DateOnly ExtrairCompetencia(string conteudo, Uri fonte)
     {
-        var match = Regex.Match(Normalizar(conteudo), @"a partir de (?:janeiro de )?(?<ano>20\d{2})", RegexOptions.IgnoreCase);
+        var match = VigenciaAPartirDe.Match(Normalizar(conteudo));
         if (!match.Success)
             match = AnoNaUrl.Match(fonte.AbsolutePath);
 

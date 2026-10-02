@@ -8,7 +8,7 @@ namespace CalculoIRRF.Infrastructure.Persistence;
 /// Os registros existentes são preservados para não sobrescrever manutenções locais.
 /// A carga só é executada quando o banco ainda não está na <see cref="VersaoSementes"/> atual.
 /// </summary>
-public sealed class InicializadorBancoTributario(CalculoIrrfDbContext context) : IInicializadorBancoTributario
+public sealed class InicializadorBancoTributario(IDbContextFactory<CalculoIrrfDbContext> contextFactory) : IInicializadorBancoTributario
 {
     /// <summary>Incremente ao alterar as sementes ou os scripts abaixo, para que bancos existentes recebam a nova carga.</summary>
     private const int VersaoSementes = 1;
@@ -45,19 +45,20 @@ public sealed class InicializadorBancoTributario(CalculoIrrfDbContext context) :
 
     public async Task InicializarAsync(CancellationToken cancellationToken)
     {
-        if (await ObterVersaoBancoAsync(cancellationToken) >= VersaoSementes)
+        await using var context = await contextFactory.CreateDbContextAsync(cancellationToken);
+        if (await ObterVersaoBancoAsync(context, cancellationToken) >= VersaoSementes)
             return;
 
-        await CriarTabelaReducaoMensalAsync(cancellationToken);
-        await CorrigirOuInserirReducaoMensal2026Async(cancellationToken);
-        await InserirFaixasInssAusentesAsync(cancellationToken);
-        await InserirFaixasIrrfAusentesAsync(cancellationToken);
-        await InserirParametrosAusentesAsync(cancellationToken);
+        await CriarTabelaReducaoMensalAsync(context, cancellationToken);
+        await CorrigirOuInserirReducaoMensal2026Async(context, cancellationToken);
+        await InserirFaixasInssAusentesAsync(context, cancellationToken);
+        await InserirFaixasIrrfAusentesAsync(context, cancellationToken);
+        await InserirParametrosAusentesAsync(context, cancellationToken);
         await context.Database.ExecuteSqlRawAsync($"PRAGMA user_version = {VersaoSementes}", cancellationToken);
     }
 
     // Lido por ADO.NET para não construir o modelo nem compilar consultas do EF Core na abertura quando não há carga a fazer.
-    private async Task<int> ObterVersaoBancoAsync(CancellationToken cancellationToken)
+    private static async Task<int> ObterVersaoBancoAsync(CalculoIrrfDbContext context, CancellationToken cancellationToken)
     {
         await context.Database.OpenConnectionAsync(cancellationToken);
         try
@@ -72,7 +73,7 @@ public sealed class InicializadorBancoTributario(CalculoIrrfDbContext context) :
         }
     }
 
-    private Task CriarTabelaReducaoMensalAsync(CancellationToken cancellationToken) => context.Database.ExecuteSqlRawAsync("""
+    private static Task CriarTabelaReducaoMensalAsync(CalculoIrrfDbContext context, CancellationToken cancellationToken) => context.Database.ExecuteSqlRawAsync("""
         CREATE TABLE IF NOT EXISTS "ReducaoMensalIrrf" (
             "Id" INTEGER NOT NULL CONSTRAINT "PK_ReducaoMensalIrrf" PRIMARY KEY AUTOINCREMENT,
             "Competencia" TEXT NOT NULL,
@@ -83,7 +84,7 @@ public sealed class InicializadorBancoTributario(CalculoIrrfDbContext context) :
         );
         """, cancellationToken);
 
-    private Task CorrigirOuInserirReducaoMensal2026Async(CancellationToken cancellationToken) => context.Database.ExecuteSqlRawAsync("""
+    private static Task CorrigirOuInserirReducaoMensal2026Async(CalculoIrrfDbContext context, CancellationToken cancellationToken) => context.Database.ExecuteSqlRawAsync("""
         INSERT INTO "ReducaoMensalIrrf" ("Competencia", "Faixa", "LimiteRendimentos", "Multiplicador", "ValorBase")
         SELECT '2026-01-01 00:00:00', 1, 5000.00, 0.000000, 312.89
         WHERE NOT EXISTS (SELECT 1 FROM "ReducaoMensalIrrf" WHERE "Competencia" = '2026-01-01 00:00:00' AND "Faixa" = 1);
@@ -101,7 +102,7 @@ public sealed class InicializadorBancoTributario(CalculoIrrfDbContext context) :
           AND "ValorBase" = 7350.00;
         """, cancellationToken);
 
-    private async Task InserirFaixasInssAusentesAsync(CancellationToken cancellationToken)
+    private static async Task InserirFaixasInssAusentesAsync(CalculoIrrfDbContext context, CancellationToken cancellationToken)
     {
         var existentes = (await context.FaixasInss.AsNoTracking().Select(item => new { item.Competencia, item.Faixa }).ToListAsync(cancellationToken))
             .Select(item => (item.Competencia, item.Faixa)).ToHashSet();
@@ -112,7 +113,7 @@ public sealed class InicializadorBancoTributario(CalculoIrrfDbContext context) :
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task InserirFaixasIrrfAusentesAsync(CancellationToken cancellationToken)
+    private static async Task InserirFaixasIrrfAusentesAsync(CalculoIrrfDbContext context, CancellationToken cancellationToken)
     {
         var existentes = (await context.FaixasIrrf.AsNoTracking().Select(item => new { item.Competencia, item.Faixa }).ToListAsync(cancellationToken))
             .Select(item => (item.Competencia, item.Faixa)).ToHashSet();
@@ -123,28 +124,28 @@ public sealed class InicializadorBancoTributario(CalculoIrrfDbContext context) :
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task InserirParametrosAusentesAsync(CancellationToken cancellationToken)
+    private static async Task InserirParametrosAusentesAsync(CalculoIrrfDbContext context, CancellationToken cancellationToken)
     {
-        await InserirDependentesAusentesAsync(cancellationToken);
-        await InserirSimplificadosAusentesAsync(cancellationToken);
-        await InserirDescontosMinimosAusentesAsync(cancellationToken);
+        await InserirDependentesAusentesAsync(context, cancellationToken);
+        await InserirSimplificadosAusentesAsync(context, cancellationToken);
+        await InserirDescontosMinimosAusentesAsync(context, cancellationToken);
     }
 
-    private async Task InserirDependentesAusentesAsync(CancellationToken cancellationToken)
+    private static async Task InserirDependentesAusentesAsync(CalculoIrrfDbContext context, CancellationToken cancellationToken)
     {
         var existentes = (await context.ParametrosDependentes.AsNoTracking().Select(item => item.Competencia).ToListAsync(cancellationToken)).ToHashSet();
         context.ParametrosDependentes.AddRange(DeducoesPorDependente.Where(item => !existentes.Contains(item.Competencia)).Select(item => new ParametroDependenteEntity { Competencia = item.Competencia, Valor = item.Valor }));
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task InserirSimplificadosAusentesAsync(CancellationToken cancellationToken)
+    private static async Task InserirSimplificadosAusentesAsync(CalculoIrrfDbContext context, CancellationToken cancellationToken)
     {
         var existentes = (await context.ParametrosSimplificados.AsNoTracking().Select(item => item.Competencia).ToListAsync(cancellationToken)).ToHashSet();
         context.ParametrosSimplificados.AddRange(DescontosSimplificados.Where(item => !existentes.Contains(item.Competencia)).Select(item => new ParametroSimplificadoEntity { Competencia = item.Competencia, Valor = item.Valor }));
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task InserirDescontosMinimosAusentesAsync(CancellationToken cancellationToken)
+    private static async Task InserirDescontosMinimosAusentesAsync(CalculoIrrfDbContext context, CancellationToken cancellationToken)
     {
         var existentes = (await context.ParametrosDescontoMinimo.AsNoTracking().Select(item => item.Competencia).ToListAsync(cancellationToken)).ToHashSet();
         context.ParametrosDescontoMinimo.AddRange(DescontosMinimos.Where(item => !existentes.Contains(item.Competencia)).Select(item => new ParametroDescontoMinimoEntity { Competencia = item.Competencia, Valor = item.Valor }));

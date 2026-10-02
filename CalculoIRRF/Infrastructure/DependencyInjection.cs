@@ -11,9 +11,11 @@ namespace CalculoIRRF.Infrastructure;
 public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services) => services
-        .AddDbContext<CalculoIrrfDbContext>(options => options.UseSqlite("Data Source=BancoDados/calculoIrrf.db"))
-        .AddSingleton(new HttpClient())
-        .AddScoped<ITributacaoConsulta, EfTributacaoConsulta>()
+        .AddDbContextFactory<CalculoIrrfDbContext>(options => options.UseSqlite("Data Source=BancoDados/calculoIrrf.db"))
+        .AddSingleton<Func<HttpClient>>(static () => new HttpClient())
+        .AddSingleton<EfTributacaoConsulta>()
+        .AddSingleton<ITributacaoConsulta>(provider => provider.GetRequiredService<EfTributacaoConsulta>())
+        .AddSingleton<ICacheTabelasTributarias>(provider => provider.GetRequiredService<EfTributacaoConsulta>())
         .AddScoped<ITabelaTributariaService, EfTabelaTributariaService>()
         .AddScoped<IAtualizadorTabelaIrrf, AtualizadorTabelaIrrfDaReceitaFederal>()
         .AddScoped<IAtualizadorTabelaInss, AtualizadorTabelaInssDoGoverno>()

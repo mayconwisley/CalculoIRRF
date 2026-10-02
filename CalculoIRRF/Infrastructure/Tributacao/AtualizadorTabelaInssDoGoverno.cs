@@ -14,19 +14,28 @@ using System.Text.RegularExpressions;
 namespace CalculoIRRF.Infrastructure.Tributacao;
 
 /// <summary>Importa a tabela progressiva dos segurados empregado, doméstico e trabalhador avulso.</summary>
-public sealed class AtualizadorTabelaInssDoGoverno(
-    HttpClient httpClient,
-    CalculoIrrfDbContext context) : IAtualizadorTabelaInss
+public sealed partial class AtualizadorTabelaInssDoGoverno(
+    Func<HttpClient> criarHttpClient,
+    IDbContextFactory<CalculoIrrfDbContext> contextFactory,
+    ICacheTabelasTributarias cache) : IAtualizadorTabelaInss
 {
     private const string UrlTabela = "https://www.gov.br/inss/pt-br/direitos-e-deveres/inscricao-e-contribuicao/tabela-de-contribuicao-mensal";
     private static readonly CultureInfo Cultura = CultureInfo.GetCultureInfo("pt-BR");
-    private static readonly Regex ValorMonetario = new(@"\d{1,3}(?:\.\d{3})*,\d{2}", RegexOptions.Compiled);
-    private static readonly Regex Percentual = new(@"\d{1,2}(?:,\d+)?", RegexOptions.Compiled);
+
+    [GeneratedRegex(@"\d{1,3}(?:\.\d{3})*,\d{2}")]
+    private static partial Regex ValorMonetario { get; }
+
+    [GeneratedRegex(@"\d{1,2}(?:,\d+)?")]
+    private static partial Regex Percentual { get; }
+
+    [GeneratedRegex(@"(?:competencia\s+)?janeiro de (?<ano>20\d{2})", RegexOptions.IgnoreCase)]
+    private static partial Regex CompetenciaJaneiro { get; }
 
     public Uri FonteOficial => new(UrlTabela);
 
     public async Task<AtualizacaoTabelaInssResultado> AtualizarAsync(CancellationToken cancellationToken)
     {
+        using var httpClient = criarHttpClient();
         using var resposta = await httpClient.GetAsync(FonteOficial, cancellationToken);
         resposta.EnsureSuccessStatusCode();
 
@@ -60,6 +69,7 @@ public sealed class AtualizadorTabelaInssDoGoverno(
     private async Task PersistirAsync(TabelaInssOnline tabela, CancellationToken cancellationToken)
     {
         var competencia = tabela.Competencia.ToDateTime(TimeOnly.MinValue);
+        await using var context = await contextFactory.CreateDbContextAsync(cancellationToken);
         await using var transacao = await context.Database.BeginTransactionAsync(cancellationToken);
         var existentes = await context.FaixasInss.Where(item => item.Competencia == competencia).ToListAsync(cancellationToken);
         context.FaixasInss.RemoveRange(existentes);
@@ -72,12 +82,13 @@ public sealed class AtualizadorTabelaInssDoGoverno(
         }));
         await context.SaveChangesAsync(cancellationToken);
         await transacao.CommitAsync(cancellationToken);
+        cache.Invalidar();
     }
 
     private static DateOnly ExtrairCompetencia(string conteudo)
     {
         var normalizado = Normalizar(conteudo);
-        var match = Regex.Match(normalizado, @"(?:competencia\s+)?janeiro de (?<ano>20\d{2})", RegexOptions.IgnoreCase);
+        var match = CompetenciaJaneiro.Match(normalizado);
         if (!match.Success || !int.TryParse(match.Groups["ano"].Value, out var ano))
             throw new InvalidOperationException("Não foi possível identificar a competência da tabela oficial de INSS.");
 
