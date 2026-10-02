@@ -4,7 +4,7 @@
              xmlns:media="clr-namespace:System.Windows.Media.Imaging;assembly=PresentationCore">
     <Application.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <media:BitmapImage x:Key="BrandLogoImage" UriSource="pack://application:,,,/Assets/logo-light.png" />
+        <media:BitmapImage x:Key="BrandLogoImage" UriSource="pack://application:,,,/Assets/logo-light.png" DecodePixelWidth="156" />
         <SolidColorBrush x:Key="ApplicationBackgroundBrush" Color="#F8FAFC" />
         <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFF" />
         <SolidColorBrush x:Key="InputBackgroundBrush" Color="#FFFFFF" />

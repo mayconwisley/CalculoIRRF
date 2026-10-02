@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Runtime.Versioning;
 using System.Windows;
+using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace CalculoIRRF;
 
@@ -25,6 +27,8 @@ public partial class App : System.Windows.Application
         base.OnStartup(e);
         QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
         ThemeManager.Initialize();
+        if (!ThemeManager.UseHardwareAcceleration)
+            RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
         _serviceProvider = ConfigureServices();
         _applicationScope = _serviceProvider.CreateScope();
         _applicationScope.ServiceProvider.GetRequiredService<IInicializadorBancoTributario>()

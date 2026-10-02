@@ -63,6 +63,7 @@ A **Calculadora de Imposto** é uma central de cálculos trabalhistas e tributá
 - Tema claro, escuro e automático, seguindo a preferência do Windows no modo automático.
 - Controles de rolagem utilizam a aparência nativa do WPF, preservando a visibilidade e a usabilidade em todos os temas.
 - Preferência de tema persistida no perfil do usuário.
+- Renderização por software por padrão, reduzindo o consumo de memória; a aceleração por GPU pode ser reativada nas configurações locais.
 - Processamento e persistência locais em SQLite.
 - Identidade visual adaptada aos dois temas, com ícones Windows multirresolução.
 
@@ -145,7 +146,7 @@ Para uma distribuição sem pré-requisito do runtime .NET, altere `--self-conta
 | Item | Localização | Comportamento |
 | --- | --- | --- |
 | Tabelas tributárias | `CalculoIRRF\BancoDados\calculoIrrf.db` | Copiado para a saída; armazena faixas e parâmetros por competência. |
-| Tema | `%LOCALAPPDATA%\CalculoIRRF\settings.json` | Mantém a opção Claro, Escuro ou Automático. |
+| Tema e renderização | `%LOCALAPPDATA%\CalculoIRRF\settings.json` | Mantém a opção Claro, Escuro ou Automático. Com `"HardwareAcceleration": true`, a interface volta a ser renderizada pela GPU, com maior consumo de memória. |
 | PDFs | Diretório escolhido pelo usuário | Gerados sob demanda para simulações tributárias, pensão e estabilidade. |
 
 O nome `calculoIrrf.db` é mantido para preservar compatibilidade com instalações existentes.
