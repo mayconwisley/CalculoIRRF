@@ -1,0 +1,11 @@
+#!/bin/sh
+# Ao enviar uma tag de versão (vX.Y.Z), gera o instalador localmente e publica no GitHub Releases.
+# Pushes sem tag de versão passam direto. Ative uma vez por clone com:
+#   git config core.hooksPath .githooks
+entrada=$(cat)
+case "$entrada" in
+  *refs/tags/v[0-9]*) ;;
+  *) exit 0 ;;
+esac
+raiz=$(git rev-parse --show-toplevel)
+printf '%s\n' "$entrada" | powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$raiz/instalador/publicar-release.ps1" -Remoto "$1"

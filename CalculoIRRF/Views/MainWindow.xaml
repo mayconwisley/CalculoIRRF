@@ -276,7 +276,8 @@
 			</Border>
 		</Grid>
 		<TextBlock Grid.Row="5" Foreground="{DynamicResource MutedTextBrush}" Margin="2,18,0,0">
-			<Run Text="Calculadora de Imposto • Dados processados localmente - Desenvolvido por: Maycon Wisley" />
+			<Run Text="{Binding Versao, Mode=OneTime, StringFormat='Calculadora de Imposto {0}'}" />
+			<Run Text=" • Dados processados localmente - Desenvolvido por: Maycon Wisley" />
 			<Run Text=" • " />
 			<Hyperlink
 				NavigateUri="https://github.com/mayconwisley/CalculoIRRF"

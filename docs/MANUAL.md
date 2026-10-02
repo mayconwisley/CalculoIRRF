@@ -35,16 +35,31 @@ Todos os cálculos são feitos **no seu computador**. Os dados digitados não s�
 
 ### Requisitos
 
-- Windows 10 ou superior.
-- .NET 9 Desktop Runtime instalado, quando a aplicação for distribuída na versão dependente do runtime.
+- Windows 10 ou superior, 64 bits.
+
+Não é preciso instalar o .NET nem outro componente: o instalador já inclui tudo o que o aplicativo usa.
+
+### Instalando
+
+1. Na página de [versões do projeto](https://github.com/mayconwisley/CalculoIRRF/releases/latest), baixe o arquivo **CalculadoraDeImposto-X.Y.Z-setup.exe**, em *Assets*.
+2. Execute o instalador e siga as etapas. Se quiser, marque a opção de criar um atalho na área de trabalho.
+3. Ao final, deixe marcada a opção de abrir a Calculadora de Imposto.
+
+A instalação é feita apenas para o seu usuário, na pasta `%LOCALAPPDATA%\Programs\Calculadora de Imposto`, e não pede permissão de administrador.
+
+> **Aviso do Windows:** como o instalador não é assinado digitalmente, o Windows pode exibir a tela "O Windows protegeu o computador" (SmartScreen). Selecione **Mais informações** e depois **Executar assim mesmo**.
 
 ### Abrindo o aplicativo
 
-Execute o arquivo **CalculadoraDeImposto.exe**. A janela principal, **Central de cálculos**, é aberta já com a competência do mês atual preenchida.
+Abra a **Calculadora de Imposto** pelo Menu Iniciar ou pelo atalho da área de trabalho. A janela principal, **Central de cálculos**, é aberta já com a competência do mês atual preenchida. A versão instalada aparece no rodapé da janela.
 
 Na primeira execução, o aplicativo prepara o banco de dados local com as tabelas históricas de INSS e IRRF. Esse processo é automático e acontece uma única vez.
 
-> **Dica:** mantenha a pasta **BancoDados** junto do executável. É nela que ficam as tabelas tributárias e as alterações que você fizer.
+### Atualizando e desinstalando
+
+Para atualizar, baixe e execute o instalador da nova versão: ele substitui a versão anterior, fechando o aplicativo se estiver aberto. As tabelas que você incluiu ou alterou são **preservadas**.
+
+Para remover, use **Configurações do Windows > Aplicativos > Aplicativos instalados > Calculadora de Imposto > Desinstalar**. O banco com as suas tabelas (`BancoDados\calculoIrrf.db`, na pasta de instalação) é mantido, para que uma reinstalação recupere os dados. Se não quiser mantê-lo, apague a pasta `%LOCALAPPDATA%\Programs\Calculadora de Imposto` depois de desinstalar.
 
 ## 3. Conhecendo a tela principal
 
@@ -245,7 +260,7 @@ Se a página oficial estiver indisponível ou tiver mudado de formato, a atualiz
 
 ![Tabela de parâmetro com valor por competência](imagens/15-tabela-parametro.png)
 
-> **Dica:** antes de grandes alterações, faça uma cópia de segurança do arquivo **BancoDados\calculoIrrf.db** com o aplicativo fechado.
+> **Dica:** antes de grandes alterações, faça uma cópia de segurança do arquivo **BancoDados\calculoIrrf.db**, que fica na pasta de instalação (`%LOCALAPPDATA%\Programs\Calculadora de Imposto`), com o aplicativo fechado.
 
 ## 9. Relatórios em PDF
 
@@ -305,6 +320,9 @@ O desconto simplificado mensal passou a valer a partir de 05/2023. Em competênc
 
 **A base de INSS mostrada é menor que a que eu informei. Está errado?**
 Não. Quando a base ultrapassa o teto da tabela do INSS, o cálculo do INSS é limitado ao teto, e o cartão do INSS mostra a base efetivamente considerada. O FGTS não tem teto e continua sendo calculado sobre a base informada: com R$ 8.500,00, por exemplo, o INSS considera R$ 8.475,55 (teto de 2026), mas o FGTS de 8% é de R$ 680,00.
+
+**Ao instalar uma nova versão, perco as tabelas que alterei?**
+Não. O instalador só copia o banco de dados na primeira instalação; nas atualizações, o seu banco é mantido como está.
 
 **Alterei uma tabela. Preciso reiniciar o aplicativo?**
 Não. A alteração vale para o próximo cálculo.

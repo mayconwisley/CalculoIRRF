@@ -6,6 +6,7 @@ using CalculoIRRF.Application.UseCases;
 using CalculoIRRF.Presentation.Mvvm;
 using CalculoIRRF.Presentation.Services;
 using System.Globalization;
+using System.Reflection;
 using System.Runtime.Versioning;
 using System.Windows.Input;
 
@@ -54,6 +55,7 @@ public sealed class MainWindowViewModel : ViewModelBase
     }
 
     public IReadOnlyList<ThemeMode> Temas { get; } = [ThemeMode.Automatico, ThemeMode.Claro, ThemeMode.Escuro];
+    public string Versao { get; } = ObterVersao();
     public string Competencia { get => _competencia; set => SetProperty(ref _competencia, value); }
     public string ValorBruto
     {
@@ -228,4 +230,12 @@ public sealed class MainWindowViewModel : ViewModelBase
 
     private static string Moeda(decimal valor) => valor.ToString("C2", CulturaPtBr);
     private static string Percentual(decimal valor) => valor.ToString("N2", CulturaPtBr) + "%";
+
+    // A versão vem da tag usada na publicação; o SDK acrescenta "+<commit>" à versão informativa, que não interessa ao usuário.
+    private static string ObterVersao()
+    {
+        var versao = typeof(MainWindowViewModel).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "1.0.0";
+        var indiceCommit = versao.IndexOf('+');
+        return indiceCommit >= 0 ? versao[..indiceCommit] : versao;
+    }
 }

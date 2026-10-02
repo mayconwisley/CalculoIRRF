@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Instaladores, notas e logs gerados por instalador/*.ps1
+artefatos/

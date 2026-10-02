@@ -25,6 +25,15 @@ A **Calculadora de Imposto** é uma central de cálculos trabalhistas e tributá
 
 > Os resultados têm caráter de simulação. A conferência com a legislação vigente, o vínculo empregatício e os dados da competência continua sendo indispensável.
 
+## Instalação
+
+Baixe o instalador **CalculadoraDeImposto-X.Y.Z-setup.exe** na página de [Releases](https://github.com/mayconwisley/CalculoIRRF/releases) e execute-o.
+
+- A instalação é feita para o usuário atual, em `%LOCALAPPDATA%\Programs\Calculadora de Imposto`, e não pede permissão de administrador.
+- O .NET já vem incluído: não é preciso instalar nenhum pré-requisito.
+- Ao instalar uma versão nova sobre a anterior, as tabelas editadas pelo usuário são preservadas. A desinstalação também mantém o banco de dados.
+- Como o instalador não é assinado digitalmente, o Windows pode exibir o aviso do SmartScreen: selecione **Mais informações** e depois **Executar assim mesmo**.
+
 ## Manual do usuário
 
 O passo a passo completo de cada tela, com prints, está no **[Manual do Usuário](docs/MANUAL.md)**, também disponível em **[PDF](docs/ManualDoUsuario.pdf)**. No aplicativo, o manual abre pelo botão **Manual do usuário** ou pela tecla **F1**, em qualquer janela.
@@ -124,7 +133,7 @@ CalculoIRRF/
 
 - Windows 10 ou superior.
 - **.NET 9 SDK** para compilar e desenvolver.
-- **.NET 9 Desktop Runtime** para executar uma publicação dependente do framework.
+- Para gerar e publicar instaladores: [Inno Setup 6](https://jrsoftware.org/isdl.php) e o [GitHub CLI](https://cli.github.com) autenticado (`gh auth login`).
 
 ## Executar localmente
 
@@ -138,25 +147,65 @@ dotnet run --project .\CalculoIRRF\CalculoIRRF.csproj
 
 O executável de desenvolvimento é gerado como `CalculadoraDeImposto.exe` em `CalculoIRRF\bin\<configuração>\net9.0-windows`.
 
-## Publicar para Windows
+## Gerar o instalador
 
-Exemplo de publicação dependente do runtime para Windows 64 bits:
+O instalador é gerado localmente com o Inno Setup. O script publica o aplicativo para Windows x64 com o .NET incluído e grava o resultado em `artefatos\`:
 
 ```powershell
-dotnet publish .\CalculoIRRF\CalculoIRRF.csproj `
-  --configuration Release `
-  --runtime win-x64 `
-  --self-contained false `
-  --output .\publish
+.\instalador\gerar-instalador.ps1 -Versao 1.2.0
 ```
 
-Para uma distribuição sem pré-requisito do runtime .NET, altere `--self-contained` para `true`.
+| Arquivo | Função |
+| --- | --- |
+| `instalador\CalculadoraDeImposto.iss` | Definição do instalador: instalação por usuário, atalhos, idioma e preservação do banco. |
+| `instalador\gerar-instalador.ps1` | Publica o aplicativo e compila o instalador. |
+| `instalador\publicar-release.ps1` | Gera o instalador de uma tag e o publica no GitHub Releases. |
+| `.githooks\pre-push` | Aciona a publicação quando uma tag de versão é enviada. |
+
+## Publicar uma nova versão
+
+A publicação acontece ao enviar uma tag no formato `vX.Y.Z`. Todo o processo roda na sua máquina; o GitHub recebe apenas a tag e o instalador pronto.
+
+Ative os hooks do repositório uma única vez por clone:
+
+```powershell
+git config core.hooksPath .githooks
+```
+
+Depois, para cada versão:
+
+```powershell
+git tag v1.2.0
+git push origin master v1.2.0
+```
+
+Durante o push, o hook:
+
+1. Compila o aplicativo a partir de uma cópia isolada do código da tag (`git worktree`), com a versão da tag gravada no executável.
+2. Gera o instalador com o Inno Setup. Se algo falhar, **o push é cancelado** e nenhuma versão quebrada chega ao GitHub.
+3. Deixa um processo em segundo plano aguardando a tag chegar ao GitHub. Em seguida, ele cria o release com o instalador, as instruções de instalação e o SHA-256 do arquivo. O resultado é avisado em uma janela e registrado em `artefatos\release-vX.Y.Z.log`.
+
+Pushes sem tag de versão não são afetados. Tags com sufixo, como `v1.2.0-beta.1`, são publicadas como *pré-lançamento*.
+
+Para testar o processo sem enviar nada, use a simulação, que gera o instalador e mostra o que seria publicado:
+
+```powershell
+$env:CALCULADORA_SIMULAR_RELEASE = '1'
+git push --dry-run origin v1.2.0
+Remove-Item Env:CALCULADORA_SIMULAR_RELEASE
+```
+
+Se a tag já estiver no GitHub sem o release, por exemplo porque a conexão caiu, publique manualmente:
+
+```powershell
+.\instalador\publicar-release.ps1 -Tag v1.2.0
+```
 
 ## Dados locais e configurações
 
 | Item | Localização | Comportamento |
 | --- | --- | --- |
-| Tabelas tributárias | `CalculoIRRF\BancoDados\calculoIrrf.db` | Copiado para a saída; armazena faixas e parâmetros por competência. |
+| Tabelas tributárias | `BancoDados\calculoIrrf.db`, na pasta do aplicativo | Armazena faixas e parâmetros por competência. Instalado apenas na primeira instalação; atualizações e a desinstalação preservam o arquivo. |
 | Tema e renderização | `%LOCALAPPDATA%\CalculoIRRF\settings.json` | Mantém a opção Claro, Escuro ou Automático. Com `"HardwareAcceleration": true`, a interface volta a ser renderizada pela GPU, com maior consumo de memória. |
 | PDFs | Diretório escolhido pelo usuário | Gerados sob demanda para simulações tributárias, pensão e estabilidade. |
 
