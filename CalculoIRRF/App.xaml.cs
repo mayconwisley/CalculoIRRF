@@ -1,4 +1,6 @@
+using CalculoIRRF.Application.DTOs;
 using CalculoIRRF.Application.UseCases;
+using CalculoIRRF.Presentation.ViewModels.Calculadoras;
 using CalculoIRRF.Application.Abstractions;
 using CalculoIRRF.Infrastructure;
 using CalculoIRRF.Infrastructure.Reporting;
@@ -64,6 +66,22 @@ public partial class App : System.Windows.Application
         .AddScoped<ISimularImpostoUseCase, SimularImpostoUseCase>()
         .AddScoped<ISimularPensaoUseCase, SimularPensaoUseCase>()
         .AddScoped<ISimularEstabilidadeUseCase, SimularEstabilidadeUseCase>()
+        .AddScoped<ICalculadoraViewModelFactory, CalculadoraViewModelFactory>()
+        .AddScoped<ISimularDemonstrativoUseCase<SimularSalarioPeloLiquidoRequest>, SimularSalarioPeloLiquidoUseCase>()
+        .AddScoped<ISimularDemonstrativoUseCase<SimularDecimoTerceiroRequest>, SimularDecimoTerceiroUseCase>()
+        .AddScoped<ISimularDemonstrativoUseCase<SimularFeriasRequest>, SimularFeriasUseCase>()
+        .AddScoped<ISimularDemonstrativoUseCase<SimularHorasExtrasRequest>, SimularHorasExtrasUseCase>()
+        .AddScoped<ISimularDemonstrativoUseCase<SimularRescisaoRequest>, SimularRescisaoUseCase>()
+        .AddScoped<ISimularDemonstrativoUseCase<SimularCustoFuncionarioRequest>, SimularCustoFuncionarioUseCase>()
+        .AddScoped<ISimularDemonstrativoUseCase<SimularProLaboreRequest>, SimularProLaboreUseCase>()
+        // Cada janela de calculadora recebe uma calculadora nova, com o formulário em branco.
+        .AddKeyedTransient<ICalculadora, CalculadoraSalarioPeloLiquido>(TipoCalculadora.SalarioPeloLiquido)
+        .AddKeyedTransient<ICalculadora, CalculadoraDecimoTerceiro>(TipoCalculadora.DecimoTerceiro)
+        .AddKeyedTransient<ICalculadora, CalculadoraFerias>(TipoCalculadora.Ferias)
+        .AddKeyedTransient<ICalculadora, CalculadoraHorasExtras>(TipoCalculadora.HorasExtras)
+        .AddKeyedTransient<ICalculadora, CalculadoraRescisao>(TipoCalculadora.Rescisao)
+        .AddKeyedTransient<ICalculadora, CalculadoraCustoFuncionario>(TipoCalculadora.CustoFuncionario)
+        .AddKeyedTransient<ICalculadora, CalculadoraProLabore>(TipoCalculadora.ProLaboreAutonomo)
         .AddInfrastructure()
         .BuildServiceProvider();
 }

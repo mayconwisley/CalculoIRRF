@@ -2,7 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:behaviors="clr-namespace:CalculoIRRF.Presentation.Behaviors"
-        Title="Calculadora de Imposto" Height="863" Width="1292" MinHeight="620" MinWidth="940"
+        xmlns:calculadoras="clr-namespace:CalculoIRRF.Presentation.ViewModels.Calculadoras"
+        Title="Calculadora de Imposto" Height="900" Width="1292" MinHeight="620" MinWidth="940"
         Background="{DynamicResource ApplicationBackgroundBrush}"
         Foreground="{DynamicResource TextBrush}" WindowStartupLocation="CenterScreen">
 	<Grid Margin="28" Background="{DynamicResource ApplicationBackgroundBrush}">
@@ -25,7 +26,7 @@
 				<Image Source="{DynamicResource BrandLogoImage}" Width="52" Height="52" Stretch="Uniform" Margin="0,0,14,0" />
 				<StackPanel VerticalAlignment="Center">
 					<TextBlock Text="Central de cálculos" FontSize="28" FontWeight="SemiBold" />
-					<TextBlock Text="Simulações tributárias, pensão alimentícia e indenização de estabilidade." Foreground="{DynamicResource MutedTextBrush}" Margin="0,5,0,0" />
+					<TextBlock Text="Simulações tributárias e trabalhistas: IRRF, INSS, férias, 13º, rescisão, pensão e estabilidade." Foreground="{DynamicResource MutedTextBrush}" Margin="0,5,0,0" />
 				</StackPanel>
 			</StackPanel>
 			<TextBlock Grid.Column="1" Text="Imposto • Brasil" Foreground="{DynamicResource AccentBrush}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,20,0" />
@@ -85,8 +86,15 @@
 								<TextBlock Text="IRRF, INSS e FGTS" FontSize="11" Foreground="{DynamicResource MutedTextBrush}" Margin="0,2,0,0" />
 							</StackPanel>
 						</Border>
-						<Button Style="{StaticResource NavigationButton}" Content="Cálculo de estabilidade" Command="{Binding AbrirEstabilidadeCommand}" />
 						<Button Style="{StaticResource NavigationButton}" Content="Calcular pensão" Command="{Binding AbrirPensaoCommand}" />
+						<Button Style="{StaticResource NavigationButton}" Content="Salário bruto pelo líquido" Command="{Binding AbrirCalculadoraCommand}" CommandParameter="{x:Static calculadoras:TipoCalculadora.SalarioPeloLiquido}" />
+						<Button Style="{StaticResource NavigationButton}" Content="Horas extras e adicionais" Command="{Binding AbrirCalculadoraCommand}" CommandParameter="{x:Static calculadoras:TipoCalculadora.HorasExtras}" />
+						<Button Style="{StaticResource NavigationButton}" Content="13º salário" Command="{Binding AbrirCalculadoraCommand}" CommandParameter="{x:Static calculadoras:TipoCalculadora.DecimoTerceiro}" />
+						<Button Style="{StaticResource NavigationButton}" Content="Férias" Command="{Binding AbrirCalculadoraCommand}" CommandParameter="{x:Static calculadoras:TipoCalculadora.Ferias}" />
+						<Button Style="{StaticResource NavigationButton}" Content="Rescisão" Command="{Binding AbrirCalculadoraCommand}" CommandParameter="{x:Static calculadoras:TipoCalculadora.Rescisao}" />
+						<Button Style="{StaticResource NavigationButton}" Content="Cálculo de estabilidade" Command="{Binding AbrirEstabilidadeCommand}" />
+						<Button Style="{StaticResource NavigationButton}" Content="Custo do funcionário" Command="{Binding AbrirCalculadoraCommand}" CommandParameter="{x:Static calculadoras:TipoCalculadora.CustoFuncionario}" />
+						<Button Style="{StaticResource NavigationButton}" Content="Pró-labore e autônomo" Command="{Binding AbrirCalculadoraCommand}" CommandParameter="{x:Static calculadoras:TipoCalculadora.ProLaboreAutonomo}" />
 						<Separator Margin="0,8,0,12" Background="{DynamicResource BorderBrush}" />
 						<TextBlock Text="Tabelas e parâmetros" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,10" />
 						<Button Style="{StaticResource NavigationButton}" Content="Tabela INSS" Command="{Binding AbrirTabelaInssCommand}" />

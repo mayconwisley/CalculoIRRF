@@ -30,4 +30,10 @@ public sealed record SimulacaoImpostoDto(
     string? ModalidadeMaisVantajosa,
     IReadOnlyList<DetalheFaixaDto> DetalhesInss,
     decimal DeducaoPorDependente,
-    decimal? DescontoSimplificado);
+    decimal? DescontoSimplificado)
+{
+    // A fonte pagadora aplica o desconto simplificado quando ele resulta em imposto menor que o das deduções legais.
+    public bool SimplificadaAplicada => DescontoSimplificado is not null && Simplificada.Imposto < Normal.Imposto;
+    public decimal IrrfAplicado => SimplificadaAplicada ? Simplificada.Imposto : Normal.Imposto;
+    public decimal SalarioLiquido => Entrada.ValorBruto - ValorInss - IrrfAplicado;
+}

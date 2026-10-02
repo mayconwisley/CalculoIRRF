@@ -53,7 +53,24 @@ dotnet run --project .\tools\GeradorManual
 - Calcula **INSS** por faixas: alíquota única nas competências anteriores a março de 2020 e modelo progressivo nas posteriores.
 - Calcula **FGTS padrão (8%)** e **FGTS para Jovem Aprendiz (2%)**.
 - Compara as modalidades de IRRF e destaca a alternativa mais vantajosa.
-- Exibe indicadores, faixas utilizadas e fórmulas na memória de cálculo.
+- Mostra o salário líquido, descontando o INSS e o IRRF da modalidade mais vantajosa.
+- Exibe indicadores, faixas utilizadas e fórmulas na memória de cálculo, com cada dedução da base do IRRF identificada.
+
+### Calculadoras trabalhistas
+
+Todas usam a mesma janela, com resumo, demonstrativo no formato de holerite, valores informativos (como o FGTS), memória de cálculo, observações e PDF:
+
+| Calculadora | O que calcula |
+| --- | --- |
+| Salário bruto a partir do líquido | O salário bruto que, descontados INSS e IRRF, resulta no líquido desejado. |
+| Horas extras e adicionais | Horas extras em duas faixas, adicional noturno com a hora reduzida e o reflexo no DSR, com o líquido do mês. |
+| 13º salário | 1ª e 2ª parcelas, com médias, avos e INSS e IRRF de tributação exclusiva. |
+| Férias | Férias com 1/3, dias de direito conforme as faltas, venda de 1/3 (abono, isento) e adiantamento do 13º. |
+| Rescisão | Verbas por motivo de desligamento, aviso prévio proporcional com projeção, férias vencidas e proporcionais, FGTS, multa e saque. |
+| Custo do funcionário | Encargos por regime tributário (Lucro Real ou Presumido e Simples Nacional), provisões de 13º e férias e benefícios. |
+| Pró-labore e autônomo | INSS de 11% até o teto, IRRF, ISS do autônomo e o custo para a empresa. |
+
+As regras da CLT ficam em `Domain/Trabalhista/RegrasTrabalhistas`, e a apuração de INSS e IRRF comum a todas as calculadoras, em `Application/UseCases/TabelasDaCompetencia`.
 
 ### Pensão alimentícia e documentos
 

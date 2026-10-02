@@ -5,6 +5,7 @@ using CalculoIRRF.Application.Abstractions;
 using CalculoIRRF.Application.UseCases;
 using CalculoIRRF.Presentation.Mvvm;
 using CalculoIRRF.Presentation.Services;
+using CalculoIRRF.Presentation.ViewModels.Calculadoras;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.Versioning;
@@ -52,6 +53,7 @@ public sealed class MainWindowViewModel : ViewModelBase
         AbrirReducaoMensalIrrfCommand = new RelayCommand(_ => _navegador.AbrirReducaoMensalIrrf());
         AbrirPensaoCommand = new RelayCommand(_ => AbrirPensao(), _ => PodeCalcularPensao);
         AbrirEstabilidadeCommand = new RelayCommand(_ => _navegador.AbrirEstabilidade());
+        AbrirCalculadoraCommand = new RelayCommand(parametro => _navegador.AbrirCalculadora((TipoCalculadora)parametro!, CriarContexto()));
     }
 
     public IReadOnlyList<ThemeMode> Temas { get; } = [ThemeMode.Automatico, ThemeMode.Claro, ThemeMode.Escuro];
@@ -95,6 +97,9 @@ public sealed class MainWindowViewModel : ViewModelBase
     public ICommand AbrirReducaoMensalIrrfCommand { get; }
     public ICommand AbrirPensaoCommand { get; }
     public ICommand AbrirEstabilidadeCommand { get; }
+
+    /// <summary>Abre a calculadora indicada no parâmetro, já preenchida com a competência, o valor bruto e os dependentes desta tela.</summary>
+    public ICommand AbrirCalculadoraCommand { get; }
 
     private async Task CalcularAsync()
     {
@@ -164,6 +169,12 @@ public sealed class MainWindowViewModel : ViewModelBase
         return true;
     }
 
+    // Só os campos válidos são aproveitados; os demais ficam com o valor padrão da calculadora.
+    private ContextoCalculo CriarContexto() => new(
+        TentarLerCompetencia(out var competencia) ? competencia : null,
+        TentarLerDecimal(ValorBruto, out var valorBruto) && valorBruto > 0m ? valorBruto : null,
+        int.TryParse(Dependentes, out var dependentes) && dependentes >= 0 ? dependentes : null);
+
     private bool TentarLerCompetencia(out DateOnly competencia)
     {
         competencia = default;
@@ -184,6 +195,7 @@ public sealed class MainWindowViewModel : ViewModelBase
             new("INSS", Moeda(simulacao.ValorInss), $"Base: {Moeda(simulacao.BaseInssConsiderada)}"),
             new("IRRF normal", Moeda(simulacao.Normal.Imposto), $"Alíquota efetiva: {Percentual(simulacao.Normal.AliquotaEfetiva)}"),
             new("IRRF simplificado", Moeda(simulacao.Simplificada.Imposto), $"Alíquota efetiva: {Percentual(simulacao.Simplificada.AliquotaEfetiva)}"),
+            new("Salário líquido", Moeda(simulacao.SalarioLiquido), "Bruto menos INSS e o menor IRRF"),
             new("FGTS padrão", Moeda(simulacao.FgtsOitoPorCento), "Alíquota de 8%"),
             new("FGTS Jovem Aprendiz", Moeda(simulacao.FgtsDoisPorCento), "Alíquota de 2%")
         ];
@@ -197,7 +209,14 @@ public sealed class MainWindowViewModel : ViewModelBase
         MemoriaIrrf =
         [
             CriarMemoriaIrrf(simulacao.Normal, FormulaBaseIrrf.Normal(simulacao, Moeda)),
-            CriarMemoriaIrrf(simulacao.Simplificada, FormulaBaseIrrf.Simplificada(simulacao, Moeda))
+            CriarMemoriaIrrf(simulacao.Simplificada, FormulaBaseIrrf.Simplificada(simulacao, Moeda)),
+            new("Salário líquido", $"Líquido: {Moeda(simulacao.SalarioLiquido)}",
+            [
+                new("Valor bruto - INSS - IRRF", $"{Moeda(simulacao.Entrada.ValorBruto)} - {Moeda(simulacao.ValorInss)} - {Moeda(simulacao.IrrfAplicado)} = {Moeda(simulacao.SalarioLiquido)}"),
+                new("IRRF descontado", simulacao.SimplificadaAplicada
+                    ? "O da modalidade simplificada, que resulta em imposto menor."
+                    : "O da modalidade normal (deduções legais), que resulta em imposto menor ou igual ao simplificado.")
+            ])
         ];
 
         MemoriaTributaria =

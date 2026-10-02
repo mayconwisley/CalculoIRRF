@@ -1,0 +1,198 @@
+<Window x:Class="CalculoIRRF.Views.CalculadoraWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:behaviors="clr-namespace:CalculoIRRF.Presentation.Behaviors"
+        xmlns:calculadoras="clr-namespace:CalculoIRRF.Presentation.ViewModels.Calculadoras"
+        Title="{Binding Titulo}" Height="840" Width="1180" MinHeight="620" MinWidth="900"
+        Background="{DynamicResource ApplicationBackgroundBrush}"
+        Foreground="{DynamicResource TextBrush}" WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <!-- Cada tipo de campo tem o seu controle; a calculadora só declara os campos. -->
+        <DataTemplate DataType="{x:Type calculadoras:CampoTextoViewModel}">
+            <StackPanel Width="170" Margin="0,0,14,14" ToolTip="{Binding Dica}" Visibility="{Binding Visivel, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <TextBlock Text="{Binding Rotulo}" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,6" TextTrimming="CharacterEllipsis" />
+                <TextBox Text="{Binding Valor, UpdateSourceTrigger=PropertyChanged}" TextAlignment="{Binding Alinhamento}" behaviors:FormatacaoNumerica.Formato="{Binding Formato}" AutomationProperties.Name="{Binding Rotulo}" />
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type calculadoras:CampoOpcaoViewModel}">
+            <StackPanel Width="170" Margin="0,0,14,14" ToolTip="{Binding Dica}" Visibility="{Binding Visivel, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <TextBlock Text="{Binding Rotulo}" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,6" TextTrimming="CharacterEllipsis" />
+                <ComboBox ItemsSource="{Binding Opcoes}" SelectedItem="{Binding Selecionada, Mode=TwoWay}" MinHeight="54" AutomationProperties.Name="{Binding Rotulo}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate><TextBlock Text="{Binding Texto}" /></DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+        </DataTemplate>
+        <Style x:Key="Valor" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+    </Window.Resources>
+    <Grid Margin="28">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel>
+            <TextBlock Text="{Binding Titulo}" FontSize="24" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding Descricao}" Foreground="{DynamicResource MutedTextBrush}" Margin="0,5,0,0" />
+        </StackPanel>
+
+        <Border Grid.Row="2" Style="{StaticResource Card}" Padding="24,24,24,10">
+            <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                <ItemsControl ItemsSource="{Binding Campos}" Focusable="False">
+                    <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                </ItemsControl>
+                <Button Grid.Column="1" Style="{StaticResource PrimaryButton}" Content="Calcular" Command="{Binding CalcularCommand}" IsDefault="True" VerticalAlignment="Bottom" Margin="0,0,0,14" MinWidth="118" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="4" Style="{StaticResource Card}">
+            <Grid>
+                <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="Resultado" FontSize="16" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding Referencia}" Foreground="{DynamicResource AccentBrush}" FontWeight="SemiBold" Margin="0,5,0,0" />
+                    </StackPanel>
+                    <Button Grid.Column="1" Style="{StaticResource PrimaryButton}" Content="Gerar PDF" Command="{Binding ExportarPdfCommand}" VerticalAlignment="Center" MinWidth="112" />
+                </Grid>
+                <TextBlock Grid.Row="1" Style="{StaticResource EstadoVazio}" Text="{Binding InstrucaoInicial}" />
+                <ScrollViewer Grid.Row="1" Margin="0,16,0,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Visibility="{Binding TemResultado, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <TextBlock Text="Resumo executivo" FontSize="15" FontWeight="SemiBold" />
+                        <ItemsControl ItemsSource="{Binding Destaques}" Margin="0,10,0,20">
+                            <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Width="230" Margin="0,0,10,10" Padding="14" Background="{DynamicResource ResultBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="10">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Rotulo}" Foreground="{DynamicResource MutedTextBrush}" FontSize="12" />
+                                            <TextBlock Text="{Binding Valor}" FontSize="18" FontWeight="SemiBold" Margin="0,4,0,0" />
+                                            <TextBlock Text="{Binding Complemento}" Foreground="{DynamicResource MutedTextBrush}" FontSize="11" Margin="0,4,0,0" TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <Border Padding="16" Background="{DynamicResource ResultBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="10" Margin="0,0,0,20">
+                            <StackPanel>
+                                <TextBlock Text="Demonstrativo" FontSize="15" FontWeight="SemiBold" />
+                                <Grid Margin="0,12,0,4">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="3*" /><ColumnDefinition Width="1.1*" /><ColumnDefinition Width="1.3*" /><ColumnDefinition Width="1.3*" /></Grid.ColumnDefinitions>
+                                    <TextBlock Text="Descrição" FontWeight="SemiBold" Foreground="{DynamicResource MutedTextBrush}" />
+                                    <TextBlock Grid.Column="1" Text="Referência" FontWeight="SemiBold" Foreground="{DynamicResource MutedTextBrush}" />
+                                    <TextBlock Grid.Column="2" Text="{Binding RotuloProventos}" FontWeight="SemiBold" Foreground="{DynamicResource MutedTextBrush}" Style="{StaticResource Valor}" />
+                                    <TextBlock Grid.Column="3" Text="Descontos" FontWeight="SemiBold" Foreground="{DynamicResource MutedTextBrush}" Style="{StaticResource Valor}" Visibility="{Binding TemDescontos, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                </Grid>
+                                <ItemsControl ItemsSource="{Binding Linhas}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" Padding="0,8">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions><ColumnDefinition Width="3*" /><ColumnDefinition Width="1.1*" /><ColumnDefinition Width="1.3*" /><ColumnDefinition Width="1.3*" /></Grid.ColumnDefinitions>
+                                                    <TextBlock Text="{Binding Descricao}" TextWrapping="Wrap" Margin="0,0,12,0" />
+                                                    <TextBlock Grid.Column="1" Text="{Binding Referencia}" Foreground="{DynamicResource MutedTextBrush}" />
+                                                    <TextBlock Grid.Column="2" Text="{Binding Provento}" Style="{StaticResource Valor}" />
+                                                    <TextBlock Grid.Column="3" Text="{Binding Desconto}" Style="{StaticResource Valor}" />
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <Grid Margin="0,10,0,0">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="3*" /><ColumnDefinition Width="1.1*" /><ColumnDefinition Width="1.3*" /><ColumnDefinition Width="1.3*" /></Grid.ColumnDefinitions>
+                                    <TextBlock Text="Totais" FontWeight="SemiBold" />
+                                    <TextBlock Grid.Column="2" Text="{Binding TotalProventos}" FontWeight="SemiBold" Style="{StaticResource Valor}" />
+                                    <TextBlock Grid.Column="3" Text="{Binding TotalDescontos}" FontWeight="SemiBold" Style="{StaticResource Valor}" />
+                                </Grid>
+                                <Border Margin="0,12,0,0" Padding="12,10" Background="{DynamicResource AdvantageBackgroundBrush}" BorderBrush="{DynamicResource AdvantageBorderBrush}" BorderThickness="1" CornerRadius="8">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding RotuloResultado}" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource AdvantageTextBrush}" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Column="1" Text="{Binding Resultado}" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource AdvantageTextBrush}" />
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Padding="16" Background="{DynamicResource ResultBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="10" Margin="0,0,0,20"
+                                Visibility="{Binding TemInformativos, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <StackPanel>
+                                <TextBlock Text="Valores informativos" FontSize="15" FontWeight="SemiBold" />
+                                <TextBlock Text="Não são pagos ao trabalhador." Foreground="{DynamicResource MutedTextBrush}" Margin="0,4,0,6" />
+                                <ItemsControl ItemsSource="{Binding Informativos}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" Padding="0,8">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions><ColumnDefinition Width="3*" /><ColumnDefinition Width="1.1*" /><ColumnDefinition Width="2.6*" /></Grid.ColumnDefinitions>
+                                                    <TextBlock Text="{Binding Descricao}" TextWrapping="Wrap" Margin="0,0,12,0" />
+                                                    <TextBlock Grid.Column="1" Text="{Binding Referencia}" Foreground="{DynamicResource MutedTextBrush}" />
+                                                    <TextBlock Grid.Column="2" Text="{Binding Provento}" Style="{StaticResource Valor}" />
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+
+                        <TextBlock Text="Memória de cálculo" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,10" />
+                        <ItemsControl ItemsSource="{Binding Memoria}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Padding="14" Background="{DynamicResource ResultBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="10" Margin="0,0,0,12">
+                                        <StackPanel>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding Titulo}" FontSize="14" FontWeight="SemiBold" />
+                                                <TextBlock Grid.Column="1" Text="{Binding Destaque}" Foreground="{DynamicResource AccentBrush}" FontWeight="SemiBold" />
+                                            </Grid>
+                                            <ItemsControl ItemsSource="{Binding Formulas}" Margin="0,10,0,0">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Margin="0,0,0,7">
+                                                            <TextBlock Text="{Binding Titulo}" FontSize="12" FontWeight="SemiBold" />
+                                                            <TextBlock Text="{Binding Formula}" FontFamily="Cascadia Mono" FontSize="12" Foreground="{DynamicResource MutedTextBrush}" TextWrapping="Wrap" />
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <Border Padding="16" Background="{DynamicResource ResultBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="10"
+                                Visibility="{Binding TemObservacoes, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <StackPanel>
+                                <TextBlock Text="Observações" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,8" />
+                                <ItemsControl ItemsSource="{Binding Observacoes}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="0,0,0,6">
+                                                <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition /></Grid.ColumnDefinitions>
+                                                <TextBlock Text="•" Foreground="{DynamicResource AccentBrush}" Margin="0,0,8,0" />
+                                                <TextBlock Grid.Column="1" Text="{Binding}" Foreground="{DynamicResource MutedTextBrush}" TextWrapping="Wrap" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
