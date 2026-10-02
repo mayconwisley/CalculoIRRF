@@ -117,7 +117,7 @@ No final da área de resultado aparece o detalhamento **faixa a faixa** do INSS 
 | IRRF simplificado | Base = valor bruto − desconto simplificado. Disponível a partir de 05/2023. |
 | Redução mensal | Quando cadastrada para a competência, reduz o imposto apurado conforme a faixa de rendimentos (por exemplo, as regras vigentes a partir de 01/2026). |
 | Alíquota efetiva | IRRF final ÷ valor bruto. |
-| FGTS | 8% (padrão) e 2% (Jovem Aprendiz) sobre a base de INSS considerada na simulação. |
+| FGTS | 8% (padrão) e 2% (Jovem Aprendiz) sobre toda a base de INSS informada. O FGTS não tem teto: diferentemente do INSS, ele não é limitado ao último limite da tabela. |
 
 > **Importante:** o aplicativo utiliza, para cada tabela, o registro mais recente cuja competência seja **igual ou anterior** à competência informada. Por exemplo, uma simulação de 10/2026 usa as faixas de INSS de 01/2026, se essa for a tabela mais recente até essa data.
 
@@ -192,24 +192,25 @@ As tabelas definem as faixas e os valores usados em todos os cálculos. Elas já
 | Nº | Elemento | Função |
 | --- | --- | --- |
 | 1 | Formulário | Campos do registro: competência e os valores da tabela aberta. Só aparecem os campos que a tabela usa. |
-| 2 | Salvar alteração | Grava o registro do formulário (veja a regra de inclusão e edição abaixo). |
+| 2 | Incluir registro / Salvar alteração | Grava o formulário. O nome do botão indica o que vai acontecer: **Incluir registro** cria um registro novo; **Salvar alteração** atualiza a linha selecionada. |
 | 3 | Lista de registros | Registros cadastrados, do mais recente para o mais antigo. |
-| 4 | Recarregar lista | Lê novamente os registros do banco e **limpa a seleção**. |
-| 5 | Excluir selecionado | Remove a linha selecionada. Fica desabilitado quando nenhuma linha está selecionada. |
-| 6 | Atualizar tabela oficial | Busca a tabela vigente no site oficial e grava no banco local. |
-| 7 | Abrir página oficial | Abre no navegador a página oficial usada na atualização. |
+| 4 | Novo registro | Limpa a seleção e o formulário para você incluir um registro. |
+| 5 | Recarregar lista | Lê novamente os registros do banco, mantendo a linha selecionada. Alterações digitadas e não salvas são descartadas. |
+| 6 | Excluir selecionado | Remove a linha selecionada. Fica desabilitado quando nenhuma linha está selecionada. |
+| 7 | Atualizar tabela oficial | Busca a tabela vigente no site oficial e grava no banco local. |
+| 8 | Abrir página oficial | Abre no navegador a página oficial usada na atualização. |
 
 ### 8.2 Incluindo, editando e excluindo registros
 
-O botão **Salvar alteração** funciona de duas formas, conforme haja ou não uma linha selecionada:
+O botão de gravação muda de nome conforme a situação, para deixar claro o que será feito:
 
-- **Editar um registro:** clique na linha desejada. Os valores são copiados para o formulário. Altere o que for necessário e clique em **Salvar alteração**; o registro selecionado é atualizado.
-- **Incluir um registro novo:** clique em **Recarregar lista** para limpar a seleção. Preencha o formulário e clique em **Salvar alteração**; um novo registro é criado.
-- **Excluir:** selecione a linha e clique em **Excluir selecionado**.
+- **Incluir um registro:** clique em **Novo registro**, preencha o formulário e clique em **Incluir registro**. O registro criado aparece na lista já selecionado.
+- **Editar um registro:** clique na linha desejada. Os valores são copiados para o formulário e o botão passa a se chamar **Salvar alteração**. Altere o que for necessário e clique nele; a linha continua selecionada com os valores atualizados.
+- **Excluir:** selecione a linha e clique em **Excluir selecionado**. Depois da exclusão, o formulário volta ao modo de inclusão.
 
 ![Linha selecionada para edição](imagens/11-tabela-inss-edicao.png)
 
-> **Atenção:** sem nenhuma linha selecionada, **Salvar alteração sempre inclui um registro novo**, mesmo que o formulário mostre valores de um registro existente. Isso acontece, por exemplo, depois de **Recarregar lista** ou de uma atualização oficial. Confira se a linha certa está destacada antes de salvar uma edição.
+> **Dica:** se uma linha selecionada deixar de existir, por exemplo quando a atualização oficial substitui a tabela da competência, o formulário é limpo e volta ao modo **Incluir registro**. Assim, valores antigos nunca ficam no formulário sem uma linha correspondente.
 
 As alterações passam a valer imediatamente para os próximos cálculos.
 
@@ -279,7 +280,8 @@ Por padrão, o aplicativo desenha a interface sem usar a placa de vídeo, o que 
 | --- | --- |
 | "Informe uma competência válida (MM/AAAA), valores monetários válidos e dependentes maior ou igual a zero." | Confira o formato da competência, use vírgula nos centavos e informe dependentes como número inteiro. |
 | "Informe média, dias-base, datas (dd/MM/aaaa) e complementos em formatos válidos." | Confira as datas da estabilidade e os valores digitados. |
-| Aviso de que o fim da estabilidade deve ser posterior à data de demissão | Corrija a data final, que precisa ser depois da demissão. |
+| "O fim da estabilidade deve ser posterior à data de demissão." | Corrija a data final, que precisa ser depois da demissão. |
+| "Os dias-base devem ser maiores que zero." | Informe o divisor da média, normalmente 30. |
 | "Informe valores monetários válidos." (pensão) | Confira o percentual e os outros descontos. |
 | "Os parâmetros da pensão são inválidos." | O percentual deve estar entre 0 e 100, e os outros descontos não podem superar os rendimentos. |
 | "Não há dados de INSS cadastrados para a competência informada." (ou de IRRF e demais tabelas) | Não existe tabela vigente para a competência. Informe uma competência a partir de 01/2017 ou cadastre a tabela correspondente. |
@@ -302,7 +304,7 @@ No detalhamento por faixas, o imposto de cada faixa é arredondado separadamente
 O desconto simplificado mensal passou a valer a partir de 05/2023. Em competências anteriores, apenas a modalidade normal é aplicável.
 
 **A base de INSS mostrada é menor que a que eu informei. Está errado?**
-Não. Quando a base ultrapassa o teto da tabela do INSS, o cálculo é limitado ao teto, e o cartão do INSS mostra a base efetivamente considerada.
+Não. Quando a base ultrapassa o teto da tabela do INSS, o cálculo do INSS é limitado ao teto, e o cartão do INSS mostra a base efetivamente considerada. O FGTS não tem teto e continua sendo calculado sobre a base informada: com R$ 8.500,00, por exemplo, o INSS considera R$ 8.475,55 (teto de 2026), mas o FGTS de 8% é de R$ 680,00.
 
 **Alterei uma tabela. Preciso reiniciar o aplicativo?**
 Não. A alteração vale para o próximo cálculo.

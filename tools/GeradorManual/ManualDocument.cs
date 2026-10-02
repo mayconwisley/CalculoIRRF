@@ -315,9 +315,9 @@ public sealed class ManualDocument
     {
         var linhas = tabela.OfType<MdTableRow>().ToList();
         var colunas = linhas.Max(linha => linha.Count);
-        // Largura proporcional ao texto mais longo de cada coluna, com limites para colunas curtas (Nº) e longas (descrições).
+        // Largura proporcional ao texto mais longo de cada coluna; colunas curtas (como "Nº") têm largura fixa para não quebrar o título.
         var pesos = Enumerable.Range(0, colunas)
-            .Select(indice => Math.Clamp(linhas.Max(linha => indice < linha.Count ? TextoSimples((ContainerBlock)linha[indice]).Length : 0), 4, 60))
+            .Select(indice => Math.Min(linhas.Max(linha => indice < linha.Count ? TextoSimples((ContainerBlock)linha[indice]).Length : 0), 60))
             .ToArray();
 
         container.PaddingVertical(4).DefaultTextStyle(estilo => estilo.FontSize(9.5f)).Table(grade =>
@@ -325,7 +325,12 @@ public sealed class ManualDocument
             grade.ColumnsDefinition(definicao =>
             {
                 foreach (var peso in pesos)
-                    definicao.RelativeColumn(peso);
+                {
+                    if (peso <= 3)
+                        definicao.ConstantColumn(32);
+                    else
+                        definicao.RelativeColumn(peso);
+                }
             });
 
             if (linhas.FirstOrDefault(linha => linha.IsHeader) is { } cabecalho)

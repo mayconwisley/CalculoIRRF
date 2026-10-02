@@ -39,8 +39,9 @@ public sealed class SimularImpostoUseCase(ITributacaoConsulta tributacaoConsulta
             normal,
             simplificada,
             perfil.DescontoMinimo,
-            CalculadoraTributacao.Arredondar(baseInss * .08m),
-            CalculadoraTributacao.Arredondar(baseInss * .02m),
+            // O FGTS não tem teto: incide sobre toda a remuneração informada, e não sobre a base limitada do INSS.
+            CalculadoraTributacao.Arredondar(request.BaseInss * .08m),
+            CalculadoraTributacao.Arredondar(request.BaseInss * .02m),
             vantagem,
             modalidadeMaisVantajosa,
             detalhesInss.Select(Mapear).ToArray());

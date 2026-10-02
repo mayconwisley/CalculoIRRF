@@ -31,7 +31,7 @@
                     <StackPanel Margin="0,0,12,0" Visibility="{Binding ExibeFaixa, Converter={StaticResource BooleanToVisibilityConverter}}"><TextBlock Text="{Binding LabelAliquota}" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,6"/><TextBox Text="{Binding Aliquota, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right" behaviors:FormatacaoNumerica.Formato="#,##0.00####"/></StackPanel>
                     <StackPanel Margin="0,0,12,0" Visibility="{Binding ExibeDeducao, Converter={StaticResource BooleanToVisibilityConverter}}"><TextBlock Text="{Binding LabelDeducao}" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,6"/><TextBox Text="{Binding Deducao, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right" behaviors:FormatacaoNumerica.Formato="N2"/></StackPanel>
                 </UniformGrid>
-                <Button Grid.Column="1" Content="Salvar alteração" Command="{Binding SalvarCommand}" Style="{StaticResource PrimaryButton}" VerticalAlignment="Bottom" MinWidth="132"/>
+                <Button Grid.Column="1" Content="{Binding TextoSalvar}" Command="{Binding SalvarCommand}" Style="{StaticResource PrimaryButton}" VerticalAlignment="Bottom" MinWidth="142"/>
             </Grid>
         </Border>
         <Border Grid.Row="4" Style="{StaticResource Card}">
@@ -41,9 +41,10 @@
                     <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                     <StackPanel>
                         <TextBlock Text="{Binding TituloLista}" FontSize="17" FontWeight="SemiBold"/>
-                        <TextBlock Text="Selecione uma linha para editar ou excluir." Foreground="{DynamicResource MutedTextBrush}" Margin="0,4,0,0"/>
+                        <TextBlock Text="Selecione uma linha para editar ou excluir, ou use Novo registro para incluir." Foreground="{DynamicResource MutedTextBrush}" Margin="0,4,0,0"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Content="Novo registro" Command="{Binding NovoCommand}" Margin="0,0,8,0"/>
                         <Button Content="Recarregar lista" Command="{Binding CarregarCommand}" Margin="0,0,8,0"/>
                         <Button Content="Excluir selecionado" Command="{Binding ExcluirCommand}"/>
                     </StackPanel>

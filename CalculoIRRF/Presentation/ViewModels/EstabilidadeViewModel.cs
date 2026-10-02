@@ -102,7 +102,7 @@ public sealed class EstabilidadeViewModel : ViewModelBase
         }
         catch (ArgumentException exception)
         {
-            _notificador.MostrarAviso(exception.Message);
+            _notificador.MostrarAviso(MensagemUsuario.De(exception));
         }
         catch (Exception exception)
         {

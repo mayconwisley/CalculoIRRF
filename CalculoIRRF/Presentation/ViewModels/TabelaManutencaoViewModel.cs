@@ -37,7 +37,8 @@ public sealed class TabelaManutencaoViewModel : ViewModelBase
         Tipo = tipo; _service = service; _atualizadorIrrf = atualizadorIrrf; _atualizadorInss = atualizadorInss; _notificador = notificador;
         SalvarCommand = new AsyncRelayCommand(SalvarAsync);
         ExcluirCommand = new AsyncRelayCommand(ExcluirAsync, () => Selecionado is not null);
-        CarregarCommand = new AsyncRelayCommand(CarregarAsync);
+        CarregarCommand = new AsyncRelayCommand(() => CarregarAsync(Selecionado?.Id));
+        NovoCommand = new RelayCommand(_ => NovoRegistro());
         AtualizarDaReceitaCommand = new AsyncRelayCommand(AtualizarDaReceitaAsync, () => ExibeAtualizacaoOnline);
         AbrirFonteOficialCommand = new RelayCommand(_ => AbrirFonteOficial(), _ => ExibeAtualizacaoOnline);
     }
@@ -57,7 +58,18 @@ public sealed class TabelaManutencaoViewModel : ViewModelBase
     public string TextoLinkFonteOficial => Tipo == TipoTabelaTributaria.Inss ? "Abrir página oficial do INSS ↗" : "Abrir página oficial da Receita Federal ↗";
     public string FonteOficial => (Tipo == TipoTabelaTributaria.Inss ? _atualizadorInss.FonteOficial : _atualizadorIrrf.FonteOficial).AbsoluteUri;
     public ObservableCollection<RegistroTabelaDto> Registros { get; } = [];
-    public RegistroTabelaDto? Selecionado { get => _selecionado; set { if (SetProperty(ref _selecionado, value) && value is not null) Preencher(value); ((AsyncRelayCommand)ExcluirCommand).RaiseCanExecuteChanged(); } }
+    public RegistroTabelaDto? Selecionado
+    {
+        get => _selecionado;
+        set
+        {
+            if (SetProperty(ref _selecionado, value) && value is not null) Preencher(value);
+            ((AsyncRelayCommand)ExcluirCommand).RaiseCanExecuteChanged();
+            OnPropertyChanged(nameof(TextoSalvar));
+        }
+    }
+    // Sem linha selecionada, salvar cria um registro; o rótulo deixa claro qual das duas operações será feita.
+    public string TextoSalvar => Selecionado is null ? "Incluir registro" : "Salvar alteração";
     public string Competencia { get => _competencia; set => SetProperty(ref _competencia, value); }
     public string Faixa { get => _faixa; set => SetProperty(ref _faixa, value); }
     public string Valor { get => _valor; set => SetProperty(ref _valor, value); }
@@ -67,14 +79,29 @@ public sealed class TabelaManutencaoViewModel : ViewModelBase
     public ICommand SalvarCommand { get; }
     public ICommand ExcluirCommand { get; }
     public ICommand CarregarCommand { get; }
+    public ICommand NovoCommand { get; }
     public ICommand AtualizarDaReceitaCommand { get; }
     public ICommand AbrirFonteOficialCommand { get; }
 
-    private async Task CarregarAsync()
+    /// <summary>Recarrega a lista mantendo selecionado o registro informado; se ele não existir mais, volta ao modo de inclusão.</summary>
+    private async Task CarregarAsync(int? idSelecionado)
     {
+        var registros = await _service.ListarAsync(Tipo, CancellationToken.None);
         Registros.Clear();
-        foreach (var item in await _service.ListarAsync(Tipo, CancellationToken.None)) Registros.Add(item);
+        foreach (var item in registros) Registros.Add(item);
+        // Os registros são records (igualdade por valor): limpar antes garante que o formulário seja preenchido de novo com o que está no banco.
         Selecionado = null;
+        Selecionado = Registros.FirstOrDefault(item => item.Id == idSelecionado);
+        if (Selecionado is null) LimparFormulario();
+    }
+    private void NovoRegistro()
+    {
+        Selecionado = null;
+        LimparFormulario();
+    }
+    private void LimparFormulario()
+    {
+        Competencia = DateTime.Today.ToString("MM/yyyy"); Faixa = "1"; Valor = "0,00"; Aliquota = "0,00"; Deducao = "0,00";
     }
     private async Task AtualizarDaReceitaAsync()
     {
@@ -84,7 +111,7 @@ public sealed class TabelaManutencaoViewModel : ViewModelBase
             var resultado = Tipo == TipoTabelaTributaria.Inss
                 ? await AtualizarInssAsync()
                 : await AtualizarIrrfAsync();
-            await CarregarAsync();
+            await CarregarAsync(Selecionado?.Id);
             StatusAtualizacao = $"Dados de {resultado.Competencia:MM/yyyy} atualizados pela fonte oficial ({resultado.QuantidadeFaixas} faixas tributárias importadas).";
         }
         catch (Exception ex)
@@ -110,13 +137,20 @@ public sealed class TabelaManutencaoViewModel : ViewModelBase
     private async Task SalvarAsync()
     {
         if (!Ler(out var request)) return;
-        try { await _service.SalvarAsync(Tipo, request, CancellationToken.None); await CarregarAsync(); }
+        try
+        {
+            await _service.SalvarAsync(Tipo, request, CancellationToken.None);
+            await CarregarAsync(request.Id == 0 ? null : request.Id);
+            // Após incluir, o registro criado (o de maior Id com a mesma competência e faixa) fica selecionado.
+            if (request.Id == 0)
+                Selecionado = Registros.Where(item => item.Competencia == request.Competencia && item.Faixa == request.Faixa).MaxBy(item => item.Id);
+        }
         catch (Exception ex) { _notificador.MostrarErro("Não foi possível salvar o registro.", ex); }
     }
     private async Task ExcluirAsync()
     {
         if (Selecionado is null) return;
-        try { await _service.ExcluirAsync(Tipo, Selecionado.Id, CancellationToken.None); await CarregarAsync(); }
+        try { await _service.ExcluirAsync(Tipo, Selecionado.Id, CancellationToken.None); await CarregarAsync(null); }
         catch (Exception ex) { _notificador.MostrarErro("Não foi possível excluir o registro.", ex); }
     }
     private bool Ler(out SalvarRegistroTabelaRequest request)
