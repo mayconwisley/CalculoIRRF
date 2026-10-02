@@ -2,9 +2,8 @@
 
 using CalculoIRRF.Application.Management;
 using CalculoIRRF.Infrastructure.Persistence;
-using CalculoIRRF.Infrastructure.Persistence.Entities;
 using HtmlAgilityPack;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.Sqlite;
 using System.Globalization;
 using System.Net;
 using System.Net.Http;
@@ -19,7 +18,7 @@ namespace CalculoIRRF.Infrastructure.Tributacao;
 /// </summary>
 public sealed partial class AtualizadorTabelaIrrfDaReceitaFederal(
     Func<HttpClient> criarHttpClient,
-    IDbContextFactory<CalculoIrrfDbContext> contextFactory,
+    BancoTributario banco,
     ICacheTabelasTributarias cache) : IAtualizadorTabelaIrrf
 {
     private const string CatalogoUrl = "https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas";
@@ -148,55 +147,39 @@ public sealed partial class AtualizadorTabelaIrrfDaReceitaFederal(
     private async Task PersistirAsync(TabelaIrrfOnline tabela, CancellationToken cancellationToken)
     {
         var competencia = tabela.Competencia.ToDateTime(TimeOnly.MinValue);
-        await using var context = await contextFactory.CreateDbContextAsync(cancellationToken);
-        await using var transacao = await context.Database.BeginTransactionAsync(cancellationToken);
+        await using var conexao = await banco.AbrirAsync(cancellationToken);
+        await using var transacao = conexao.BeginTransaction();
 
-        var existentes = await context.FaixasIrrf.Where(item => item.Competencia == competencia).ToListAsync(cancellationToken);
-        context.FaixasIrrf.RemoveRange(existentes);
-        context.FaixasIrrf.AddRange(tabela.Faixas.Select((faixa, indice) => new FaixaIrrfEntity
+        await conexao.ExecutarAsync(transacao, "DELETE FROM Irrf WHERE Competencia = $competencia", cancellationToken, ("$competencia", competencia));
+        for (var indice = 0; indice < tabela.Faixas.Count; indice++)
         {
-            Competencia = competencia,
-            Faixa = indice + 1,
-            Valor = (double)faixa.Limite,
-            Porcentagem = (double)faixa.Aliquota,
-            Deducao = (double)faixa.Deducao
-        }));
+            var faixa = tabela.Faixas[indice];
+            await conexao.ExecutarAsync(transacao, "INSERT INTO Irrf (Competencia, Faixa, Valor, Porcentagem, Deducao) VALUES ($competencia, $faixa, $valor, $porcentagem, $deducao)", cancellationToken,
+                ("$competencia", competencia), ("$faixa", indice + 1), ("$valor", (double)faixa.Limite), ("$porcentagem", (double)faixa.Aliquota), ("$deducao", (double)faixa.Deducao));
+        }
 
-        await AtualizarParametroAsync(context.ParametrosDependentes, competencia, tabela.ValorDependente, cancellationToken);
-        await AtualizarParametroAsync(context.ParametrosSimplificados, competencia, tabela.ValorSimplificado, cancellationToken);
+        await AtualizarParametroAsync(conexao, transacao, "Dependente", competencia, tabela.ValorDependente, cancellationToken);
+        await AtualizarParametroAsync(conexao, transacao, "Simplificado", competencia, tabela.ValorSimplificado, cancellationToken);
 
-        var reducoesExistentes = await context.ReducoesMensaisIrrf.Where(item => item.Competencia == competencia).ToListAsync(cancellationToken);
-        context.ReducoesMensaisIrrf.RemoveRange(reducoesExistentes);
-        context.ReducoesMensaisIrrf.AddRange(tabela.ReducoesMensais.Select(reducao => new ReducaoIrrfMensalEntity
-        {
-            Competencia = competencia,
-            Faixa = reducao.Faixa,
-            LimiteRendimentos = (double)reducao.LimiteRendimentos,
-            Multiplicador = (double)reducao.Multiplicador,
-            ValorBase = (double)reducao.ValorBase
-        }));
+        await conexao.ExecutarAsync(transacao, "DELETE FROM ReducaoMensalIrrf WHERE Competencia = $competencia", cancellationToken, ("$competencia", competencia));
+        foreach (var reducao in tabela.ReducoesMensais)
+            await conexao.ExecutarAsync(transacao, "INSERT INTO ReducaoMensalIrrf (Competencia, Faixa, LimiteRendimentos, Multiplicador, ValorBase) VALUES ($competencia, $faixa, $limite, $multiplicador, $valorBase)", cancellationToken,
+                ("$competencia", competencia), ("$faixa", reducao.Faixa), ("$limite", (double)reducao.LimiteRendimentos), ("$multiplicador", (double)reducao.Multiplicador), ("$valorBase", (double)reducao.ValorBase));
 
-        await context.SaveChangesAsync(cancellationToken);
         await transacao.CommitAsync(cancellationToken);
         cache.Invalidar();
     }
 
-    private static async Task AtualizarParametroAsync(DbSet<ParametroDependenteEntity> parametros, DateTime competencia, decimal valor, CancellationToken cancellationToken)
+    private static async Task AtualizarParametroAsync(SqliteConnection conexao, SqliteTransaction transacao, string tabela, DateTime competencia, decimal valor, CancellationToken cancellationToken)
     {
-        var parametro = await parametros.SingleOrDefaultAsync(item => item.Competencia == competencia, cancellationToken);
-        if (parametro is null)
-            parametros.Add(new ParametroDependenteEntity { Competencia = competencia, Valor = (double)valor });
-        else
-            parametro.Valor = (double)valor;
-    }
+        var ids = await conexao.ListarAsync(transacao, $"SELECT Id FROM {tabela} WHERE Competencia = $competencia LIMIT 2", leitor => leitor.GetInt32(0), cancellationToken, ("$competencia", competencia));
+        if (ids.Length > 1)
+            throw new InvalidOperationException($"Há mais de um registro em {tabela} para a competência {competencia:MM/yyyy}. Nenhum dado foi alterado.");
 
-    private static async Task AtualizarParametroAsync(DbSet<ParametroSimplificadoEntity> parametros, DateTime competencia, decimal valor, CancellationToken cancellationToken)
-    {
-        var parametro = await parametros.SingleOrDefaultAsync(item => item.Competencia == competencia, cancellationToken);
-        if (parametro is null)
-            parametros.Add(new ParametroSimplificadoEntity { Competencia = competencia, Valor = (double)valor });
+        if (ids.Length == 0)
+            await conexao.ExecutarAsync(transacao, $"INSERT INTO {tabela} (Competencia, Valor) VALUES ($competencia, $valor)", cancellationToken, ("$competencia", competencia), ("$valor", (double)valor));
         else
-            parametro.Valor = (double)valor;
+            await conexao.ExecutarAsync(transacao, $"UPDATE {tabela} SET Valor = $valor WHERE Id = $id", cancellationToken, ("$valor", (double)valor), ("$id", ids[0]));
     }
 
     private static DateOnly ExtrairCompetencia(string conteudo, Uri fonte)

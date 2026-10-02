@@ -2,9 +2,7 @@
 
 using CalculoIRRF.Application.Management;
 using CalculoIRRF.Infrastructure.Persistence;
-using CalculoIRRF.Infrastructure.Persistence.Entities;
 using HtmlAgilityPack;
-using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Net;
 using System.Net.Http;
@@ -16,7 +14,7 @@ namespace CalculoIRRF.Infrastructure.Tributacao;
 /// <summary>Importa a tabela progressiva dos segurados empregado, doméstico e trabalhador avulso.</summary>
 public sealed partial class AtualizadorTabelaInssDoGoverno(
     Func<HttpClient> criarHttpClient,
-    IDbContextFactory<CalculoIrrfDbContext> contextFactory,
+    BancoTributario banco,
     ICacheTabelasTributarias cache) : IAtualizadorTabelaInss
 {
     private const string UrlTabela = "https://www.gov.br/inss/pt-br/direitos-e-deveres/inscricao-e-contribuicao/tabela-de-contribuicao-mensal";
@@ -69,18 +67,12 @@ public sealed partial class AtualizadorTabelaInssDoGoverno(
     private async Task PersistirAsync(TabelaInssOnline tabela, CancellationToken cancellationToken)
     {
         var competencia = tabela.Competencia.ToDateTime(TimeOnly.MinValue);
-        await using var context = await contextFactory.CreateDbContextAsync(cancellationToken);
-        await using var transacao = await context.Database.BeginTransactionAsync(cancellationToken);
-        var existentes = await context.FaixasInss.Where(item => item.Competencia == competencia).ToListAsync(cancellationToken);
-        context.FaixasInss.RemoveRange(existentes);
-        context.FaixasInss.AddRange(tabela.Faixas.Select(faixa => new FaixaInssEntity
-        {
-            Competencia = competencia,
-            Faixa = faixa.Faixa,
-            Valor = (double)faixa.Limite,
-            Porcentagem = (double)faixa.Aliquota
-        }));
-        await context.SaveChangesAsync(cancellationToken);
+        await using var conexao = await banco.AbrirAsync(cancellationToken);
+        await using var transacao = conexao.BeginTransaction();
+        await conexao.ExecutarAsync(transacao, "DELETE FROM Inss WHERE Competencia = $competencia", cancellationToken, ("$competencia", competencia));
+        foreach (var faixa in tabela.Faixas)
+            await conexao.ExecutarAsync(transacao, "INSERT INTO Inss (Competencia, Faixa, Valor, Porcentagem) VALUES ($competencia, $faixa, $valor, $porcentagem)", cancellationToken,
+                ("$competencia", competencia), ("$faixa", faixa.Faixa), ("$valor", (double)faixa.Limite), ("$porcentagem", (double)faixa.Aliquota));
         await transacao.CommitAsync(cancellationToken);
         cache.Invalidar();
     }

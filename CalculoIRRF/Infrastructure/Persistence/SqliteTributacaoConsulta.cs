@@ -2,16 +2,15 @@
 
 using CalculoIRRF.Application.Abstractions;
 using CalculoIRRF.Application.DTOs;
-using Microsoft.EntityFrameworkCore;
 
 namespace CalculoIRRF.Infrastructure.Persistence;
 
 /// <summary>
-/// Adaptador EF Core da porta de leitura consumida pela camada Application.
+/// Adaptador SQLite da porta de leitura consumida pela camada Application.
 /// As tabelas são pequenas e só mudam pela manutenção ou pela atualização online, por isso são carregadas uma vez
 /// e mantidas em memória até <see cref="Invalidar"/> ser chamado.
 /// </summary>
-public sealed class EfTributacaoConsulta(IDbContextFactory<CalculoIrrfDbContext> contextFactory) : ITributacaoConsulta, ICacheTabelasTributarias
+public sealed class SqliteTributacaoConsulta(BancoTributario banco) : ITributacaoConsulta, ICacheTabelasTributarias
 {
     private TabelasTributarias? _tabelas;
     private int _versao;
@@ -51,23 +50,23 @@ public sealed class EfTributacaoConsulta(IDbContextFactory<CalculoIrrfDbContext>
             return carregadas;
 
         var versao = Volatile.Read(ref _versao);
-        await using var context = await contextFactory.CreateDbContextAsync(cancellationToken);
+        await using var conexao = await banco.AbrirAsync(cancellationToken);
 
-        // As conversões para decimal ficam na consulta para manter a mesma leitura feita pelo provedor SQLite.
+        // GetDecimal converte o texto que o SQLite gera para cada REAL, mantendo a mesma escala decimal lida pelo EF Core até então.
         // A ordenação por Id preserva a ordem física usada antes quando há mais de um registro na mesma competência.
         var tabelas = new TabelasTributarias(
-            await context.FaixasInss.OrderBy(item => item.Id)
-                .Select(item => new Vigencia<FaixaTributariaDto>(item.Competencia, new FaixaTributariaDto(item.Faixa, (decimal)item.Valor, (decimal)item.Porcentagem, 0m))).ToArrayAsync(cancellationToken),
-            await context.FaixasIrrf.OrderBy(item => item.Id)
-                .Select(item => new Vigencia<FaixaTributariaDto>(item.Competencia, new FaixaTributariaDto(item.Faixa, (decimal)item.Valor, (decimal)item.Porcentagem, (decimal)item.Deducao))).ToArrayAsync(cancellationToken),
-            await context.ParametrosSimplificados.OrderBy(item => item.Id)
-                .Select(item => new Vigencia<decimal>(item.Competencia, (decimal)item.Valor)).ToArrayAsync(cancellationToken),
-            await context.ParametrosDependentes.OrderBy(item => item.Id)
-                .Select(item => new Vigencia<decimal>(item.Competencia, (decimal)item.Valor)).ToArrayAsync(cancellationToken),
-            await context.ParametrosDescontoMinimo.OrderBy(item => item.Id)
-                .Select(item => new Vigencia<decimal>(item.Competencia, (decimal)item.Valor)).ToArrayAsync(cancellationToken),
-            await context.ReducoesMensaisIrrf.OrderBy(item => item.Id)
-                .Select(item => new Vigencia<RegraReducaoMensalIrrfDto>(item.Competencia, new RegraReducaoMensalIrrfDto(item.Faixa, (decimal)item.LimiteRendimentos, (decimal)item.Multiplicador, (decimal)item.ValorBase))).ToArrayAsync(cancellationToken));
+            await conexao.ListarAsync(null, "SELECT Competencia, Faixa, Valor, Porcentagem FROM Inss ORDER BY Id",
+                leitor => new Vigencia<FaixaTributariaDto>(leitor.GetDateTime(0), new FaixaTributariaDto(leitor.GetInt32(1), leitor.GetDecimal(2), leitor.GetDecimal(3), 0m)), cancellationToken),
+            await conexao.ListarAsync(null, "SELECT Competencia, Faixa, Valor, Porcentagem, Deducao FROM Irrf ORDER BY Id",
+                leitor => new Vigencia<FaixaTributariaDto>(leitor.GetDateTime(0), new FaixaTributariaDto(leitor.GetInt32(1), leitor.GetDecimal(2), leitor.GetDecimal(3), leitor.GetDecimal(4))), cancellationToken),
+            await conexao.ListarAsync(null, "SELECT Competencia, Valor FROM Simplificado ORDER BY Id",
+                leitor => new Vigencia<decimal>(leitor.GetDateTime(0), leitor.GetDecimal(1)), cancellationToken),
+            await conexao.ListarAsync(null, "SELECT Competencia, Valor FROM Dependente ORDER BY Id",
+                leitor => new Vigencia<decimal>(leitor.GetDateTime(0), leitor.GetDecimal(1)), cancellationToken),
+            await conexao.ListarAsync(null, "SELECT Competencia, Valor FROM DescontoMinimo ORDER BY Id",
+                leitor => new Vigencia<decimal>(leitor.GetDateTime(0), leitor.GetDecimal(1)), cancellationToken),
+            await conexao.ListarAsync(null, "SELECT Competencia, Faixa, LimiteRendimentos, Multiplicador, ValorBase FROM ReducaoMensalIrrf ORDER BY Id",
+                leitor => new Vigencia<RegraReducaoMensalIrrfDto>(leitor.GetDateTime(0), new RegraReducaoMensalIrrfDto(leitor.GetInt32(1), leitor.GetDecimal(2), leitor.GetDecimal(3), leitor.GetDecimal(4))), cancellationToken));
 
         // Se houve gravação durante a carga, o resultado atende esta chamada, mas não é guardado.
         if (versao == Volatile.Read(ref _versao))

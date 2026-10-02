@@ -1,5 +1,4 @@
-using CalculoIRRF.Infrastructure.Persistence.Entities;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.Sqlite;
 
 namespace CalculoIRRF.Infrastructure.Persistence;
 
@@ -8,7 +7,7 @@ namespace CalculoIRRF.Infrastructure.Persistence;
 /// Os registros existentes são preservados para não sobrescrever manutenções locais.
 /// A carga só é executada quando o banco ainda não está na <see cref="VersaoSementes"/> atual.
 /// </summary>
-public sealed class InicializadorBancoTributario(IDbContextFactory<CalculoIrrfDbContext> contextFactory) : IInicializadorBancoTributario
+public sealed class InicializadorBancoTributario(BancoTributario banco) : IInicializadorBancoTributario
 {
     /// <summary>Incremente ao alterar as sementes ou os scripts abaixo, para que bancos existentes recebam a nova carga.</summary>
     private const int VersaoSementes = 1;
@@ -45,35 +44,28 @@ public sealed class InicializadorBancoTributario(IDbContextFactory<CalculoIrrfDb
 
     public async Task InicializarAsync(CancellationToken cancellationToken)
     {
-        await using var context = await contextFactory.CreateDbContextAsync(cancellationToken);
-        if (await ObterVersaoBancoAsync(context, cancellationToken) >= VersaoSementes)
+        await using var conexao = await banco.AbrirAsync(cancellationToken);
+        if (await ObterVersaoBancoAsync(conexao, cancellationToken) >= VersaoSementes)
             return;
 
-        await CriarTabelaReducaoMensalAsync(context, cancellationToken);
-        await CorrigirOuInserirReducaoMensal2026Async(context, cancellationToken);
-        await InserirFaixasInssAusentesAsync(context, cancellationToken);
-        await InserirFaixasIrrfAusentesAsync(context, cancellationToken);
-        await InserirParametrosAusentesAsync(context, cancellationToken);
-        await context.Database.ExecuteSqlRawAsync($"PRAGMA user_version = {VersaoSementes}", cancellationToken);
+        // Uma única transação: ou a carga inteira é gravada junto com a versão, ou nada muda.
+        await using var transacao = conexao.BeginTransaction();
+        await CriarTabelaReducaoMensalAsync(conexao, transacao, cancellationToken);
+        await CorrigirOuInserirReducaoMensal2026Async(conexao, transacao, cancellationToken);
+        await InserirFaixasInssAusentesAsync(conexao, transacao, cancellationToken);
+        await InserirFaixasIrrfAusentesAsync(conexao, transacao, cancellationToken);
+        await InserirParametrosAusentesAsync(conexao, transacao, cancellationToken);
+        await conexao.ExecutarAsync(transacao, $"PRAGMA user_version = {VersaoSementes}", cancellationToken);
+        await transacao.CommitAsync(cancellationToken);
     }
 
-    // Lido por ADO.NET para não construir o modelo nem compilar consultas do EF Core na abertura quando não há carga a fazer.
-    private static async Task<int> ObterVersaoBancoAsync(CalculoIrrfDbContext context, CancellationToken cancellationToken)
+    private static async Task<int> ObterVersaoBancoAsync(SqliteConnection conexao, CancellationToken cancellationToken)
     {
-        await context.Database.OpenConnectionAsync(cancellationToken);
-        try
-        {
-            await using var comando = context.Database.GetDbConnection().CreateCommand();
-            comando.CommandText = "PRAGMA user_version";
-            return Convert.ToInt32(await comando.ExecuteScalarAsync(cancellationToken));
-        }
-        finally
-        {
-            await context.Database.CloseConnectionAsync();
-        }
+        await using var comando = conexao.CriarComando(null, "PRAGMA user_version");
+        return Convert.ToInt32(await comando.ExecuteScalarAsync(cancellationToken));
     }
 
-    private static Task CriarTabelaReducaoMensalAsync(CalculoIrrfDbContext context, CancellationToken cancellationToken) => context.Database.ExecuteSqlRawAsync("""
+    private static Task CriarTabelaReducaoMensalAsync(SqliteConnection conexao, SqliteTransaction transacao, CancellationToken cancellationToken) => conexao.ExecutarAsync(transacao, """
         CREATE TABLE IF NOT EXISTS "ReducaoMensalIrrf" (
             "Id" INTEGER NOT NULL CONSTRAINT "PK_ReducaoMensalIrrf" PRIMARY KEY AUTOINCREMENT,
             "Competencia" TEXT NOT NULL,
@@ -84,7 +76,7 @@ public sealed class InicializadorBancoTributario(IDbContextFactory<CalculoIrrfDb
         );
         """, cancellationToken);
 
-    private static Task CorrigirOuInserirReducaoMensal2026Async(CalculoIrrfDbContext context, CancellationToken cancellationToken) => context.Database.ExecuteSqlRawAsync("""
+    private static Task CorrigirOuInserirReducaoMensal2026Async(SqliteConnection conexao, SqliteTransaction transacao, CancellationToken cancellationToken) => conexao.ExecutarAsync(transacao, """
         INSERT INTO "ReducaoMensalIrrf" ("Competencia", "Faixa", "LimiteRendimentos", "Multiplicador", "ValorBase")
         SELECT '2026-01-01 00:00:00', 1, 5000.00, 0.000000, 312.89
         WHERE NOT EXISTS (SELECT 1 FROM "ReducaoMensalIrrf" WHERE "Competencia" = '2026-01-01 00:00:00' AND "Faixa" = 1);
@@ -102,54 +94,35 @@ public sealed class InicializadorBancoTributario(IDbContextFactory<CalculoIrrfDb
           AND "ValorBase" = 7350.00;
         """, cancellationToken);
 
-    private static async Task InserirFaixasInssAusentesAsync(CalculoIrrfDbContext context, CancellationToken cancellationToken)
+    private static async Task InserirFaixasInssAusentesAsync(SqliteConnection conexao, SqliteTransaction transacao, CancellationToken cancellationToken)
     {
-        var existentes = (await context.FaixasInss.AsNoTracking().Select(item => new { item.Competencia, item.Faixa }).ToListAsync(cancellationToken))
-            .Select(item => (item.Competencia, item.Faixa)).ToHashSet();
-        var pendentes = FaixasInss.Where(item => !existentes.Contains((item.Competencia, item.Faixa)))
-            .Select(item => new FaixaInssEntity { Competencia = item.Competencia, Faixa = item.Faixa, Valor = item.Limite, Porcentagem = item.Aliquota });
-
-        context.FaixasInss.AddRange(pendentes);
-        await context.SaveChangesAsync(cancellationToken);
+        var existentes = (await conexao.ListarAsync(transacao, "SELECT Competencia, Faixa FROM Inss", leitor => (leitor.GetDateTime(0), leitor.GetInt32(1)), cancellationToken)).ToHashSet();
+        foreach (var item in FaixasInss.Where(item => !existentes.Contains((item.Competencia, item.Faixa))))
+            await conexao.ExecutarAsync(transacao, "INSERT INTO Inss (Competencia, Faixa, Valor, Porcentagem) VALUES ($competencia, $faixa, $valor, $porcentagem)", cancellationToken,
+                ("$competencia", item.Competencia), ("$faixa", item.Faixa), ("$valor", item.Limite), ("$porcentagem", item.Aliquota));
     }
 
-    private static async Task InserirFaixasIrrfAusentesAsync(CalculoIrrfDbContext context, CancellationToken cancellationToken)
+    private static async Task InserirFaixasIrrfAusentesAsync(SqliteConnection conexao, SqliteTransaction transacao, CancellationToken cancellationToken)
     {
-        var existentes = (await context.FaixasIrrf.AsNoTracking().Select(item => new { item.Competencia, item.Faixa }).ToListAsync(cancellationToken))
-            .Select(item => (item.Competencia, item.Faixa)).ToHashSet();
-        var pendentes = FaixasIrrf.Where(item => !existentes.Contains((item.Competencia, item.Faixa)))
-            .Select(item => new FaixaIrrfEntity { Competencia = item.Competencia, Faixa = item.Faixa, Valor = item.Limite, Porcentagem = item.Aliquota, Deducao = item.Deducao });
-
-        context.FaixasIrrf.AddRange(pendentes);
-        await context.SaveChangesAsync(cancellationToken);
+        var existentes = (await conexao.ListarAsync(transacao, "SELECT Competencia, Faixa FROM Irrf", leitor => (leitor.GetDateTime(0), leitor.GetInt32(1)), cancellationToken)).ToHashSet();
+        foreach (var item in FaixasIrrf.Where(item => !existentes.Contains((item.Competencia, item.Faixa))))
+            await conexao.ExecutarAsync(transacao, "INSERT INTO Irrf (Competencia, Faixa, Valor, Porcentagem, Deducao) VALUES ($competencia, $faixa, $valor, $porcentagem, $deducao)", cancellationToken,
+                ("$competencia", item.Competencia), ("$faixa", item.Faixa), ("$valor", item.Limite), ("$porcentagem", item.Aliquota), ("$deducao", item.Deducao));
     }
 
-    private static async Task InserirParametrosAusentesAsync(CalculoIrrfDbContext context, CancellationToken cancellationToken)
+    private static async Task InserirParametrosAusentesAsync(SqliteConnection conexao, SqliteTransaction transacao, CancellationToken cancellationToken)
     {
-        await InserirDependentesAusentesAsync(context, cancellationToken);
-        await InserirSimplificadosAusentesAsync(context, cancellationToken);
-        await InserirDescontosMinimosAusentesAsync(context, cancellationToken);
+        await InserirParametrosAusentesAsync(conexao, transacao, "Dependente", DeducoesPorDependente, cancellationToken);
+        await InserirParametrosAusentesAsync(conexao, transacao, "Simplificado", DescontosSimplificados, cancellationToken);
+        await InserirParametrosAusentesAsync(conexao, transacao, "DescontoMinimo", DescontosMinimos, cancellationToken);
     }
 
-    private static async Task InserirDependentesAusentesAsync(CalculoIrrfDbContext context, CancellationToken cancellationToken)
+    private static async Task InserirParametrosAusentesAsync(SqliteConnection conexao, SqliteTransaction transacao, string tabela, SementeParametro[] sementes, CancellationToken cancellationToken)
     {
-        var existentes = (await context.ParametrosDependentes.AsNoTracking().Select(item => item.Competencia).ToListAsync(cancellationToken)).ToHashSet();
-        context.ParametrosDependentes.AddRange(DeducoesPorDependente.Where(item => !existentes.Contains(item.Competencia)).Select(item => new ParametroDependenteEntity { Competencia = item.Competencia, Valor = item.Valor }));
-        await context.SaveChangesAsync(cancellationToken);
-    }
-
-    private static async Task InserirSimplificadosAusentesAsync(CalculoIrrfDbContext context, CancellationToken cancellationToken)
-    {
-        var existentes = (await context.ParametrosSimplificados.AsNoTracking().Select(item => item.Competencia).ToListAsync(cancellationToken)).ToHashSet();
-        context.ParametrosSimplificados.AddRange(DescontosSimplificados.Where(item => !existentes.Contains(item.Competencia)).Select(item => new ParametroSimplificadoEntity { Competencia = item.Competencia, Valor = item.Valor }));
-        await context.SaveChangesAsync(cancellationToken);
-    }
-
-    private static async Task InserirDescontosMinimosAusentesAsync(CalculoIrrfDbContext context, CancellationToken cancellationToken)
-    {
-        var existentes = (await context.ParametrosDescontoMinimo.AsNoTracking().Select(item => item.Competencia).ToListAsync(cancellationToken)).ToHashSet();
-        context.ParametrosDescontoMinimo.AddRange(DescontosMinimos.Where(item => !existentes.Contains(item.Competencia)).Select(item => new ParametroDescontoMinimoEntity { Competencia = item.Competencia, Valor = item.Valor }));
-        await context.SaveChangesAsync(cancellationToken);
+        var existentes = (await conexao.ListarAsync(transacao, $"SELECT Competencia FROM {tabela}", leitor => leitor.GetDateTime(0), cancellationToken)).ToHashSet();
+        foreach (var item in sementes.Where(item => !existentes.Contains(item.Competencia)))
+            await conexao.ExecutarAsync(transacao, $"INSERT INTO {tabela} (Competencia, Valor) VALUES ($competencia, $valor)", cancellationToken,
+                ("$competencia", item.Competencia), ("$valor", item.Valor));
     }
 
     private sealed record SementeFaixa(int Ano, int Mes, int Dia, int Faixa, double Limite, double Aliquota)

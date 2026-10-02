@@ -15,7 +15,6 @@
   <img src="https://img.shields.io/badge/.NET-9.0-512BD4?logo=dotnet&logoColor=white" alt=".NET 9" />
   <img src="https://img.shields.io/badge/C%23-13-239120?logo=csharp&logoColor=white" alt="C# 13" />
   <img src="https://img.shields.io/badge/WPF-Windows-0078D4?logo=windows&logoColor=white" alt="WPF para Windows" />
-  <img src="https://img.shields.io/badge/Entity%20Framework%20Core-9.0-512BD4?logo=dotnet&logoColor=white" alt="Entity Framework Core 9" />
   <img src="https://img.shields.io/badge/SQLite-Local%20database-003B57?logo=sqlite&logoColor=white" alt="SQLite" />
   <img src="https://img.shields.io/badge/QuestPDF-2025.12-FF4B4B" alt="QuestPDF" />
 </p>
@@ -74,20 +73,20 @@ A **Calculadora de Imposto** é uma central de cálculos trabalhistas e tributá
 | [.NET](https://dotnet.microsoft.com/) | 9 | Plataforma de execução e compilação. |
 | C# | 13 | Linguagem principal da aplicação. |
 | [WPF](https://learn.microsoft.com/dotnet/desktop/wpf/) | .NET 9 | Interface desktop, recursos e temas. |
-| [Entity Framework Core](https://learn.microsoft.com/ef/core/) | 9.0.2 | Acesso a dados e mapeamento da persistência. |
 | [SQLite](https://www.sqlite.org/) | — | Banco de dados local das tabelas tributárias. |
+| [Microsoft.Data.Sqlite](https://learn.microsoft.com/dotnet/standard/data/sqlite/) | 9.0.2 | Acesso direto ao SQLite, com as tabelas mantidas em memória entre os cálculos. |
 | [QuestPDF](https://www.questpdf.com/) | 2025.12.1 | Geração dos relatórios PDF. |
 | [Html Agility Pack](https://html-agility-pack.net/) | 1.11.74 | Leitura das fontes HTML usadas nas atualizações oficiais. |
 
 ## Arquitetura
 
-O projeto aplica uma separação pragmática em camadas. O domínio não depende de WPF, EF Core, SQLite ou bibliotecas de PDF.
+O projeto aplica uma separação pragmática em camadas. O domínio não depende de WPF, SQLite ou bibliotecas de PDF.
 
 ```text
 CalculoIRRF/
 ├── Domain/              Regras tributárias e de estabilidade independentes de UI e infraestrutura
 ├── Application/         Casos de uso, DTOs e portas de entrada/saída
-├── Infrastructure/      EF Core, SQLite, atualizadores oficiais e relatórios PDF
+├── Infrastructure/      SQLite, atualizadores oficiais e relatórios PDF
 ├── Presentation/        MVVM, serviços WPF, comportamentos e gerenciamento de tema
 ├── Views/               Janelas e composição visual em XAML
 ├── Assets/              Logos e ícones para os temas claro e escuro
