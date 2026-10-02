@@ -60,7 +60,8 @@ A **Calculadora de Imposto** é uma central de cálculos trabalhistas e tributá
 ### Experiência de uso
 
 - Tema claro, escuro e automático, seguindo a preferência do Windows no modo automático.
-- Controles de rolagem utilizam a aparência nativa do WPF, preservando a visibilidade e a usabilidade em todos os temas.
+- Barras de rolagem finas e arredondadas, no padrão atual do Windows, com cores ajustadas a cada tema.
+- Valores formatados no padrão brasileiro em todas as telas, inclusive nas tabelas de manutenção.
 - Preferência de tema persistida no perfil do usuário.
 - Renderização por software por padrão, reduzindo o consumo de memória; a aceleração por GPU pode ser reativada nas configurações locais.
 - Processamento e persistência locais em SQLite.

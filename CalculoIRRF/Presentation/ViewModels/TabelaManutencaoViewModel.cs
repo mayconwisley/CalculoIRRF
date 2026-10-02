@@ -13,6 +13,8 @@ namespace CalculoIRRF.Presentation.ViewModels;
 public sealed class TabelaManutencaoViewModel : ViewModelBase
 {
     private static readonly CultureInfo Cultura = CultureInfo.GetCultureInfo("pt-BR");
+    // Até seis casas: o multiplicador da redução mensal (ex.: 0,133145) não pode ser arredondado ao ser editado.
+    private const string FormatoAliquota = "#,##0.00####";
     private readonly ITabelaTributariaService _service;
     private readonly IAtualizadorTabelaIrrf _atualizadorIrrf;
     private readonly IAtualizadorTabelaInss _atualizadorInss;
@@ -44,15 +46,15 @@ public sealed class TabelaManutencaoViewModel : ViewModelBase
     public string Titulo => Tipo switch { TipoTabelaTributaria.Inss => "Tabela INSS", TipoTabelaTributaria.Irrf => "Tabela IRRF", TipoTabelaTributaria.Simplificado => "Valor simplificado", TipoTabelaTributaria.Dependente => "Dedução por dependente", TipoTabelaTributaria.DescontoMinimo => "Desconto mínimo", _ => "Redução mensal do IRRF" };
     public string Descricao => Tipo == TipoTabelaTributaria.ReducaoMensalIrrf
         ? "Configure a redução aplicada ao imposto após a tabela progressiva."
-        : "Cadastre, consulte e mantenha as faixas por competência.";
-    public string LabelValor => Tipo == TipoTabelaTributaria.ReducaoMensalIrrf ? "Limite de rendimentos (R$)" : "Limite da base (R$)";
+        : ExibeFaixa ? "Cadastre, consulte e mantenha as faixas por competência." : "Cadastre, consulte e mantenha os valores por competência.";
+    public string TituloLista => ExibeFaixa ? "Faixas cadastradas" : "Valores cadastrados";
+    public string LabelValor => Tipo switch { TipoTabelaTributaria.ReducaoMensalIrrf => "Limite de rendimentos (R$)", TipoTabelaTributaria.Inss or TipoTabelaTributaria.Irrf => "Limite da base (R$)", _ => "Valor (R$)" };
     public string LabelAliquota => Tipo == TipoTabelaTributaria.ReducaoMensalIrrf ? "Multiplicador" : "Alíquota (%)";
     public string LabelDeducao => Tipo == TipoTabelaTributaria.ReducaoMensalIrrf ? "Valor-base da redução (R$)" : "Parcela a deduzir (R$)";
     public bool ExibeFaixa => Tipo is TipoTabelaTributaria.Inss or TipoTabelaTributaria.Irrf or TipoTabelaTributaria.ReducaoMensalIrrf;
     public bool ExibeDeducao => Tipo is TipoTabelaTributaria.Irrf or TipoTabelaTributaria.ReducaoMensalIrrf;
     public bool ExibeAtualizacaoOnline => Tipo is TipoTabelaTributaria.Inss or TipoTabelaTributaria.Irrf or TipoTabelaTributaria.Simplificado or TipoTabelaTributaria.Dependente or TipoTabelaTributaria.ReducaoMensalIrrf;
-    public string NomeFonteOficial => Tipo == TipoTabelaTributaria.Inss ? "INSS" : "Receita Federal";
-    public string TextoLinkFonteOficial => $"Abrir página oficial do {NomeFonteOficial} ↗";
+    public string TextoLinkFonteOficial => Tipo == TipoTabelaTributaria.Inss ? "Abrir página oficial do INSS ↗" : "Abrir página oficial da Receita Federal ↗";
     public string FonteOficial => (Tipo == TipoTabelaTributaria.Inss ? _atualizadorInss.FonteOficial : _atualizadorIrrf.FonteOficial).AbsoluteUri;
     public ObservableCollection<RegistroTabelaDto> Registros { get; } = [];
     public RegistroTabelaDto? Selecionado { get => _selecionado; set { if (SetProperty(ref _selecionado, value) && value is not null) Preencher(value); ((AsyncRelayCommand)ExcluirCommand).RaiseCanExecuteChanged(); } }
@@ -133,7 +135,7 @@ public sealed class TabelaManutencaoViewModel : ViewModelBase
     }
     private void Preencher(RegistroTabelaDto item)
     {
-        Competencia = item.Competencia.ToString("MM/yyyy"); Faixa = item.Faixa?.ToString() ?? "1"; Valor = item.Valor.ToString("N2", Cultura); Aliquota = item.Aliquota?.ToString("N2", Cultura) ?? "0,00"; Deducao = item.Deducao?.ToString("N2", Cultura) ?? "0,00";
+        Competencia = item.Competencia.ToString("MM/yyyy"); Faixa = item.Faixa?.ToString() ?? "1"; Valor = item.Valor.ToString("N2", Cultura); Aliquota = item.Aliquota?.ToString(FormatoAliquota, Cultura) ?? "0,00"; Deducao = item.Deducao?.ToString("N2", Cultura) ?? "0,00";
     }
     private sealed record AtualizacaoOnlineResultado(DateOnly Competencia, int QuantidadeFaixas);
 }

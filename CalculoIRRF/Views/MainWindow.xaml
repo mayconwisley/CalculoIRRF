@@ -31,7 +31,11 @@
 			<TextBlock Grid.Column="1" Text="Imposto • Brasil" Foreground="{DynamicResource AccentBrush}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,20,0" />
 			<StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
 				<TextBlock Text="Tema" Foreground="{DynamicResource MutedTextBrush}" VerticalAlignment="Center" Margin="0,0,8,0" />
-				<ComboBox Width="128" ItemsSource="{Binding Temas}" SelectedItem="{Binding TemaSelecionado, Mode=TwoWay}" />
+				<ComboBox Width="128" ItemsSource="{Binding Temas}" SelectedItem="{Binding TemaSelecionado, Mode=TwoWay}">
+					<ComboBox.ItemTemplate>
+						<DataTemplate><TextBlock Text="{Binding Converter={StaticResource NomeTemaConverter}}" /></DataTemplate>
+					</ComboBox.ItemTemplate>
+				</ComboBox>
 			</StackPanel>
 		</Grid>
 
@@ -71,27 +75,25 @@
 				<ColumnDefinition Width="*" />
 			</Grid.ColumnDefinitions>
 			<Border Style="{StaticResource Card}">
-				<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" CanContentScroll="True">
+				<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
 					<StackPanel>
-						<TextBlock Text="Calculadoras" FontSize="16" FontWeight="SemiBold" />
-						<TextBlock Text="Escolha o tipo de apuração." Foreground="{DynamicResource MutedTextBrush}" Margin="0,4,0,16" />
-						<Border Padding="12" Background="{DynamicResource AdvantageBackgroundBrush}" BorderBrush="{DynamicResource AdvantageBorderBrush}" BorderThickness="1" CornerRadius="8" Margin="0,0,0,8">
+						<TextBlock Text="Calculadoras" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10" />
+						<Border Padding="14,7" Background="{DynamicResource AdvantageBackgroundBrush}" BorderBrush="{DynamicResource AdvantageBorderBrush}" BorderThickness="1" CornerRadius="8" Margin="0,0,0,4">
 							<StackPanel>
 								<TextBlock Text="Simulação tributária" FontWeight="SemiBold" Foreground="{DynamicResource AdvantageTextBrush}" />
-								<TextBlock Text="IRRF, INSS e FGTS" FontSize="11" Foreground="{DynamicResource MutedTextBrush}" Margin="0,3,0,0" />
+								<TextBlock Text="IRRF, INSS e FGTS" FontSize="11" Foreground="{DynamicResource MutedTextBrush}" Margin="0,2,0,0" />
 							</StackPanel>
 						</Border>
-						<Button Style="{StaticResource NavigationButton}" Content="Cálculo de estabilidade" Command="{Binding AbrirEstabilidadeCommand}" Margin="0,0,0,8" />
-						<Button Style="{StaticResource NavigationButton}" Content="Calcular pensão" Command="{Binding AbrirPensaoCommand}" Margin="0,0,0,8" />
-						<Separator Margin="0,12,0,16" Background="{DynamicResource BorderBrush}" />
-						<TextBlock Text="Tabelas e parâmetros" FontSize="14" FontWeight="SemiBold" />
-						<TextBlock Text="Valores de referência da simulação tributária." Foreground="{DynamicResource MutedTextBrush}" FontSize="11" Margin="0,4,0,12" />
-						<Button Style="{StaticResource NavigationButton}" Content="Tabela INSS" Command="{Binding AbrirTabelaInssCommand}" Margin="0,0,0,8" />
-						<Button Style="{StaticResource NavigationButton}" Content="Tabela IRRF" Command="{Binding AbrirTabelaIrrfCommand}" Margin="0,0,0,8" />
-						<Button Style="{StaticResource NavigationButton}" Content="Valor simplificado" Command="{Binding AbrirSimplificadoCommand}" Margin="0,0,0,8" />
-						<Button Style="{StaticResource NavigationButton}" Content="Dedução por dependente" Command="{Binding AbrirDependentesCommand}" Margin="0,0,0,8" />
+						<Button Style="{StaticResource NavigationButton}" Content="Cálculo de estabilidade" Command="{Binding AbrirEstabilidadeCommand}" />
+						<Button Style="{StaticResource NavigationButton}" Content="Calcular pensão" Command="{Binding AbrirPensaoCommand}" />
+						<Separator Margin="0,8,0,12" Background="{DynamicResource BorderBrush}" />
+						<TextBlock Text="Tabelas e parâmetros" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,10" />
+						<Button Style="{StaticResource NavigationButton}" Content="Tabela INSS" Command="{Binding AbrirTabelaInssCommand}" />
+						<Button Style="{StaticResource NavigationButton}" Content="Tabela IRRF" Command="{Binding AbrirTabelaIrrfCommand}" />
+						<Button Style="{StaticResource NavigationButton}" Content="Valor simplificado" Command="{Binding AbrirSimplificadoCommand}" />
+						<Button Style="{StaticResource NavigationButton}" Content="Dedução por dependente" Command="{Binding AbrirDependentesCommand}" />
 						<Button Style="{StaticResource NavigationButton}" Content="Desconto mínimo" Command="{Binding AbrirDescontoMinimoCommand}" />
-						<Button Style="{StaticResource NavigationButton}" Content="Redução mensal do IRRF" Command="{Binding AbrirReducaoMensalIrrfCommand}" Margin="0,8,0,0" />
+						<Button Style="{StaticResource NavigationButton}" Content="Redução mensal do IRRF" Command="{Binding AbrirReducaoMensalIrrfCommand}" Margin="0" />
 					</StackPanel>
 				</ScrollViewer>
 			</Border>
@@ -118,6 +120,7 @@
 						</Grid>
 						<Button Grid.Column="1" Style="{StaticResource PrimaryButton}" Content="Gerar PDF" Command="{Binding ExportarPdfCommand}" MinWidth="112" />
 					</Grid>
+					<TextBlock Grid.Row="1" Style="{StaticResource EstadoVazio}" Text="Preencha competência, valor bruto, base de INSS e dependentes e selecione Calcular para ver o resumo e a memória de cálculo." />
 					<ScrollViewer Grid.Row="1" Margin="0,16,0,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
 						<StackPanel Visibility="{Binding TemResultado, Converter={StaticResource BooleanToVisibilityConverter}}">
 							<TextBlock Text="Resumo executivo" FontSize="15" FontWeight="SemiBold" />

@@ -54,21 +54,22 @@
         </Border>
 
         <Border Grid.Row="4" Style="{StaticResource Card}">
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                <StackPanel>
-                    <Grid>
-                        <Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
-                        <StackPanel>
-                            <TextBlock Text="Resultado da apuração" FontSize="16" FontWeight="SemiBold" />
-                            <TextBlock Text="{Binding DiasRestantes}" Foreground="{DynamicResource AccentBrush}" FontWeight="SemiBold" Margin="0,5,0,0" />
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Text="Valores estimados" Foreground="{DynamicResource MutedTextBrush}" VerticalAlignment="Center" Margin="0,0,12,0" />
-                            <Button Style="{StaticResource PrimaryButton}" Content="Gerar PDF" Command="{Binding ExportarPdfCommand}" MinWidth="112" />
-                        </StackPanel>
-                    </Grid>
-
-                    <StackPanel Visibility="{Binding TemResultado, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,20,0,0">
+            <Grid>
+                <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="Resultado da apuração" FontSize="16" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding DiasRestantes}" Foreground="{DynamicResource AccentBrush}" FontWeight="SemiBold" Margin="0,5,0,0" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="Valores estimados" Foreground="{DynamicResource MutedTextBrush}" VerticalAlignment="Center" Margin="0,0,12,0" />
+                        <Button Style="{StaticResource PrimaryButton}" Content="Gerar PDF" Command="{Binding ExportarPdfCommand}" MinWidth="112" />
+                    </StackPanel>
+                </Grid>
+                <TextBlock Grid.Row="1" Style="{StaticResource EstadoVazio}" Text="Informe a média remuneratória, os dias-base e as datas de demissão e de fim da estabilidade e selecione Calcular." />
+                <ScrollViewer Grid.Row="1" Margin="0,16,0,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Visibility="{Binding TemResultado, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <TextBlock Text="Resumo executivo" FontSize="15" FontWeight="SemiBold" />
                         <ItemsControl ItemsSource="{Binding IndicadoresResumo}" Margin="0,10,0,20">
                             <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
@@ -99,8 +100,8 @@
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
                     </StackPanel>
-                </StackPanel>
-            </ScrollViewer>
+                </ScrollViewer>
+            </Grid>
         </Border>
     </Grid>
 </Window>

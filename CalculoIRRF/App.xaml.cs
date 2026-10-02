@@ -12,6 +12,7 @@ using System;
 using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Interop;
+using System.Windows.Markup;
 using System.Windows.Media;
 
 namespace CalculoIRRF;
@@ -25,6 +26,8 @@ public partial class App : System.Windows.Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        // O WPF formata bindings (StringFormat) em en-US por padrão; o app inteiro exibe valores no padrão brasileiro.
+        FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(XmlLanguage.GetLanguage("pt-BR")));
         ThemeManager.Initialize();
         if (!ThemeManager.UseHardwareAcceleration)
             RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;

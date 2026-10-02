@@ -4,7 +4,10 @@
         xmlns:behaviors="clr-namespace:CalculoIRRF.Presentation.Behaviors"
         Title="{Binding Titulo}" Height="720" Width="1060" MinHeight="600" MinWidth="900"
         Background="{DynamicResource ApplicationBackgroundBrush}"
-        Foreground="{DynamicResource TextBrush}" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Foreground="{DynamicResource TextBrush}" WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <behaviors:BindingProxy x:Key="Proxy" Data="{Binding}" />
+    </Window.Resources>
     <Grid Margin="32" Background="{DynamicResource ApplicationBackgroundBrush}">
         <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="20"/><RowDefinition Height="Auto"/><RowDefinition Height="20"/><RowDefinition Height="*"/></Grid.RowDefinitions>
         <Grid>
@@ -19,13 +22,16 @@
         </Grid>
         <Border Grid.Row="2" Style="{StaticResource Card}">
             <Grid>
-                <Grid.ColumnDefinitions><ColumnDefinition Width="1.05*"/><ColumnDefinition Width="0.75*"/><ColumnDefinition Width="1.15*"/><ColumnDefinition Width="1.05*"/><ColumnDefinition Width="1.05*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                <StackPanel Margin="0,0,12,0"><TextBlock Text="Competência" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,6"/><TextBox Text="{Binding Competencia, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" ToolTip="Informe mês e ano: MM/AAAA"/></StackPanel>
-                <StackPanel Grid.Column="1" Margin="0,0,12,0"><TextBlock Text="Faixa" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,6"/><TextBox Text="{Binding Faixa, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right"/></StackPanel>
-                <StackPanel Grid.Column="2" Margin="0,0,12,0"><TextBlock Text="{Binding LabelValor}" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,6"/><TextBox Text="{Binding Valor, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right" behaviors:FormatacaoNumerica.Formato="N2"/></StackPanel>
-                <StackPanel Grid.Column="3" Margin="0,0,12,0"><TextBlock Text="{Binding LabelAliquota}" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,6"/><TextBox Text="{Binding Aliquota, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right" behaviors:FormatacaoNumerica.Formato="N2"/></StackPanel>
-                <StackPanel Grid.Column="4" Margin="0,0,12,0"><TextBlock Text="{Binding LabelDeducao}" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,6"/><TextBox Text="{Binding Deducao, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right" behaviors:FormatacaoNumerica.Formato="N2"/></StackPanel>
-                <Button Grid.Column="5" Content="Salvar alteração" Command="{Binding SalvarCommand}" Style="{StaticResource PrimaryButton}" Margin="0,25,0,0" MinWidth="132"/>
+                <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <!-- Só os campos usados pela tabela aberta; UniformGrid redistribui a largura quando algum é ocultado. -->
+                <UniformGrid Rows="1">
+                    <StackPanel Margin="0,0,12,0"><TextBlock Text="Competência" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,6"/><TextBox Text="{Binding Competencia, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" ToolTip="Informe mês e ano: MM/AAAA"/></StackPanel>
+                    <StackPanel Margin="0,0,12,0" Visibility="{Binding ExibeFaixa, Converter={StaticResource BooleanToVisibilityConverter}}"><TextBlock Text="Faixa" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,6"/><TextBox Text="{Binding Faixa, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right"/></StackPanel>
+                    <StackPanel Margin="0,0,12,0"><TextBlock Text="{Binding LabelValor}" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,6"/><TextBox Text="{Binding Valor, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right" behaviors:FormatacaoNumerica.Formato="N2"/></StackPanel>
+                    <StackPanel Margin="0,0,12,0" Visibility="{Binding ExibeFaixa, Converter={StaticResource BooleanToVisibilityConverter}}"><TextBlock Text="{Binding LabelAliquota}" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,6"/><TextBox Text="{Binding Aliquota, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right" behaviors:FormatacaoNumerica.Formato="#,##0.00####"/></StackPanel>
+                    <StackPanel Margin="0,0,12,0" Visibility="{Binding ExibeDeducao, Converter={StaticResource BooleanToVisibilityConverter}}"><TextBlock Text="{Binding LabelDeducao}" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,6"/><TextBox Text="{Binding Deducao, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right" behaviors:FormatacaoNumerica.Formato="N2"/></StackPanel>
+                </UniformGrid>
+                <Button Grid.Column="1" Content="Salvar alteração" Command="{Binding SalvarCommand}" Style="{StaticResource PrimaryButton}" VerticalAlignment="Bottom" MinWidth="132"/>
             </Grid>
         </Border>
         <Border Grid.Row="4" Style="{StaticResource Card}">
@@ -34,7 +40,7 @@
                 <Grid>
                     <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                     <StackPanel>
-                        <TextBlock Text="Faixas cadastradas" FontSize="17" FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding TituloLista}" FontSize="17" FontWeight="SemiBold"/>
                         <TextBlock Text="Selecione uma linha para editar ou excluir." Foreground="{DynamicResource MutedTextBrush}" Margin="0,4,0,0"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
@@ -44,20 +50,20 @@
                 </Grid>
                 <DataGrid Grid.Row="2" ItemsSource="{Binding Registros}" SelectedItem="{Binding Selecionado}" AutoGenerateColumns="False" BorderBrush="{DynamicResource BorderBrush}" SelectionMode="Single" HeadersVisibility="Column" AlternationCount="2">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Competência" Binding="{Binding Competencia, StringFormat={}{0:MM/yyyy}}" Width="140"/>
-                        <DataGridTextColumn Header="Faixa" Binding="{Binding Faixa}" Width="90"/>
-                        <DataGridTextColumn Header="Limite / valor (R$)" Binding="{Binding Valor, StringFormat={}{0:N2}}" Width="*"/>
-                        <DataGridTextColumn Header="Alíquota / multiplicador" Binding="{Binding Aliquota, StringFormat={}{0:N6}}" Width="180"/>
-                        <DataGridTextColumn Header="Dedução / valor-base (R$)" Binding="{Binding Deducao, StringFormat={}{0:N2}}" Width="*"/>
+                        <DataGridTextColumn Header="Competência" Binding="{Binding Competencia, StringFormat={}{0:MM/yyyy}}" Width="130"/>
+                        <DataGridTextColumn Header="Faixa" Binding="{Binding Faixa}" Width="80" Visibility="{Binding Data.ExibeFaixa, Source={StaticResource Proxy}, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <DataGridTextColumn Header="{Binding Data.LabelValor, Source={StaticResource Proxy}}" Binding="{Binding Valor, StringFormat={}{0:N2}}" Width="*" HeaderStyle="{StaticResource CabecalhoNumerico}" ElementStyle="{StaticResource CelulaNumerica}"/>
+                        <DataGridTextColumn Header="{Binding Data.LabelAliquota, Source={StaticResource Proxy}}" Binding="{Binding Aliquota, StringFormat={}{0:#,##0.00####}}" Width="*" HeaderStyle="{StaticResource CabecalhoNumerico}" ElementStyle="{StaticResource CelulaNumerica}" Visibility="{Binding Data.ExibeFaixa, Source={StaticResource Proxy}, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <DataGridTextColumn Header="{Binding Data.LabelDeducao, Source={StaticResource Proxy}}" Binding="{Binding Deducao, StringFormat={}{0:N2}}" Width="*" HeaderStyle="{StaticResource CabecalhoNumerico}" ElementStyle="{StaticResource CelulaNumerica}" Visibility="{Binding Data.ExibeDeducao, Source={StaticResource Proxy}, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     </DataGrid.Columns>
                 </DataGrid>
                 <Grid Grid.Row="3" Margin="0,18,0,0" Visibility="{Binding ExibeAtualizacaoOnline, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                     <StackPanel VerticalAlignment="Center">
                         <TextBlock Text="{Binding StatusAtualizacao}" Foreground="{DynamicResource MutedTextBrush}" TextWrapping="Wrap"/>
-                        <Button Content="{Binding TextoLinkFonteOficial}" Command="{Binding AbrirFonteOficialCommand}" Padding="0,6" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Left"/>
+                        <Button Style="{StaticResource LinkButton}" Content="{Binding TextoLinkFonteOficial}" Command="{Binding AbrirFonteOficialCommand}" Margin="0,4,0,0"/>
                     </StackPanel>
-                    <Button Grid.Column="1" Content="Atualizar tabela oficial" Command="{Binding AtualizarDaReceitaCommand}" Style="{StaticResource PrimaryButton}" MinWidth="202"/>
+                    <Button Grid.Column="1" Content="Atualizar tabela oficial" Command="{Binding AtualizarDaReceitaCommand}" Style="{StaticResource PrimaryButton}" VerticalAlignment="Center" MinWidth="202"/>
                 </Grid>
             </Grid>
         </Border>

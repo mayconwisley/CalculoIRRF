@@ -4,7 +4,7 @@
         xmlns:behaviors="clr-namespace:CalculoIRRF.Presentation.Behaviors"
         Title="Cálculo de pensão alimentícia" Height="760" Width="1020" MinHeight="600" MinWidth="820"
         Background="{DynamicResource ApplicationBackgroundBrush}"
-        Foreground="{DynamicResource TextBrush}" WindowStartupLocation="CenterScreen">
+        Foreground="{DynamicResource TextBrush}" WindowStartupLocation="CenterOwner">
     <Grid Margin="28" Background="{DynamicResource ApplicationBackgroundBrush}">
         <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="16" /><RowDefinition Height="Auto" /><RowDefinition Height="16" /><RowDefinition Height="*" /></Grid.RowDefinitions>
         <StackPanel>
@@ -26,9 +26,10 @@
                 <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
                 <Grid>
                     <Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
-                    <TextBlock Text="Resultado da simulação" FontSize="16" FontWeight="SemiBold" />
+                    <TextBlock Text="Resultado da simulação" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" />
                     <Button Grid.Column="1" Style="{StaticResource PrimaryButton}" Content="Gerar PDF" Command="{Binding ExportarPdfCommand}" MinWidth="112" />
                 </Grid>
+                <TextBlock Grid.Row="1" Style="{StaticResource EstadoVazio}" Text="Informe o percentual da pensão e selecione Resumo para o comparativo ou Detalhar para a memória de cálculo por iteração." />
                 <ScrollViewer Grid.Row="1" Margin="0,16,0,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                     <StackPanel Visibility="{Binding TemResultado, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <TextBlock Text="Resumo executivo" FontSize="15" FontWeight="SemiBold" />
