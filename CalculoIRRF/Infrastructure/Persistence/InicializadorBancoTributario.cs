@@ -10,7 +10,7 @@ namespace CalculoIRRF.Infrastructure.Persistence;
 public sealed class InicializadorBancoTributario(BancoTributario banco) : IInicializadorBancoTributario
 {
     /// <summary>Incremente ao alterar as sementes ou os scripts abaixo, para que bancos existentes recebam a nova carga.</summary>
-    private const int VersaoSementes = 1;
+    private const int VersaoSementes = 2;
     private const double LimiteUltimaFaixaIrrf = 9_999_999_999_999.99d;
 
     private static readonly SementeFaixa[] FaixasInss =
@@ -21,7 +21,7 @@ public sealed class InicializadorBancoTributario(BancoTributario banco) : IInici
         new(2020, 1, 1, 1, 1_830.29d, 8d), new(2020, 1, 1, 2, 3_050.52d, 9d), new(2020, 1, 1, 3, 6_101.06d, 11d),
         new(2020, 3, 1, 1, 1_045.00d, 7.5d), new(2020, 3, 1, 2, 2_089.60d, 9d), new(2020, 3, 1, 3, 3_134.40d, 12d), new(2020, 3, 1, 4, 6_101.06d, 14d),
         new(2021, 1, 1, 1, 1_100.00d, 7.5d), new(2021, 1, 1, 2, 2_203.48d, 9d), new(2021, 1, 1, 3, 3_305.22d, 12d), new(2021, 1, 1, 4, 6_433.57d, 14d),
-        new(2022, 1, 1, 1, 1_212.00d, 7.5d), new(2022, 1, 1, 2, 2_452.67d, 9d), new(2022, 1, 1, 3, 3_679.00d, 12d), new(2022, 1, 1, 4, 7_087.22d, 14d),
+        new(2022, 1, 1, 1, 1_212.00d, 7.5d), new(2022, 1, 1, 2, 2_427.35d, 9d), new(2022, 1, 1, 3, 3_641.03d, 12d), new(2022, 1, 1, 4, 7_087.22d, 14d),
         new(2023, 1, 1, 1, 1_302.00d, 7.5d), new(2023, 1, 1, 2, 2_571.29d, 9d), new(2023, 1, 1, 3, 3_856.94d, 12d), new(2023, 1, 1, 4, 7_507.49d, 14d),
         new(2023, 5, 1, 1, 1_320.00d, 7.5d), new(2023, 5, 1, 2, 2_571.29d, 9d), new(2023, 5, 1, 3, 3_856.94d, 12d), new(2023, 5, 1, 4, 7_507.49d, 14d),
         new(2024, 1, 1, 1, 1_412.00d, 7.5d), new(2024, 1, 1, 2, 2_666.68d, 9d), new(2024, 1, 1, 3, 4_000.03d, 12d), new(2024, 1, 1, 4, 7_786.02d, 14d),
@@ -52,6 +52,7 @@ public sealed class InicializadorBancoTributario(BancoTributario banco) : IInici
         await using var transacao = conexao.BeginTransaction();
         await CriarTabelaReducaoMensalAsync(conexao, transacao, cancellationToken);
         await CorrigirOuInserirReducaoMensal2026Async(conexao, transacao, cancellationToken);
+        await CorrigirFaixasInss2022Async(conexao, transacao, cancellationToken);
         await InserirFaixasInssAusentesAsync(conexao, transacao, cancellationToken);
         await InserirFaixasIrrfAusentesAsync(conexao, transacao, cancellationToken);
         await InserirParametrosAusentesAsync(conexao, transacao, cancellationToken);
@@ -92,6 +93,24 @@ public sealed class InicializadorBancoTributario(BancoTributario banco) : IInici
           AND "LimiteRendimentos" = 7350.00
           AND "Multiplicador" = 0.133145
           AND "ValorBase" = 7350.00;
+        """, cancellationToken);
+
+    /// <summary>
+    /// Corrige os limites das faixas 2 e 3 de 01/2022 gravados por sementes antigas (Portaria Interministerial MTP/ME nº 12/2022).
+    /// Só altera o valor quando ele ainda é exatamente o errado, preservando edições manuais.
+    /// </summary>
+    private static Task CorrigirFaixasInss2022Async(SqliteConnection conexao, SqliteTransaction transacao, CancellationToken cancellationToken) => conexao.ExecutarAsync(transacao, """
+        UPDATE "Inss"
+        SET "Valor" = 2427.35
+        WHERE "Competencia" = '2022-01-01 00:00:00'
+          AND "Faixa" = 2
+          AND "Valor" = 2452.67;
+
+        UPDATE "Inss"
+        SET "Valor" = 3641.03
+        WHERE "Competencia" = '2022-01-01 00:00:00'
+          AND "Faixa" = 3
+          AND "Valor" = 3679.00;
         """, cancellationToken);
 
     private static async Task InserirFaixasInssAusentesAsync(SqliteConnection conexao, SqliteTransaction transacao, CancellationToken cancellationToken)
