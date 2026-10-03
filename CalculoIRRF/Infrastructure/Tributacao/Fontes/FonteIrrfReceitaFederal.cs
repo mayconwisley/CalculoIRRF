@@ -14,7 +14,7 @@ namespace CalculoIRRF.Infrastructure.Tributacao.Fontes;
 /// </summary>
 public sealed partial class FonteIrrfReceitaFederal : IFonteTabela<TabelaIrrfPublicada>
 {
-    private const string CatalogoUrl = "https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas";
+    private const string CatalogoUrl = PaginaReceitaFederal.CatalogoUrl;
     private static readonly CultureInfo Cultura = CultureInfo.GetCultureInfo("pt-BR");
 
     [GeneratedRegex(@"/tabelas/(?<ano>20\d{2})/?$", RegexOptions.IgnoreCase)]
@@ -34,34 +34,9 @@ public sealed partial class FonteIrrfReceitaFederal : IFonteTabela<TabelaIrrfPub
 
     public async Task<TabelaIrrfPublicada> ObterAsync(HttpClient httpClient, CancellationToken cancellationToken)
     {
-        var fonte = await ObterPaginaMaisRecenteAsync(httpClient, cancellationToken);
-        var documento = await LeituraDePagina.ObterDocumentoAsync(httpClient, fonte, cancellationToken);
+        var (fonte, documento) = await PaginaReceitaFederal.ObterPaginaMaisRecenteAsync(httpClient, Endereco, cancellationToken);
         return ExtrairTabela(documento, fonte);
     }
-
-    private async Task<Uri> ObterPaginaMaisRecenteAsync(HttpClient httpClient, CancellationToken cancellationToken)
-    {
-        var catalogo = await LeituraDePagina.ObterDocumentoAsync(httpClient, Endereco, cancellationToken);
-        var fontes = (catalogo.DocumentNode.SelectNodes("//a[@href]") ?? Enumerable.Empty<HtmlNode>())
-            .Select(link => link.GetAttributeValue("href", string.Empty))
-            .Select(CriarUriAbsoluta)
-            .Where(uri => uri is not null)
-            .Select(uri => uri!)
-            .Select(uri => (Uri: uri, Match: AnoNaUrl.Match(uri.AbsolutePath)))
-            .Where(item => item.Match.Success)
-            .OrderByDescending(item => int.Parse(item.Match.Groups["ano"].Value, CultureInfo.InvariantCulture))
-            .Select(item => item.Uri)
-            .Distinct()
-            .ToArray();
-
-        if (fontes.Length == 0)
-            throw new InvalidOperationException("A Receita Federal não disponibilizou uma página anual de tabelas para consulta.");
-
-        return fontes[0];
-    }
-
-    private static Uri? CriarUriAbsoluta(string href) =>
-        Uri.TryCreate(new Uri(CatalogoUrl), href, out var uri) && uri.Scheme == Uri.UriSchemeHttps ? uri : null;
 
     private static TabelaIrrfPublicada ExtrairTabela(HtmlDocument documento, Uri fonte)
     {

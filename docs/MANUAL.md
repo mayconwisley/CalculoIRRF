@@ -438,7 +438,10 @@ Clique em **Atualizar pela internet** com o computador conectado à internet. O 
 | --- | --- | --- |
 | Tabela INSS | Página de contribuição mensal do INSS (gov.br) | debit.com.br e contabeis.com.br |
 | Tabela IRRF, Valor simplificado, Dedução por dependente e Redução mensal do IRRF | Página de tabelas da Receita Federal | debit.com.br e contabeis.com.br |
-| Desconto mínimo, Tabela PLR, Salário-família e Salário mínimo | Não possuem atualização online; mantenha-os manualmente quando houver reajuste. | — |
+| Tabela PLR | Página de tabelas da Receita Federal, a mesma do IRRF | Nenhuma: os sites alternativos não publicam a tabela da PLR, e a fonte oficial vale sozinha. |
+| Salário-família | Página do INSS com o valor limite do salário-família (gov.br) | debit.com.br e contabeis.com.br |
+| Salário mínimo | Tabela de contribuição do INSS (gov.br): desde 2020, a 1ª faixa vai até exatamente um salário mínimo | contabeis.com.br e a 1ª faixa da tabela do INSS no debit.com.br |
+| Desconto mínimo | Não possui atualização online; mantenha-o manualmente. | — |
 
 **Por que fontes alternativas?** No começo do ano, esses sites costumam publicar as novas tabelas antes das páginas do governo. Para a calculadora não ficar atrasada sem abrir mão da segurança, a atualização segue estas regras:
 
@@ -475,7 +478,7 @@ Se nenhuma tabela puder ser confirmada, por exemplo sem conexão ou com páginas
 
 **Salário-família:** faixa, limite de remuneração e cota por filho. Desde 2020, há uma só faixa por ano; em 2026, cota de R$ 67,54 para remuneração até R$ 1.980,38.
 
-> **Atenção:** a Tabela PLR, o Salário-família e o Salário mínimo não têm atualização pela internet. Quando sair o reajuste anual, inclua a nova competência com **Novo registro**.
+Essas três tabelas também são atualizadas pela internet com o botão **Atualizar pela internet**, nas mesmas regras das demais (seção 9.3).
 
 > **Dica:** antes de grandes alterações, faça uma cópia de segurança do arquivo **BancoDados\calculoIrrf.db**, que fica na pasta de instalação (`%LOCALAPPDATA%\Programs\Calculadora de Imposto`), com o aplicativo fechado.
 

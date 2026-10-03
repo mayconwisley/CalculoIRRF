@@ -5,9 +5,8 @@ namespace CalculoIRRF.Presentation.ViewModels;
 
 public sealed class TabelaManutencaoViewModelFactory(
     ITabelaTributariaService service,
-    IAtualizadorTabelaIrrf atualizadorIrrf,
-    IAtualizadorTabelaInss atualizadorInss,
+    IAtualizadorTabelas atualizador,
     IUserNotifier notificador) : ITabelaManutencaoViewModelFactory
 {
-    public TabelaManutencaoViewModel Criar(TipoTabelaTributaria tipo) => new(tipo, service, atualizadorIrrf, atualizadorInss, notificador);
+    public TabelaManutencaoViewModel Criar(TipoTabelaTributaria tipo) => new(tipo, service, atualizador, notificador);
 }

@@ -29,8 +29,19 @@ public static class DependencyInjection
         .AddSingleton<IFonteTabela<TabelaInssPublicada>, FonteInssGovBr>()
         .AddSingleton<IFonteTabela<TabelaInssPublicada>, FonteInssDebit>()
         .AddSingleton<IFonteTabela<TabelaInssPublicada>, FonteInssContabeis>()
+        .AddSingleton<IFonteTabela<TabelaPlrPublicada>, FontePlrReceitaFederal>()
+        .AddSingleton<IFonteTabela<TabelaSalarioFamiliaPublicada>, FonteSalarioFamiliaGovBr>()
+        .AddSingleton<IFonteTabela<TabelaSalarioFamiliaPublicada>, FonteSalarioFamiliaDebit>()
+        .AddSingleton<IFonteTabela<TabelaSalarioFamiliaPublicada>, FonteSalarioFamiliaContabeis>()
+        .AddSingleton<IFonteTabela<SalarioMinimoPublicado>, FonteSalarioMinimoGovBr>()
+        .AddSingleton<IFonteTabela<SalarioMinimoPublicado>, FonteSalarioMinimoDebit>()
+        .AddSingleton<IFonteTabela<SalarioMinimoPublicado>, FonteSalarioMinimoContabeis>()
         .AddScoped<IAtualizadorTabelaIrrf, AtualizadorTabelaIrrf>()
         .AddScoped<IAtualizadorTabelaInss, AtualizadorTabelaInss>()
+        .AddScoped<AtualizadorTabelaPlr>()
+        .AddScoped<AtualizadorSalarioFamilia>()
+        .AddScoped<AtualizadorSalarioMinimo>()
+        .AddScoped<IAtualizadorTabelas, AtualizadorTabelas>()
         .AddScoped<IInicializadorBancoTributario, InicializadorBancoTributario>();
 
     // Identifica o aplicativo para os sites consultados e limita a espera: uma fonte fora do ar não pode travar a atualização.

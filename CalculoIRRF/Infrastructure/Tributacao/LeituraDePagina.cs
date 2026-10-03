@@ -59,6 +59,8 @@ internal static partial class LeituraDePagina
         return faixas;
     }
 
+    public static bool TemValorMonetario(string texto) => ValorMonetario.IsMatch(texto);
+
     public static decimal ExtrairUltimoValor(string texto) =>
         ValorMonetario.Matches(texto).Select(match => decimal.Parse(match.Value, Cultura)).LastOrDefault();
 

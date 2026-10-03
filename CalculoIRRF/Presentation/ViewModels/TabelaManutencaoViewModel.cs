@@ -16,8 +16,7 @@ public sealed class TabelaManutencaoViewModel : ViewModelBase
     // Até seis casas: o multiplicador da redução mensal (ex.: 0,133145) não pode ser arredondado ao ser editado.
     private const string FormatoAliquota = "#,##0.00####";
     private readonly ITabelaTributariaService _service;
-    private readonly IAtualizadorTabelaIrrf _atualizadorIrrf;
-    private readonly IAtualizadorTabelaInss _atualizadorInss;
+    private readonly IAtualizadorTabelas _atualizador;
     private readonly IUserNotifier _notificador;
     private RegistroTabelaDto? _selecionado;
     private string _competencia = DateTime.Today.ToString("MM/yyyy");
@@ -30,11 +29,10 @@ public sealed class TabelaManutencaoViewModel : ViewModelBase
     public TabelaManutencaoViewModel(
         TipoTabelaTributaria tipo,
         ITabelaTributariaService service,
-        IAtualizadorTabelaIrrf atualizadorIrrf,
-        IAtualizadorTabelaInss atualizadorInss,
+        IAtualizadorTabelas atualizador,
         IUserNotifier notificador)
     {
-        Tipo = tipo; _service = service; _atualizadorIrrf = atualizadorIrrf; _atualizadorInss = atualizadorInss; _notificador = notificador;
+        Tipo = tipo; _service = service; _atualizador = atualizador; _notificador = notificador;
         SalvarCommand = new AsyncRelayCommand(SalvarAsync);
         ExcluirCommand = new AsyncRelayCommand(ExcluirAsync, () => Selecionado is not null);
         CarregarCommand = new AsyncRelayCommand(() => CarregarAsync(Selecionado?.Id));
@@ -79,9 +77,9 @@ public sealed class TabelaManutencaoViewModel : ViewModelBase
     // O salário-família tem faixas, mas cada uma é um limite de remuneração com uma cota, sem alíquota.
     public bool ExibeAliquota => Tipo is TipoTabelaTributaria.Inss or TipoTabelaTributaria.Irrf or TipoTabelaTributaria.ReducaoMensalIrrf or TipoTabelaTributaria.Plr;
     public bool ExibeDeducao => Tipo is TipoTabelaTributaria.Irrf or TipoTabelaTributaria.ReducaoMensalIrrf or TipoTabelaTributaria.Plr or TipoTabelaTributaria.SalarioFamilia;
-    public bool ExibeAtualizacaoOnline => Tipo is TipoTabelaTributaria.Inss or TipoTabelaTributaria.Irrf or TipoTabelaTributaria.Simplificado or TipoTabelaTributaria.Dependente or TipoTabelaTributaria.ReducaoMensalIrrf;
-    public string TextoLinkFonteOficial => Tipo == TipoTabelaTributaria.Inss ? "Abrir página oficial do INSS ↗" : "Abrir página oficial da Receita Federal ↗";
-    public string FonteOficial => (Tipo == TipoTabelaTributaria.Inss ? _atualizadorInss.FonteOficial : _atualizadorIrrf.FonteOficial).AbsoluteUri;
+    public bool ExibeAtualizacaoOnline => _atualizador.TemAtualizacaoOnline(Tipo);
+    public string TextoLinkFonteOficial => ExibeAtualizacaoOnline ? (_atualizador.NomeFonteOficial(Tipo) == "INSS" ? "Abrir página oficial do INSS ↗" : "Abrir página oficial da Receita Federal ↗") : string.Empty;
+    public string FonteOficial => ExibeAtualizacaoOnline ? _atualizador.FonteOficial(Tipo).AbsoluteUri : string.Empty;
     public ObservableCollection<RegistroTabelaDto> Registros { get; } = [];
     public RegistroTabelaDto? Selecionado
     {
@@ -133,9 +131,7 @@ public sealed class TabelaManutencaoViewModel : ViewModelBase
         try
         {
             StatusAtualizacao = "Consultando a fonte oficial e as fontes alternativas...";
-            var resultado = Tipo == TipoTabelaTributaria.Inss
-                ? await _atualizadorInss.AtualizarAsync(CancellationToken.None)
-                : await _atualizadorIrrf.AtualizarAsync(CancellationToken.None);
+            var resultado = await _atualizador.AtualizarAsync(Tipo, CancellationToken.None);
             await CarregarAsync(Selecionado?.Id);
             StatusAtualizacao = DescreverAtualizacao(resultado);
         }
@@ -148,7 +144,7 @@ public sealed class TabelaManutencaoViewModel : ViewModelBase
     private static string DescreverAtualizacao(AtualizacaoTabelaResultado resultado)
     {
         var origem = resultado.Oficial ? "pela fonte oficial" : $"por {string.Join(" e ", resultado.Fontes)}, que já publicaram a tabela";
-        var texto = $"Dados de {resultado.Competencia:MM/yyyy} atualizados {origem} ({resultado.QuantidadeFaixas} faixas tributárias importadas).";
+        var texto = $"Dados de {resultado.Competencia:MM/yyyy} atualizados {origem} ({(resultado.QuantidadeFaixas == 1 ? "1 valor importado" : $"{resultado.QuantidadeFaixas} faixas tributárias importadas")}).";
         return resultado.Observacoes.Count == 0 ? texto : $"{texto} {string.Join(" ", resultado.Observacoes)}";
     }
     private void AbrirFonteOficial()

@@ -94,7 +94,7 @@ As regras da CLT ficam em `Domain/Trabalhista/RegrasTrabalhistas`, e a apuraçã
 - Mantém localmente faixas de INSS e IRRF, dedução por dependente, desconto simplificado, desconto mínimo, redução mensal, tabela anual da PLR, salário-família e salário mínimo, com o histórico desde 2017.
 - Permite incluir, editar e remover registros por competência.
 - Inicializa dados históricos de forma idempotente, sem sobrescrever manutenções locais.
-- Atualiza tabelas de INSS e IRRF pela fonte oficial ou, quando ela ainda não publicou a tabela do ano, por duas fontes alternativas que concordem entre si; em caso de falha, preserva os dados locais.
+- Atualiza pela internet as tabelas de INSS, IRRF, PLR, salário-família e salário mínimo, pela fonte oficial ou, quando ela ainda não publicou a tabela do ano, por duas fontes alternativas que concordem entre si; em caso de falha, preserva os dados locais.
 
 ### Experiência de uso
 
@@ -239,6 +239,9 @@ No começo do ano, alguns sites publicam as novas tabelas de INSS e IRRF antes d
 | --- | --- | --- |
 | INSS | [gov.br/inss](https://www.gov.br/inss/pt-br/direitos-e-deveres/inscricao-e-contribuicao/tabela-de-contribuicao-mensal) | [debit.com.br](https://www.debit.com.br/tabelas/tabelas-inss) e [contabeis.com.br](https://www.contabeis.com.br/tabelas/inss/) |
 | IRRF | [Receita Federal](https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas) | [debit.com.br](https://www.debit.com.br/tabelas/tabelas-irrf) e [contabeis.com.br](https://www.contabeis.com.br/tabelas/imposto-renda/) |
+| PLR | [Receita Federal](https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas), na mesma página do IRRF | Nenhuma: os sites alternativos não publicam a tabela da PLR |
+| Salário-família | [gov.br/inss](https://www.gov.br/inss/pt-br/direitos-e-deveres/salario-familia/valor-limite-para-direito-ao-salario-familia) | [debit.com.br](https://www.debit.com.br/tabelas/salario-familia) e [contabeis.com.br](https://www.contabeis.com.br/tabelas/salario-familia/) |
+| Salário mínimo | 1ª faixa da [tabela de contribuição do INSS](https://www.gov.br/inss/pt-br/direitos-e-deveres/inscricao-e-contribuicao/tabela-de-contribuicao-mensal), que desde a EC 103/2019 vai até um salário mínimo | [contabeis.com.br](https://www.contabeis.com.br/tabelas/salario-minimo/) e a 1ª faixa do INSS no [debit.com.br](https://www.debit.com.br/tabelas/tabelas-inss) |
 
 A tabela gravada é a de competência mais recente que tenha sido confirmada:
 
@@ -247,7 +250,7 @@ A tabela gravada é a de competência mais recente que tenha sido confirmada:
 
 As fontes alternativas do IRRF publicam apenas as faixas. Nesse caso, o desconto simplificado é calculado em 25% do limite da faixa isenta, como determina a Lei 9.250/1995, e a dedução por dependente e a redução mensal continuam com os valores cadastrados.
 
-Cada fonte é lida por uma classe em `Infrastructure/Tributacao/Fontes`, e a escolha entre elas fica em `ConsultaDeFontes`. Como a estrutura das páginas públicas pode mudar, uma fonte com falha é apenas ignorada; se nenhuma tabela for confirmada, nada é gravado e a mensagem explica o que aconteceu com cada fonte.
+Cada fonte é lida por uma classe em `Infrastructure/Tributacao/Fontes`, a escolha entre elas fica em `ConsultaDeFontes`, e `AtualizadorTabelas` encaminha a atualização de cada tabela da janela de manutenção ao seu atualizador. Como a estrutura das páginas públicas pode mudar, uma fonte com falha é apenas ignorada; se nenhuma tabela for confirmada, nada é gravado e a mensagem explica o que aconteceu com cada fonte.
 
 Revise os valores atualizados antes de utilizá-los em cálculos que exijam precisão legal ou contábil.
 
