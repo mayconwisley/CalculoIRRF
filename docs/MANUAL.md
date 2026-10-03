@@ -1,6 +1,6 @@
 # Manual do Usuário — Calculadora de Imposto
 
-Guia completo para utilizar a **Calculadora de Imposto**: simulação de IRRF, INSS e FGTS, salário líquido, férias, 13º salário, horas extras, rescisão, custo do funcionário, pró-labore, pensão alimentícia, indenização de estabilidade e manutenção das tabelas tributárias.
+Guia completo para utilizar a **Calculadora de Imposto**: simulação de IRRF, INSS e FGTS, salário líquido, férias, 13º salário, horas extras, insalubridade e periculosidade, salário-família, PLR, rescisão, custo do funcionário, pró-labore, pensão alimentícia, indenização de estabilidade e manutenção das tabelas tributárias.
 
 > **Atenção:** os resultados têm caráter de **simulação**. Confira sempre os valores com a legislação vigente e com os dados reais do vínculo antes de utilizá-los em folha de pagamento, rescisões ou decisões legais.
 
@@ -26,7 +26,7 @@ Guia completo para utilizar a **Calculadora de Imposto**: simulação de IRRF, I
 A Calculadora de Imposto reúne, em um único aplicativo para Windows, os cálculos trabalhistas e tributários mais comuns do dia a dia:
 
 - **Simulação tributária:** IRRF pelas modalidades normal e simplificada, INSS por faixas, salário líquido e FGTS de 8% e de 2% (Jovem Aprendiz), com indicação da modalidade de IRRF mais vantajosa.
-- **Calculadoras trabalhistas:** salário bruto a partir do líquido, horas extras com adicional noturno e DSR, 13º salário, férias com abono, rescisão por motivo de desligamento, custo do funcionário para a empresa e pró-labore ou pagamento a autônomo (RPA).
+- **Calculadoras trabalhistas:** salário bruto a partir do líquido, horas extras com adicional noturno e DSR, insalubridade e periculosidade, salário-família, 13º salário, férias com abono, PLR, rescisão por motivo de desligamento, custo do funcionário para a empresa e pró-labore ou pagamento a autônomo (RPA).
 - **Pensão alimentícia:** cálculo da pensão e do IRRF considerando que a pensão reduz a base do imposto, nas duas modalidades.
 - **Estabilidade:** indenização do período de estabilidade restante, com 13º salário, férias, adicional de 1/3, FGTS e multa de 40%.
 - **Tabelas e parâmetros:** consulta e manutenção das faixas de INSS e IRRF e dos valores usados nos cálculos, com atualização pela internet a partir das fontes oficiais e de fontes alternativas que publicam as tabelas antes.
@@ -73,8 +73,8 @@ Para remover, use **Configurações do Windows > Aplicativos > Aplicativos insta
 | 2 | Manual do usuário | Abre este manual. Também pode ser aberto com a tecla **F1** em qualquer janela. |
 | 3 | Dados da simulação | Competência, valor bruto, base de INSS e quantidade de dependentes. |
 | 4 | Calcular | Executa a simulação tributária com os dados informados. |
-| 5 | Calculadoras | Acesso às demais calculadoras: pensão alimentícia, salário bruto a partir do líquido, horas extras, 13º salário, férias, rescisão, estabilidade, custo do funcionário e pró-labore. Veja a seção [Calculadoras trabalhistas](#8-calculadoras-trabalhistas). |
-| 6 | Tabelas e parâmetros | Acesso às tabelas de INSS, IRRF e aos parâmetros usados nos cálculos. Role a barra lateral para ver todas. |
+| 5 | Calculadoras | Aba da barra lateral com as demais calculadoras: pensão alimentícia, salário bruto a partir do líquido, horas extras, insalubridade e periculosidade, salário-família, 13º salário, férias, PLR, rescisão, estabilidade, custo do funcionário e pró-labore. Veja a seção [Calculadoras trabalhistas](#8-calculadoras-trabalhistas). |
+| 6 | Tabelas | Aba da barra lateral com as tabelas de INSS, IRRF, PLR, salário-família, salário mínimo e os parâmetros usados nos cálculos. Veja a seção [Tabelas e parâmetros](#9-tabelas-e-parâmetros). |
 | 7 | Resultado da simulação | Mostra o resumo, o comparativo e a memória de cálculo depois de calcular. |
 | 8 | Gerar PDF | Salva o resultado em um relatório PDF. Fica disponível depois do primeiro cálculo. |
 
@@ -169,7 +169,7 @@ A modalidade mais vantajosa é a que resulta no **menor total** (IRRF + pensão)
 
 ## 7. Cálculo de estabilidade
 
-Acesse **Cálculo de estabilidade** no menu **Calculadoras**.
+Acesse **Cálculo de estabilidade** na aba **Calculadoras** da barra lateral.
 
 ![Cálculo de estabilidade](imagens/08-estabilidade-resultado.png)
 
@@ -201,7 +201,7 @@ O botão **Gerar PDF** cria um demonstrativo com as verbas, os dados considerado
 
 ## 8. Calculadoras trabalhistas
 
-Além da simulação tributária, o menu **Calculadoras** tem sete calculadoras para o dia a dia do departamento pessoal. Todas usam a mesma janela:
+Além da simulação tributária, a aba **Calculadoras** tem dez calculadoras para o dia a dia do departamento pessoal. Todas usam a mesma janela:
 
 - **Formulário:** os campos do cálculo. Passe o mouse sobre um campo para ver uma dica do que informar. Ao abrir uma calculadora, a competência, o valor bruto e os dependentes digitados na tela principal já vêm preenchidos. Alguns campos só aparecem quando a opção escolhida em outro campo exige.
 - **Calcular:** faz o cálculo. A tecla **Enter** também calcula.
@@ -348,9 +348,56 @@ Escolha o **tipo**, **pró-labore** do sócio ou **autônomo (RPA)**, e informe 
 - **Custo para a empresa:** valor bruto mais o INSS patronal de 20%, exceto no Simples Nacional, anexos I a III e V.
 - Pró-labore e RPA não têm FGTS, 13º nem férias.
 
+### 8.8 Insalubridade e periculosidade
+
+![Insalubridade e periculosidade](imagens/25-insalubridade-periculosidade.png)
+
+| Campo | O que informar |
+| --- | --- |
+| Salário | Salário-base, sem gratificações, prêmios ou outros adicionais. |
+| Insalubridade | **Não há**, **Grau mínimo (10%)**, **Grau médio (20%)** ou **Grau máximo (40%)**, conforme o laudo técnico (NR-15). |
+| Base da insalubridade | **Salário mínimo** (padrão), **Salário** ou **Valor informado**, quando a convenção coletiva prevê outra base, como o piso da categoria. Aparece só quando há insalubridade. |
+| Periculosidade (30%) | **Sim** para atividades perigosas, como inflamáveis, explosivos, energia elétrica, segurança patrimonial ou uso de motocicleta (CLT, art. 193). |
+
+- **Insalubridade:** base × 10%, 20% ou 40%. O salário mínimo de cada competência vem da tabela **Salário mínimo**.
+- **Periculosidade:** salário × 30%.
+- **Não se acumulam:** quando os dois se aplicam, o empregado recebe o mais vantajoso (CLT, art. 193, § 2º). O aplicativo aplica o maior e mostra o outro em **Valores informativos**, para comparação.
+- O INSS e o IRRF incidem sobre a remuneração com o adicional, e o resultado mostra o salário líquido.
+
+### 8.9 Salário-família
+
+![Salário-família](imagens/26-salario-familia.png)
+
+Informe a **remuneração do mês**, os **filhos com direito** (até 14 anos, ou inválidos de qualquer idade) e os **dias trabalhados**: 30 no mês completo, ou os dias de trabalho nos meses de admissão e de desligamento.
+
+- Quem recebe até o **limite de remuneração** da tabela tem direito a uma **cota por filho**. Acima do limite, não há salário-família no mês. Até 10/2019 havia duas faixas, com cotas diferentes.
+- Nos meses de admissão e de desligamento, a cota é proporcional aos dias trabalhados.
+- O salário-família não tem INSS, IRRF nem FGTS. A empresa paga junto com o salário e deduz o valor das contribuições ao INSS.
+- Se pai e mãe tiverem direito, os dois recebem.
+
+### 8.10 PLR (participação nos lucros ou resultados)
+
+![PLR](imagens/27-plr.png)
+
+| Campo | O que informar |
+| --- | --- |
+| Competência do pagamento | Mês do pagamento, que define a tabela anual usada. |
+| Valor da PLR | Valor bruto desta parcela. |
+| PLR já paga no ano e IRRF já retido no ano | A parcela anterior do mesmo ano e o imposto retido nela, quando houver. |
+| Pensão sobre a PLR | Pensão alimentícia judicial descontada desta PLR. |
+
+- A PLR tem **tributação exclusiva na fonte**, pela **tabela anual** da PLR (Lei 10.101/2000), separada do salário. Não há dedução de dependentes, desconto simplificado nem a redução mensal do IRRF; só a pensão alimentícia reduz a base.
+- Com mais de um pagamento no ano, o imposto é recalculado sobre o total e o valor já retido é descontado:
+
+![Memória de cálculo da PLR](imagens/28-plr-memoria.png)
+
+- Paga conforme a lei, no máximo duas vezes por ano e com intervalo de pelo menos um trimestre, a PLR não tem INSS nem FGTS.
+
 ## 9. Tabelas e parâmetros
 
-As tabelas definem as faixas e os valores usados em todos os cálculos. Elas já vêm preenchidas com o histórico desde 2017, e você pode consultá-las, corrigi-las, incluir novos períodos ou atualizá-las pela internet.
+As tabelas definem as faixas e os valores usados em todos os cálculos. Elas já vêm preenchidas com o histórico desde 2017, e você pode consultá-las, corrigi-las, incluir novos períodos ou atualizá-las pela internet. Para abri-las, selecione a aba **Tabelas** na barra lateral da tela principal:
+
+![Aba Tabelas da barra lateral](imagens/29-aba-tabelas.png)
 
 ### 9.1 Conhecendo a janela de uma tabela
 
@@ -391,7 +438,7 @@ Clique em **Atualizar pela internet** com o computador conectado à internet. O 
 | --- | --- | --- |
 | Tabela INSS | Página de contribuição mensal do INSS (gov.br) | debit.com.br e contabeis.com.br |
 | Tabela IRRF, Valor simplificado, Dedução por dependente e Redução mensal do IRRF | Página de tabelas da Receita Federal | debit.com.br e contabeis.com.br |
-| Desconto mínimo | Não possui atualização online; mantenha-o manualmente. | — |
+| Desconto mínimo, Tabela PLR, Salário-família e Salário mínimo | Não possuem atualização online; mantenha-os manualmente quando houver reajuste. | — |
 
 **Por que fontes alternativas?** No começo do ano, esses sites costumam publicar as novas tabelas antes das páginas do governo. Para a calculadora não ficar atrasada sem abrir mão da segurança, a atualização segue estas regras:
 
@@ -418,9 +465,17 @@ Se nenhuma tabela puder ser confirmada, por exemplo sem conexão ou com páginas
 
 ![Redução mensal do IRRF](imagens/14-tabela-reducao.png)
 
-**Valor simplificado, Dedução por dependente e Desconto mínimo:** um único valor por competência.
+**Valor simplificado, Dedução por dependente, Desconto mínimo e Salário mínimo:** um único valor por competência. O salário mínimo é a base do adicional de insalubridade.
 
 ![Tabela de parâmetro com valor por competência](imagens/15-tabela-parametro.png)
+
+**Tabela PLR:** faixa, limite da PLR anual, alíquota e parcela a deduzir da tabela exclusiva da participação nos lucros. Vem com as tabelas publicadas pela Receita Federal desde 2017; a de 05/2025 continua vigente em 2026.
+
+![Tabela PLR](imagens/30-tabela-plr.png)
+
+**Salário-família:** faixa, limite de remuneração e cota por filho. Desde 2020, há uma só faixa por ano; em 2026, cota de R$ 67,54 para remuneração até R$ 1.980,38.
+
+> **Atenção:** a Tabela PLR, o Salário-família e o Salário mínimo não têm atualização pela internet. Quando sair o reajuste anual, inclua a nova competência com **Novo registro**.
 
 > **Dica:** antes de grandes alterações, faça uma cópia de segurança do arquivo **BancoDados\calculoIrrf.db**, que fica na pasta de instalação (`%LOCALAPPDATA%\Programs\Calculadora de Imposto`), com o aplicativo fechado.
 

@@ -112,6 +112,29 @@
             <Setter Property="MinHeight" Value="32" />
             <Setter Property="Margin" Value="0,0,0,3" />
         </Style>
+        <!-- Aba de um controle segmentado: um grupo de RadioButtons em que a opção marcada fica destacada. -->
+        <Style x:Key="AbaSegmentada" TargetType="RadioButton">
+            <Setter Property="Foreground" Value="{DynamicResource MutedTextBrush}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="Fundo" Background="Transparent" CornerRadius="8" Padding="10,7">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Fundo" Property="Background" Value="{DynamicResource ButtonHoverBrush}" /></Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Fundo" Property="Background" Value="{DynamicResource AccentBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Fundo" Property="BorderBrush" Value="{DynamicResource AccentBrush}" /><Setter TargetName="Fundo" Property="BorderThickness" Value="1" /></Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style x:Key="LinkButton" TargetType="Button">
             <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
             <Setter Property="Cursor" Value="Hand" />

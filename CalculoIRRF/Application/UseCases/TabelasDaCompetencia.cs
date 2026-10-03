@@ -17,6 +17,7 @@ internal sealed class TabelasDaCompetencia
     private readonly IReadOnlyList<FaixaTributaria> _faixasInss;
     private readonly IReadOnlyList<FaixaTributaria> _faixasIrrf;
     private readonly IReadOnlyList<RegraReducaoMensalIrrf> _regrasReducao;
+    private readonly IReadOnlyList<FaixaTributaria> _faixasPlr;
 
     private TabelasDaCompetencia(DateOnly competencia, PerfilTributarioDto perfil)
     {
@@ -28,6 +29,9 @@ internal sealed class TabelasDaCompetencia
         DeducaoPorDependente = perfil.DeducaoPorDependente;
         DescontoSimplificado = competencia >= InicioSimplificado ? perfil.DeducaoSimplificada : null;
         DescontoMinimo = perfil.DescontoMinimo;
+        SalarioMinimo = perfil.SalarioMinimo;
+        _faixasPlr = (perfil.FaixasPlr ?? []).Select(item => new FaixaTributaria(item.Numero, item.Limite, item.Aliquota, item.Deducao)).ToArray();
+        FaixasSalarioFamilia = perfil.FaixasSalarioFamilia ?? [];
     }
 
     public DateOnly Competencia { get; }
@@ -38,6 +42,15 @@ internal sealed class TabelasDaCompetencia
     public decimal? DescontoSimplificado { get; }
 
     public decimal DescontoMinimo { get; }
+
+    /// <summary>Nulo quando não há salário mínimo cadastrado até a competência.</summary>
+    public decimal? SalarioMinimo { get; }
+
+    /// <summary>Tabela anual da PLR vigente; vazia sem tabela cadastrada.</summary>
+    public IReadOnlyList<FaixaTributaria> FaixasPlr => _faixasPlr;
+
+    /// <summary>Faixas do salário-família vigentes, da menor para a maior remuneração; vazias sem tabela cadastrada.</summary>
+    public IReadOnlyList<FaixaSalarioFamiliaDto> FaixasSalarioFamilia { get; }
 
     public static async Task<TabelasDaCompetencia> ObterAsync(ITributacaoConsulta consulta, DateOnly competencia, CancellationToken cancellationToken) =>
         new(competencia, await consulta.ObterPerfilAsync(competencia, cancellationToken));
@@ -70,6 +83,19 @@ internal sealed class TabelasDaCompetencia
         return new ApuracaoIrrf(rendimentos, inss, dependentes, DeducaoPorDependente, DescontoSimplificado, normal, simplificada);
     }
 
+    /// <summary>
+    /// IRRF pela tabela anual exclusiva da PLR (Lei 10.101/2000, art. 3º, § 5º), sem dependentes, desconto simplificado
+    /// nem redução mensal: só a pensão alimentícia sobre a PLR é deduzida da base.
+    /// </summary>
+    public ApuracaoPlr CalcularIrrfPlr(decimal baseCalculo)
+    {
+        if (_faixasPlr.Count == 0)
+            throw new InvalidOperationException($"Não há tabela de PLR cadastrada para a competência {Competencia:MM/yyyy}.");
+
+        var faixa = _faixasPlr.OrderBy(item => item.Numero).FirstOrDefault(item => baseCalculo <= item.Limite) ?? _faixasPlr.MaxBy(item => item.Limite)!;
+        return new ApuracaoPlr(baseCalculo, faixa.Numero, faixa.Aliquota, faixa.Deducao, CalculadoraTributacao.CalcularPorFaixa(baseCalculo, _faixasPlr));
+    }
+
     private ModalidadeIrrfDto CalcularModalidade(string nome, decimal rendimentosTributaveis, decimal baseCalculo)
     {
         var faixa = _faixasIrrf.OrderBy(item => item.Numero).FirstOrDefault(item => baseCalculo <= item.Limite) ?? _faixasIrrf.MaxBy(item => item.Limite)!;
@@ -82,6 +108,8 @@ internal sealed class TabelasDaCompetencia
 
     private static DetalheFaixaDto Mapear(ResultadoFaixaTributaria item) => new(item.Faixa, item.BaseCalculada, item.Aliquota, item.Imposto);
 }
+
+internal sealed record ApuracaoPlr(decimal BaseCalculo, int Faixa, decimal Aliquota, decimal Deducao, decimal Imposto);
 
 /// <param name="BaseInformada">Base antes da limitação ao teto.</param>
 internal sealed record ApuracaoInss(decimal BaseInformada, decimal BaseConsiderada, decimal Valor, IReadOnlyList<DetalheFaixaDto> Detalhes)

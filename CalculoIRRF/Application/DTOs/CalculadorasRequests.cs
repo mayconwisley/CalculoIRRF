@@ -75,6 +75,35 @@ public sealed record SimularProLaboreRequest(
     decimal AliquotaIss,
     RegimeTributario Regime);
 
+/// <param name="PlrAnterior">PLR já paga no mesmo ano; o imposto é recalculado sobre o total do ano (Lei 10.101/2000, art. 3º, § 7º).</param>
+/// <param name="ImpostoRetidoAnterior">IRRF já retido sobre a PLR anterior, descontado do imposto recalculado.</param>
+/// <param name="PensaoAlimenticia">Pensão alimentícia judicial descontada desta PLR, que reduz a base do imposto.</param>
+public sealed record SimularPlrRequest(
+    DateOnly Competencia,
+    decimal Valor,
+    decimal PlrAnterior,
+    decimal ImpostoRetidoAnterior,
+    decimal PensaoAlimenticia);
+
+/// <param name="Remuneracao">Remuneração do mês, comparada ao limite do salário-família.</param>
+/// <param name="Filhos">Filhos ou equiparados de até 14 anos, ou inválidos de qualquer idade.</param>
+/// <param name="DiasTrabalhados">Dias do mês; nos meses de admissão e desligamento a cota é proporcional.</param>
+public sealed record SimularSalarioFamiliaRequest(DateOnly Competencia, decimal Remuneracao, int Filhos, int DiasTrabalhados);
+
+public enum GrauInsalubridade { Nenhum = 0, Minimo = 10, Medio = 20, Maximo = 40 }
+
+public enum BaseInsalubridade { SalarioMinimo, Salario, ValorInformado }
+
+/// <param name="ValorBaseInformado">Piso da categoria ou outra base prevista em convenção; usado com <see cref="BaseInsalubridade.ValorInformado"/>.</param>
+public sealed record SimularAdicionaisRequest(
+    DateOnly Competencia,
+    decimal Salario,
+    GrauInsalubridade Grau,
+    BaseInsalubridade Base,
+    decimal ValorBaseInformado,
+    bool Periculosidade,
+    int Dependentes);
+
 /// <param name="HorasNoturnas">Horas de relógio trabalhadas entre 22h e 5h, convertidas para a hora noturna reduzida.</param>
 public sealed record SimularHorasExtrasRequest(
     DateOnly Competencia,

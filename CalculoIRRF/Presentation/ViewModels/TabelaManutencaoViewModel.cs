@@ -44,16 +44,41 @@ public sealed class TabelaManutencaoViewModel : ViewModelBase
     }
 
     public TipoTabelaTributaria Tipo { get; }
-    public string Titulo => Tipo switch { TipoTabelaTributaria.Inss => "Tabela INSS", TipoTabelaTributaria.Irrf => "Tabela IRRF", TipoTabelaTributaria.Simplificado => "Valor simplificado", TipoTabelaTributaria.Dependente => "Dedução por dependente", TipoTabelaTributaria.DescontoMinimo => "Desconto mínimo", _ => "Redução mensal do IRRF" };
+    public string Titulo => Tipo switch
+    {
+        TipoTabelaTributaria.Inss => "Tabela INSS",
+        TipoTabelaTributaria.Irrf => "Tabela IRRF",
+        TipoTabelaTributaria.Simplificado => "Valor simplificado",
+        TipoTabelaTributaria.Dependente => "Dedução por dependente",
+        TipoTabelaTributaria.DescontoMinimo => "Desconto mínimo",
+        TipoTabelaTributaria.SalarioMinimo => "Salário mínimo",
+        TipoTabelaTributaria.SalarioFamilia => "Salário-família",
+        TipoTabelaTributaria.Plr => "Tabela PLR",
+        _ => "Redução mensal do IRRF"
+    };
     public string Descricao => Tipo == TipoTabelaTributaria.ReducaoMensalIrrf
         ? "Configure a redução aplicada ao imposto após a tabela progressiva."
         : ExibeFaixa ? "Cadastre, consulte e mantenha as faixas por competência." : "Cadastre, consulte e mantenha os valores por competência.";
     public string TituloLista => ExibeFaixa ? "Faixas cadastradas" : "Valores cadastrados";
-    public string LabelValor => Tipo switch { TipoTabelaTributaria.ReducaoMensalIrrf => "Limite de rendimentos (R$)", TipoTabelaTributaria.Inss or TipoTabelaTributaria.Irrf => "Limite da base (R$)", _ => "Valor (R$)" };
+    public string LabelValor => Tipo switch
+    {
+        TipoTabelaTributaria.ReducaoMensalIrrf => "Limite de rendimentos (R$)",
+        TipoTabelaTributaria.Inss or TipoTabelaTributaria.Irrf => "Limite da base (R$)",
+        TipoTabelaTributaria.Plr => "Limite da PLR anual (R$)",
+        TipoTabelaTributaria.SalarioFamilia => "Limite de remuneração (R$)",
+        _ => "Valor (R$)"
+    };
     public string LabelAliquota => Tipo == TipoTabelaTributaria.ReducaoMensalIrrf ? "Multiplicador" : "Alíquota (%)";
-    public string LabelDeducao => Tipo == TipoTabelaTributaria.ReducaoMensalIrrf ? "Valor-base da redução (R$)" : "Parcela a deduzir (R$)";
-    public bool ExibeFaixa => Tipo is TipoTabelaTributaria.Inss or TipoTabelaTributaria.Irrf or TipoTabelaTributaria.ReducaoMensalIrrf;
-    public bool ExibeDeducao => Tipo is TipoTabelaTributaria.Irrf or TipoTabelaTributaria.ReducaoMensalIrrf;
+    public string LabelDeducao => Tipo switch
+    {
+        TipoTabelaTributaria.ReducaoMensalIrrf => "Valor-base da redução (R$)",
+        TipoTabelaTributaria.SalarioFamilia => "Cota por filho (R$)",
+        _ => "Parcela a deduzir (R$)"
+    };
+    public bool ExibeFaixa => Tipo is TipoTabelaTributaria.Inss or TipoTabelaTributaria.Irrf or TipoTabelaTributaria.ReducaoMensalIrrf or TipoTabelaTributaria.Plr or TipoTabelaTributaria.SalarioFamilia;
+    // O salário-família tem faixas, mas cada uma é um limite de remuneração com uma cota, sem alíquota.
+    public bool ExibeAliquota => Tipo is TipoTabelaTributaria.Inss or TipoTabelaTributaria.Irrf or TipoTabelaTributaria.ReducaoMensalIrrf or TipoTabelaTributaria.Plr;
+    public bool ExibeDeducao => Tipo is TipoTabelaTributaria.Irrf or TipoTabelaTributaria.ReducaoMensalIrrf or TipoTabelaTributaria.Plr or TipoTabelaTributaria.SalarioFamilia;
     public bool ExibeAtualizacaoOnline => Tipo is TipoTabelaTributaria.Inss or TipoTabelaTributaria.Irrf or TipoTabelaTributaria.Simplificado or TipoTabelaTributaria.Dependente or TipoTabelaTributaria.ReducaoMensalIrrf;
     public string TextoLinkFonteOficial => Tipo == TipoTabelaTributaria.Inss ? "Abrir página oficial do INSS ↗" : "Abrir página oficial da Receita Federal ↗";
     public string FonteOficial => (Tipo == TipoTabelaTributaria.Inss ? _atualizadorInss.FonteOficial : _atualizadorIrrf.FonteOficial).AbsoluteUri;
@@ -157,8 +182,8 @@ public sealed class TabelaManutencaoViewModel : ViewModelBase
         var valido = DateTime.TryParseExact(Competencia, "MM/yyyy", Cultura, DateTimeStyles.None, out competencia) && decimal.TryParse(Valor, NumberStyles.Number, Cultura, out valor) && valor >= 0m;
         var f = 0; var a = 0m; var d = 0m;
         int? faixa = null; decimal? aliquota = null; decimal? deducao = null;
-        if (ExibeFaixa) valido &= int.TryParse(Faixa, out f) && f > 0 && decimal.TryParse(Aliquota, NumberStyles.Number, Cultura, out a) && a >= 0m;
-        if (ExibeFaixa) { faixa = f; aliquota = a; }
+        if (ExibeFaixa) { valido &= int.TryParse(Faixa, out f) && f > 0; faixa = f; }
+        if (ExibeAliquota) { valido &= decimal.TryParse(Aliquota, NumberStyles.Number, Cultura, out a) && a >= 0m; aliquota = a; }
         if (ExibeDeducao) { valido &= decimal.TryParse(Deducao, NumberStyles.Number, Cultura, out d) && d >= 0m; deducao = d; }
         if (!valido) { _notificador.MostrarAviso("Informe valores válidos para competência e campos numéricos."); return false; }
         request = new SalvarRegistroTabelaRequest(Selecionado?.Id ?? 0, DateOnly.FromDateTime(competencia), faixa, valor, aliquota, deducao); return true;

@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:behaviors="clr-namespace:CalculoIRRF.Presentation.Behaviors"
         xmlns:calculadoras="clr-namespace:CalculoIRRF.Presentation.ViewModels.Calculadoras"
+        xmlns:management="clr-namespace:CalculoIRRF.Application.Management"
         Title="Calculadora de Imposto" Height="900" Width="1292" MinHeight="620" MinWidth="940"
         Background="{DynamicResource ApplicationBackgroundBrush}"
         Foreground="{DynamicResource TextBrush}" WindowStartupLocation="CenterScreen">
@@ -76,36 +77,53 @@
 				<ColumnDefinition Width="16" />
 				<ColumnDefinition Width="*" />
 			</Grid.ColumnDefinitions>
-			<Border Style="{StaticResource Card}">
-				<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-					<StackPanel>
-						<TextBlock Text="Calculadoras" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10" />
-						<Border Padding="14,7" Background="{DynamicResource AdvantageBackgroundBrush}" BorderBrush="{DynamicResource AdvantageBorderBrush}" BorderThickness="1" CornerRadius="8" Margin="0,0,0,4">
-							<StackPanel>
-								<TextBlock Text="Simulação tributária" FontWeight="SemiBold" Foreground="{DynamicResource AdvantageTextBrush}" />
-								<TextBlock Text="IRRF, INSS e FGTS" FontSize="11" Foreground="{DynamicResource MutedTextBrush}" Margin="0,2,0,0" />
-							</StackPanel>
+				<Border Style="{StaticResource Card}" Padding="20,20,20,16">
+					<Grid>
+						<Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+						<!-- As abas alternam a lista da barra lateral, para que calculadoras e tabelas não fiquem escondidas pela rolagem. -->
+						<Border Background="{DynamicResource ButtonBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="10" Padding="3" Margin="0,0,0,14">
+							<UniformGrid Rows="1">
+								<RadioButton x:Name="AbaCalculadoras" Style="{StaticResource AbaSegmentada}" Content="Calculadoras" GroupName="BarraLateral" IsChecked="True" />
+								<RadioButton x:Name="AbaTabelas" Style="{StaticResource AbaSegmentada}" Content="Tabelas" GroupName="BarraLateral" />
+							</UniformGrid>
 						</Border>
-						<Button Style="{StaticResource NavigationButton}" Content="Calcular pensão" Command="{Binding AbrirPensaoCommand}" />
-						<Button Style="{StaticResource NavigationButton}" Content="Salário bruto pelo líquido" Command="{Binding AbrirCalculadoraCommand}" CommandParameter="{x:Static calculadoras:TipoCalculadora.SalarioPeloLiquido}" />
-						<Button Style="{StaticResource NavigationButton}" Content="Horas extras e adicionais" Command="{Binding AbrirCalculadoraCommand}" CommandParameter="{x:Static calculadoras:TipoCalculadora.HorasExtras}" />
-						<Button Style="{StaticResource NavigationButton}" Content="13º salário" Command="{Binding AbrirCalculadoraCommand}" CommandParameter="{x:Static calculadoras:TipoCalculadora.DecimoTerceiro}" />
-						<Button Style="{StaticResource NavigationButton}" Content="Férias" Command="{Binding AbrirCalculadoraCommand}" CommandParameter="{x:Static calculadoras:TipoCalculadora.Ferias}" />
-						<Button Style="{StaticResource NavigationButton}" Content="Rescisão" Command="{Binding AbrirCalculadoraCommand}" CommandParameter="{x:Static calculadoras:TipoCalculadora.Rescisao}" />
-						<Button Style="{StaticResource NavigationButton}" Content="Cálculo de estabilidade" Command="{Binding AbrirEstabilidadeCommand}" />
-						<Button Style="{StaticResource NavigationButton}" Content="Custo do funcionário" Command="{Binding AbrirCalculadoraCommand}" CommandParameter="{x:Static calculadoras:TipoCalculadora.CustoFuncionario}" />
-						<Button Style="{StaticResource NavigationButton}" Content="Pró-labore e autônomo" Command="{Binding AbrirCalculadoraCommand}" CommandParameter="{x:Static calculadoras:TipoCalculadora.ProLaboreAutonomo}" />
-						<Separator Margin="0,8,0,12" Background="{DynamicResource BorderBrush}" />
-						<TextBlock Text="Tabelas e parâmetros" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,10" />
-						<Button Style="{StaticResource NavigationButton}" Content="Tabela INSS" Command="{Binding AbrirTabelaInssCommand}" />
-						<Button Style="{StaticResource NavigationButton}" Content="Tabela IRRF" Command="{Binding AbrirTabelaIrrfCommand}" />
-						<Button Style="{StaticResource NavigationButton}" Content="Valor simplificado" Command="{Binding AbrirSimplificadoCommand}" />
-						<Button Style="{StaticResource NavigationButton}" Content="Dedução por dependente" Command="{Binding AbrirDependentesCommand}" />
-						<Button Style="{StaticResource NavigationButton}" Content="Desconto mínimo" Command="{Binding AbrirDescontoMinimoCommand}" />
-						<Button Style="{StaticResource NavigationButton}" Content="Redução mensal do IRRF" Command="{Binding AbrirReducaoMensalIrrfCommand}" Margin="0" />
-					</StackPanel>
-				</ScrollViewer>
-			</Border>
+						<ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+							<Grid>
+								<StackPanel Visibility="{Binding IsChecked, ElementName=AbaCalculadoras, Converter={StaticResource BooleanToVisibilityConverter}}">
+									<Border Padding="14,7" Background="{DynamicResource AdvantageBackgroundBrush}" BorderBrush="{DynamicResource AdvantageBorderBrush}" BorderThickness="1" CornerRadius="8" Margin="0,0,0,4">
+										<StackPanel>
+											<TextBlock Text="Simulação tributária" FontWeight="SemiBold" Foreground="{DynamicResource AdvantageTextBrush}" />
+											<TextBlock Text="IRRF, INSS e FGTS" FontSize="11" Foreground="{DynamicResource MutedTextBrush}" Margin="0,2,0,0" />
+										</StackPanel>
+									</Border>
+									<Button Style="{StaticResource NavigationButton}" Content="Calcular pensão" Command="{Binding AbrirPensaoCommand}" />
+									<Button Style="{StaticResource NavigationButton}" Content="Salário bruto pelo líquido" Command="{Binding AbrirCalculadoraCommand}" CommandParameter="{x:Static calculadoras:TipoCalculadora.SalarioPeloLiquido}" />
+									<Button Style="{StaticResource NavigationButton}" Content="Horas extras e adicionais" Command="{Binding AbrirCalculadoraCommand}" CommandParameter="{x:Static calculadoras:TipoCalculadora.HorasExtras}" />
+									<Button Style="{StaticResource NavigationButton}" Content="Insalubridade e periculosidade" Command="{Binding AbrirCalculadoraCommand}" CommandParameter="{x:Static calculadoras:TipoCalculadora.Adicionais}" />
+									<Button Style="{StaticResource NavigationButton}" Content="Salário-família" Command="{Binding AbrirCalculadoraCommand}" CommandParameter="{x:Static calculadoras:TipoCalculadora.SalarioFamilia}" />
+									<Button Style="{StaticResource NavigationButton}" Content="13º salário" Command="{Binding AbrirCalculadoraCommand}" CommandParameter="{x:Static calculadoras:TipoCalculadora.DecimoTerceiro}" />
+									<Button Style="{StaticResource NavigationButton}" Content="Férias" Command="{Binding AbrirCalculadoraCommand}" CommandParameter="{x:Static calculadoras:TipoCalculadora.Ferias}" />
+									<Button Style="{StaticResource NavigationButton}" Content="PLR (participação nos lucros)" Command="{Binding AbrirCalculadoraCommand}" CommandParameter="{x:Static calculadoras:TipoCalculadora.Plr}" />
+									<Button Style="{StaticResource NavigationButton}" Content="Rescisão" Command="{Binding AbrirCalculadoraCommand}" CommandParameter="{x:Static calculadoras:TipoCalculadora.Rescisao}" />
+									<Button Style="{StaticResource NavigationButton}" Content="Cálculo de estabilidade" Command="{Binding AbrirEstabilidadeCommand}" />
+									<Button Style="{StaticResource NavigationButton}" Content="Custo do funcionário" Command="{Binding AbrirCalculadoraCommand}" CommandParameter="{x:Static calculadoras:TipoCalculadora.CustoFuncionario}" />
+									<Button Style="{StaticResource NavigationButton}" Content="Pró-labore e autônomo" Command="{Binding AbrirCalculadoraCommand}" CommandParameter="{x:Static calculadoras:TipoCalculadora.ProLaboreAutonomo}" />
+								</StackPanel>
+								<StackPanel Visibility="{Binding IsChecked, ElementName=AbaTabelas, Converter={StaticResource BooleanToVisibilityConverter}}">
+									<Button Style="{StaticResource NavigationButton}" Content="Tabela INSS" Command="{Binding AbrirTabelaCommand}" CommandParameter="{x:Static management:TipoTabelaTributaria.Inss}" />
+									<Button Style="{StaticResource NavigationButton}" Content="Tabela IRRF" Command="{Binding AbrirTabelaCommand}" CommandParameter="{x:Static management:TipoTabelaTributaria.Irrf}" />
+									<Button Style="{StaticResource NavigationButton}" Content="Valor simplificado" Command="{Binding AbrirTabelaCommand}" CommandParameter="{x:Static management:TipoTabelaTributaria.Simplificado}" />
+									<Button Style="{StaticResource NavigationButton}" Content="Dedução por dependente" Command="{Binding AbrirTabelaCommand}" CommandParameter="{x:Static management:TipoTabelaTributaria.Dependente}" />
+									<Button Style="{StaticResource NavigationButton}" Content="Desconto mínimo" Command="{Binding AbrirTabelaCommand}" CommandParameter="{x:Static management:TipoTabelaTributaria.DescontoMinimo}" />
+									<Button Style="{StaticResource NavigationButton}" Content="Redução mensal do IRRF" Command="{Binding AbrirTabelaCommand}" CommandParameter="{x:Static management:TipoTabelaTributaria.ReducaoMensalIrrf}" />
+									<Button Style="{StaticResource NavigationButton}" Content="Tabela PLR" Command="{Binding AbrirTabelaCommand}" CommandParameter="{x:Static management:TipoTabelaTributaria.Plr}" />
+									<Button Style="{StaticResource NavigationButton}" Content="Salário-família" Command="{Binding AbrirTabelaCommand}" CommandParameter="{x:Static management:TipoTabelaTributaria.SalarioFamilia}" />
+									<Button Style="{StaticResource NavigationButton}" Content="Salário mínimo" Command="{Binding AbrirTabelaCommand}" CommandParameter="{x:Static management:TipoTabelaTributaria.SalarioMinimo}" />
+								</StackPanel>
+							</Grid>
+						</ScrollViewer>
+					</Grid>
+				</Border>
 			<Border Grid.Column="2" Style="{StaticResource Card}">
 				<Grid>
 					<Grid.RowDefinitions>

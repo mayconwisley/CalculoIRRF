@@ -5,7 +5,7 @@ using System.Globalization;
 
 namespace CalculoIRRF.Presentation.ViewModels.Calculadoras;
 
-public enum TipoCalculadora { SalarioPeloLiquido, DecimoTerceiro, Ferias, HorasExtras, Rescisao, CustoFuncionario, ProLaboreAutonomo }
+public enum TipoCalculadora { SalarioPeloLiquido, DecimoTerceiro, Ferias, HorasExtras, Rescisao, CustoFuncionario, ProLaboreAutonomo, Adicionais, SalarioFamilia, Plr }
 
 /// <summary>Dados da tela principal aproveitados para preencher uma calculadora ao abri-la.</summary>
 public sealed record ContextoCalculo(DateOnly? Competencia, decimal? Salario, int? Dependentes);

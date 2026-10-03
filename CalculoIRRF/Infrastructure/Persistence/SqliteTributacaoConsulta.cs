@@ -35,7 +35,15 @@ public sealed class SqliteTributacaoConsulta(BancoTributario banco) : ITributaca
             ? []
             : tabelas.ReducoesMensais.Where(item => item.Competencia == competenciaReducao).Select(item => item.Valor).OrderBy(item => item.Faixa).ToArray();
 
-        return new PerfilTributarioDto(inss, irrf, simplificado, dependente, minimo, reducoes);
+        // As tabelas das calculadoras trabalhistas são opcionais: faltar uma delas não impede os cálculos de INSS e IRRF.
+        var competenciaSalarioMinimo = ObterUltimaCompetenciaOpcional(tabelas.SalariosMinimos, data);
+        var competenciaPlr = ObterUltimaCompetenciaOpcional(tabelas.FaixasPlr, data);
+        var competenciaSalarioFamilia = ObterUltimaCompetenciaOpcional(tabelas.FaixasSalarioFamilia, data);
+        var salarioMinimo = competenciaSalarioMinimo is null ? (decimal?)null : tabelas.SalariosMinimos.First(item => item.Competencia == competenciaSalarioMinimo).Valor;
+        var plr = tabelas.FaixasPlr.Where(item => item.Competencia == competenciaPlr).Select(item => item.Valor).OrderBy(item => item.Numero).ToArray();
+        var salarioFamilia = tabelas.FaixasSalarioFamilia.Where(item => item.Competencia == competenciaSalarioFamilia).Select(item => item.Valor).OrderBy(item => item.Faixa).ToArray();
+
+        return new PerfilTributarioDto(inss, irrf, simplificado, dependente, minimo, reducoes, salarioMinimo, plr, salarioFamilia);
     }
 
     public void Invalidar()
@@ -66,7 +74,13 @@ public sealed class SqliteTributacaoConsulta(BancoTributario banco) : ITributaca
             await conexao.ListarAsync(null, "SELECT Competencia, Valor FROM DescontoMinimo ORDER BY Id",
                 leitor => new Vigencia<decimal>(leitor.GetDateTime(0), leitor.GetDecimal(1)), cancellationToken),
             await conexao.ListarAsync(null, "SELECT Competencia, Faixa, LimiteRendimentos, Multiplicador, ValorBase FROM ReducaoMensalIrrf ORDER BY Id",
-                leitor => new Vigencia<RegraReducaoMensalIrrfDto>(leitor.GetDateTime(0), new RegraReducaoMensalIrrfDto(leitor.GetInt32(1), leitor.GetDecimal(2), leitor.GetDecimal(3), leitor.GetDecimal(4))), cancellationToken));
+                leitor => new Vigencia<RegraReducaoMensalIrrfDto>(leitor.GetDateTime(0), new RegraReducaoMensalIrrfDto(leitor.GetInt32(1), leitor.GetDecimal(2), leitor.GetDecimal(3), leitor.GetDecimal(4))), cancellationToken),
+            await conexao.ListarAsync(null, "SELECT Competencia, Valor FROM SalarioMinimo ORDER BY Id",
+                leitor => new Vigencia<decimal>(leitor.GetDateTime(0), leitor.GetDecimal(1)), cancellationToken),
+            await conexao.ListarAsync(null, "SELECT Competencia, Faixa, Valor, Porcentagem, Deducao FROM Plr ORDER BY Id",
+                leitor => new Vigencia<FaixaTributariaDto>(leitor.GetDateTime(0), new FaixaTributariaDto(leitor.GetInt32(1), leitor.GetDecimal(2), leitor.GetDecimal(3), leitor.GetDecimal(4))), cancellationToken),
+            await conexao.ListarAsync(null, "SELECT Competencia, Faixa, LimiteRemuneracao, Cota FROM SalarioFamilia ORDER BY Id",
+                leitor => new Vigencia<FaixaSalarioFamiliaDto>(leitor.GetDateTime(0), new FaixaSalarioFamiliaDto(leitor.GetInt32(1), leitor.GetDecimal(2), leitor.GetDecimal(3))), cancellationToken));
 
         // Se houve gravação durante a carga, o resultado atende esta chamada, mas não é guardado.
         if (versao == Volatile.Read(ref _versao))
@@ -89,5 +103,8 @@ public sealed class SqliteTributacaoConsulta(BancoTributario banco) : ITributaca
         Vigencia<decimal>[] Simplificados,
         Vigencia<decimal>[] Dependentes,
         Vigencia<decimal>[] DescontosMinimos,
-        Vigencia<RegraReducaoMensalIrrfDto>[] ReducoesMensais);
+        Vigencia<RegraReducaoMensalIrrfDto>[] ReducoesMensais,
+        Vigencia<decimal>[] SalariosMinimos,
+        Vigencia<FaixaTributariaDto>[] FaixasPlr,
+        Vigencia<FaixaSalarioFamiliaDto>[] FaixasSalarioFamilia);
 }

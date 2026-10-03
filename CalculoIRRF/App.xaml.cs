@@ -74,6 +74,9 @@ public partial class App : System.Windows.Application
         .AddScoped<ISimularDemonstrativoUseCase<SimularRescisaoRequest>, SimularRescisaoUseCase>()
         .AddScoped<ISimularDemonstrativoUseCase<SimularCustoFuncionarioRequest>, SimularCustoFuncionarioUseCase>()
         .AddScoped<ISimularDemonstrativoUseCase<SimularProLaboreRequest>, SimularProLaboreUseCase>()
+        .AddScoped<ISimularDemonstrativoUseCase<SimularPlrRequest>, SimularPlrUseCase>()
+        .AddScoped<ISimularDemonstrativoUseCase<SimularSalarioFamiliaRequest>, SimularSalarioFamiliaUseCase>()
+        .AddScoped<ISimularDemonstrativoUseCase<SimularAdicionaisRequest>, SimularAdicionaisUseCase>()
         // Cada janela de calculadora recebe uma calculadora nova, com o formulário em branco.
         .AddKeyedTransient<ICalculadora, CalculadoraSalarioPeloLiquido>(TipoCalculadora.SalarioPeloLiquido)
         .AddKeyedTransient<ICalculadora, CalculadoraDecimoTerceiro>(TipoCalculadora.DecimoTerceiro)
@@ -82,6 +85,9 @@ public partial class App : System.Windows.Application
         .AddKeyedTransient<ICalculadora, CalculadoraRescisao>(TipoCalculadora.Rescisao)
         .AddKeyedTransient<ICalculadora, CalculadoraCustoFuncionario>(TipoCalculadora.CustoFuncionario)
         .AddKeyedTransient<ICalculadora, CalculadoraProLabore>(TipoCalculadora.ProLaboreAutonomo)
+        .AddKeyedTransient<ICalculadora, CalculadoraPlr>(TipoCalculadora.Plr)
+        .AddKeyedTransient<ICalculadora, CalculadoraSalarioFamilia>(TipoCalculadora.SalarioFamilia)
+        .AddKeyedTransient<ICalculadora, CalculadoraAdicionais>(TipoCalculadora.Adicionais)
         .AddInfrastructure()
         .BuildServiceProvider();
 }

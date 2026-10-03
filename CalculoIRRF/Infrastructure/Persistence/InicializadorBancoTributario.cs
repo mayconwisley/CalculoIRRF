@@ -10,7 +10,7 @@ namespace CalculoIRRF.Infrastructure.Persistence;
 public sealed class InicializadorBancoTributario(BancoTributario banco) : IInicializadorBancoTributario
 {
     /// <summary>Incremente ao alterar as sementes ou os scripts abaixo, para que bancos existentes recebam a nova carga.</summary>
-    private const int VersaoSementes = 2;
+    private const int VersaoSementes = 3;
     private const double LimiteUltimaFaixaIrrf = 9_999_999_999_999.99d;
 
     private static readonly SementeFaixa[] FaixasInss =
@@ -42,6 +42,35 @@ public sealed class InicializadorBancoTributario(BancoTributario banco) : IInici
     private static readonly SementeParametro[] DescontosSimplificados = [new(2017, 1, 1, 0d), new(2023, 5, 1, 528.00d), new(2024, 2, 1, 564.80d), new(2025, 5, 1, 607.20d), new(2026, 1, 1, 607.20d)];
     private static readonly SementeParametro[] DescontosMinimos = [new(2017, 1, 1, 0d)];
 
+    // Base do adicional de insalubridade (CLT, art. 192).
+    private static readonly SementeParametro[] SalariosMinimos =
+    [
+        new(2017, 1, 1, 937.00d), new(2018, 1, 1, 954.00d), new(2019, 1, 1, 998.00d), new(2020, 1, 1, 1_039.00d), new(2020, 2, 1, 1_045.00d),
+        new(2021, 1, 1, 1_100.00d), new(2022, 1, 1, 1_212.00d), new(2023, 1, 1, 1_302.00d), new(2023, 5, 1, 1_320.00d), new(2024, 1, 1, 1_412.00d),
+        new(2025, 1, 1, 1_518.00d), new(2026, 1, 1, 1_621.00d)
+    ];
+
+    // Cota por filho conforme a remuneração do segurado. Até 10/2019 havia duas faixas; a EC 103/2019 deixou uma só.
+    private static readonly SementeSalarioFamilia[] FaixasSalarioFamilia =
+    [
+        new(2017, 1, 1, 1, 859.88d, 44.09d), new(2017, 1, 1, 2, 1_292.43d, 31.07d),
+        new(2018, 1, 1, 1, 877.67d, 45.00d), new(2018, 1, 1, 2, 1_319.18d, 31.71d),
+        new(2019, 1, 1, 1, 907.77d, 46.54d), new(2019, 1, 1, 2, 1_364.43d, 32.80d),
+        new(2019, 11, 1, 1, 1_364.43d, 46.54d),
+        new(2020, 1, 1, 1, 1_425.56d, 48.62d), new(2021, 1, 1, 1, 1_503.25d, 51.27d), new(2022, 1, 1, 1, 1_655.98d, 56.47d),
+        new(2023, 1, 1, 1, 1_754.18d, 59.82d), new(2024, 1, 1, 1, 1_819.26d, 62.04d), new(2025, 1, 1, 1, 1_906.04d, 65.00d),
+        new(2026, 1, 1, 1, 1_980.38d, 67.54d)
+    ];
+
+    // Tabela anual exclusiva da PLR (Lei 10.101/2000, anexo), conforme as tabelas publicadas pela Receita Federal.
+    private static readonly SementeIrrf[] FaixasPlr =
+    [
+        new(2017, 1, 1, 1, 6_677.55d, 0d, 0d), new(2017, 1, 1, 2, 9_922.28d, 7.5d, 500.82d), new(2017, 1, 1, 3, 13_167.00d, 15d, 1_244.99d), new(2017, 1, 1, 4, 16_380.38d, 22.5d, 2_232.51d), new(2017, 1, 1, 5, LimiteUltimaFaixaIrrf, 27.5d, 3_051.53d),
+        new(2023, 5, 1, 1, 7_407.11d, 0d, 0d), new(2023, 5, 1, 2, 9_922.28d, 7.5d, 555.53d), new(2023, 5, 1, 3, 13_167.00d, 15d, 1_299.70d), new(2023, 5, 1, 4, 16_380.38d, 22.5d, 2_287.23d), new(2023, 5, 1, 5, LimiteUltimaFaixaIrrf, 27.5d, 3_106.25d),
+        new(2024, 2, 1, 1, 7_640.80d, 0d, 0d), new(2024, 2, 1, 2, 9_922.28d, 7.5d, 573.06d), new(2024, 2, 1, 3, 13_167.00d, 15d, 1_317.23d), new(2024, 2, 1, 4, 16_380.38d, 22.5d, 2_304.76d), new(2024, 2, 1, 5, LimiteUltimaFaixaIrrf, 27.5d, 3_123.78d),
+        new(2025, 5, 1, 1, 8_214.40d, 0d, 0d), new(2025, 5, 1, 2, 9_922.28d, 7.5d, 616.08d), new(2025, 5, 1, 3, 13_167.00d, 15d, 1_360.25d), new(2025, 5, 1, 4, 16_380.38d, 22.5d, 2_347.78d), new(2025, 5, 1, 5, LimiteUltimaFaixaIrrf, 27.5d, 3_166.80d)
+    ];
+
     public async Task InicializarAsync(CancellationToken cancellationToken)
     {
         await using var conexao = await banco.AbrirAsync(cancellationToken);
@@ -51,10 +80,13 @@ public sealed class InicializadorBancoTributario(BancoTributario banco) : IInici
         // Uma única transação: ou a carga inteira é gravada junto com a versão, ou nada muda.
         await using var transacao = conexao.BeginTransaction();
         await CriarTabelaReducaoMensalAsync(conexao, transacao, cancellationToken);
+        await CriarTabelasDasCalculadorasAsync(conexao, transacao, cancellationToken);
         await CorrigirOuInserirReducaoMensal2026Async(conexao, transacao, cancellationToken);
         await CorrigirFaixasInss2022Async(conexao, transacao, cancellationToken);
         await InserirFaixasInssAusentesAsync(conexao, transacao, cancellationToken);
         await InserirFaixasIrrfAusentesAsync(conexao, transacao, cancellationToken);
+        await InserirFaixasPlrAusentesAsync(conexao, transacao, cancellationToken);
+        await InserirFaixasSalarioFamiliaAusentesAsync(conexao, transacao, cancellationToken);
         await InserirParametrosAusentesAsync(conexao, transacao, cancellationToken);
         await conexao.ExecutarAsync(transacao, $"PRAGMA user_version = {VersaoSementes}", cancellationToken);
         await transacao.CommitAsync(cancellationToken);
@@ -74,6 +106,31 @@ public sealed class InicializadorBancoTributario(BancoTributario banco) : IInici
             "LimiteRendimentos" REAL NOT NULL,
             "Multiplicador" REAL NOT NULL,
             "ValorBase" REAL NOT NULL
+        );
+        """, cancellationToken);
+
+    private static Task CriarTabelasDasCalculadorasAsync(SqliteConnection conexao, SqliteTransaction transacao, CancellationToken cancellationToken) => conexao.ExecutarAsync(transacao, """
+        CREATE TABLE IF NOT EXISTS "SalarioMinimo" (
+            "Id" INTEGER NOT NULL CONSTRAINT "PK_SalarioMinimo" PRIMARY KEY AUTOINCREMENT,
+            "Competencia" TEXT NOT NULL,
+            "Valor" REAL NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS "SalarioFamilia" (
+            "Id" INTEGER NOT NULL CONSTRAINT "PK_SalarioFamilia" PRIMARY KEY AUTOINCREMENT,
+            "Competencia" TEXT NOT NULL,
+            "Faixa" INTEGER NOT NULL,
+            "LimiteRemuneracao" REAL NOT NULL,
+            "Cota" REAL NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS "Plr" (
+            "Id" INTEGER NOT NULL CONSTRAINT "PK_Plr" PRIMARY KEY AUTOINCREMENT,
+            "Competencia" TEXT NOT NULL,
+            "Faixa" INTEGER NOT NULL,
+            "Valor" REAL NOT NULL,
+            "Porcentagem" REAL NOT NULL,
+            "Deducao" REAL NOT NULL
         );
         """, cancellationToken);
 
@@ -129,11 +186,28 @@ public sealed class InicializadorBancoTributario(BancoTributario banco) : IInici
                 ("$competencia", item.Competencia), ("$faixa", item.Faixa), ("$valor", item.Limite), ("$porcentagem", item.Aliquota), ("$deducao", item.Deducao));
     }
 
+    private static async Task InserirFaixasPlrAusentesAsync(SqliteConnection conexao, SqliteTransaction transacao, CancellationToken cancellationToken)
+    {
+        var existentes = (await conexao.ListarAsync(transacao, "SELECT Competencia, Faixa FROM Plr", leitor => (leitor.GetDateTime(0), leitor.GetInt32(1)), cancellationToken)).ToHashSet();
+        foreach (var item in FaixasPlr.Where(item => !existentes.Contains((item.Competencia, item.Faixa))))
+            await conexao.ExecutarAsync(transacao, "INSERT INTO Plr (Competencia, Faixa, Valor, Porcentagem, Deducao) VALUES ($competencia, $faixa, $valor, $porcentagem, $deducao)", cancellationToken,
+                ("$competencia", item.Competencia), ("$faixa", item.Faixa), ("$valor", item.Limite), ("$porcentagem", item.Aliquota), ("$deducao", item.Deducao));
+    }
+
+    private static async Task InserirFaixasSalarioFamiliaAusentesAsync(SqliteConnection conexao, SqliteTransaction transacao, CancellationToken cancellationToken)
+    {
+        var existentes = (await conexao.ListarAsync(transacao, "SELECT Competencia, Faixa FROM SalarioFamilia", leitor => (leitor.GetDateTime(0), leitor.GetInt32(1)), cancellationToken)).ToHashSet();
+        foreach (var item in FaixasSalarioFamilia.Where(item => !existentes.Contains((item.Competencia, item.Faixa))))
+            await conexao.ExecutarAsync(transacao, "INSERT INTO SalarioFamilia (Competencia, Faixa, LimiteRemuneracao, Cota) VALUES ($competencia, $faixa, $limite, $cota)", cancellationToken,
+                ("$competencia", item.Competencia), ("$faixa", item.Faixa), ("$limite", item.LimiteRemuneracao), ("$cota", item.Cota));
+    }
+
     private static async Task InserirParametrosAusentesAsync(SqliteConnection conexao, SqliteTransaction transacao, CancellationToken cancellationToken)
     {
         await InserirParametrosAusentesAsync(conexao, transacao, "Dependente", DeducoesPorDependente, cancellationToken);
         await InserirParametrosAusentesAsync(conexao, transacao, "Simplificado", DescontosSimplificados, cancellationToken);
         await InserirParametrosAusentesAsync(conexao, transacao, "DescontoMinimo", DescontosMinimos, cancellationToken);
+        await InserirParametrosAusentesAsync(conexao, transacao, "SalarioMinimo", SalariosMinimos, cancellationToken);
     }
 
     private static async Task InserirParametrosAusentesAsync(SqliteConnection conexao, SqliteTransaction transacao, string tabela, SementeParametro[] sementes, CancellationToken cancellationToken)
@@ -155,6 +229,11 @@ public sealed class InicializadorBancoTributario(BancoTributario banco) : IInici
     }
 
     private sealed record SementeParametro(int Ano, int Mes, int Dia, double Valor)
+    {
+        public DateTime Competencia => new(Ano, Mes, Dia);
+    }
+
+    private sealed record SementeSalarioFamilia(int Ano, int Mes, int Dia, int Faixa, double LimiteRemuneracao, double Cota)
     {
         public DateTime Competencia => new(Ano, Mes, Dia);
     }

@@ -2,6 +2,7 @@
 
 using CalculoIRRF.Application.DTOs;
 using CalculoIRRF.Application.Abstractions;
+using CalculoIRRF.Application.Management;
 using CalculoIRRF.Application.UseCases;
 using CalculoIRRF.Presentation.Mvvm;
 using CalculoIRRF.Presentation.Services;
@@ -45,12 +46,7 @@ public sealed class MainWindowViewModel : ViewModelBase
         CalcularCommand = new AsyncRelayCommand(CalcularAsync);
         ExportarPdfCommand = new AsyncRelayCommand(ExportarPdfAsync, () => _ultimaSimulacao is not null);
         AtualizarBaseInssCommand = new AsyncRelayCommand(AtualizarBaseInssAsync);
-        AbrirTabelaInssCommand = new RelayCommand(_ => _navegador.AbrirTabelaInss());
-        AbrirTabelaIrrfCommand = new RelayCommand(_ => _navegador.AbrirTabelaIrrf());
-        AbrirSimplificadoCommand = new RelayCommand(_ => _navegador.AbrirSimplificado());
-        AbrirDependentesCommand = new RelayCommand(_ => _navegador.AbrirDependentes());
-        AbrirDescontoMinimoCommand = new RelayCommand(_ => _navegador.AbrirDescontoMinimo());
-        AbrirReducaoMensalIrrfCommand = new RelayCommand(_ => _navegador.AbrirReducaoMensalIrrf());
+        AbrirTabelaCommand = new RelayCommand(parametro => _navegador.AbrirTabela((TipoTabelaTributaria)parametro!));
         AbrirPensaoCommand = new RelayCommand(_ => AbrirPensao(), _ => PodeCalcularPensao);
         AbrirEstabilidadeCommand = new RelayCommand(_ => _navegador.AbrirEstabilidade());
         AbrirCalculadoraCommand = new RelayCommand(parametro => _navegador.AbrirCalculadora((TipoCalculadora)parametro!, CriarContexto()));
@@ -89,12 +85,9 @@ public sealed class MainWindowViewModel : ViewModelBase
     public ICommand CalcularCommand { get; }
     public ICommand ExportarPdfCommand { get; }
     public ICommand AtualizarBaseInssCommand { get; }
-    public ICommand AbrirTabelaInssCommand { get; }
-    public ICommand AbrirTabelaIrrfCommand { get; }
-    public ICommand AbrirSimplificadoCommand { get; }
-    public ICommand AbrirDependentesCommand { get; }
-    public ICommand AbrirDescontoMinimoCommand { get; }
-    public ICommand AbrirReducaoMensalIrrfCommand { get; }
+
+    /// <summary>Abre a tabela indicada no parâmetro (<see cref="TipoTabelaTributaria"/>).</summary>
+    public ICommand AbrirTabelaCommand { get; }
     public ICommand AbrirPensaoCommand { get; }
     public ICommand AbrirEstabilidadeCommand { get; }
 

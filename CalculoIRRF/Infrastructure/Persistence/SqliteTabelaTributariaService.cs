@@ -12,6 +12,9 @@ public sealed class SqliteTabelaTributariaService(BancoTributario banco, ICacheT
     private static readonly DefinicaoTabela Dependente = new("Dependente", TemFaixa: false, "Valor", null, null, null);
     private static readonly DefinicaoTabela DescontoMinimo = new("DescontoMinimo", TemFaixa: false, "Valor", null, null, null);
     private static readonly DefinicaoTabela ReducaoMensalIrrf = new("ReducaoMensalIrrf", TemFaixa: true, "LimiteRendimentos", "Multiplicador", "ValorBase", "Faixa de redução mensal não encontrada.");
+    private static readonly DefinicaoTabela SalarioMinimo = new("SalarioMinimo", TemFaixa: false, "Valor", null, null, null);
+    private static readonly DefinicaoTabela SalarioFamilia = new("SalarioFamilia", TemFaixa: true, "LimiteRemuneracao", null, "Cota", "Faixa do salário-família não encontrada.");
+    private static readonly DefinicaoTabela Plr = new("Plr", TemFaixa: true, "Valor", "Porcentagem", "Deducao", "Faixa da PLR não encontrada.");
 
     public async Task<IReadOnlyList<RegistroTabelaDto>> ListarAsync(TipoTabelaTributaria tipo, CancellationToken cancellationToken)
     {
@@ -59,12 +62,20 @@ public sealed class SqliteTabelaTributariaService(BancoTributario banco, ICacheT
         TipoTabelaTributaria.Simplificado => Simplificado,
         TipoTabelaTributaria.Dependente => Dependente,
         TipoTabelaTributaria.DescontoMinimo => DescontoMinimo,
-        _ => ReducaoMensalIrrf
+        TipoTabelaTributaria.ReducaoMensalIrrf => ReducaoMensalIrrf,
+        TipoTabelaTributaria.SalarioMinimo => SalarioMinimo,
+        TipoTabelaTributaria.SalarioFamilia => SalarioFamilia,
+        TipoTabelaTributaria.Plr => Plr,
+        _ => throw new ArgumentOutOfRangeException(nameof(tipo), tipo, "Tabela desconhecida.")
     };
 
     private static void Validar(TipoTabelaTributaria tipo, SalvarRegistroTabelaRequest request)
     {
-        if (request.Valor < 0m || (request.Aliquota is < 0m) || (request.Deducao is < 0m) || (tipo is TipoTabelaTributaria.Inss or TipoTabelaTributaria.Irrf or TipoTabelaTributaria.ReducaoMensalIrrf && (request.Faixa is null or <= 0 || request.Aliquota is null)) || (tipo is TipoTabelaTributaria.Irrf or TipoTabelaTributaria.ReducaoMensalIrrf && request.Deducao is null))
+        var definicao = ObterDefinicao(tipo);
+        if (request.Valor < 0m || request.Aliquota is < 0m || request.Deducao is < 0m ||
+            (definicao.TemFaixa && request.Faixa is null or <= 0) ||
+            (definicao.ColunaAliquota is not null && request.Aliquota is null) ||
+            (definicao.ColunaDeducao is not null && request.Deducao is null))
             throw new ArgumentException("Os dados informados são inválidos.");
     }
 

@@ -64,8 +64,11 @@ Todas usam a mesma janela, com resumo, demonstrativo no formato de holerite, val
 | --- | --- |
 | Salário bruto a partir do líquido | O salário bruto que, descontados INSS e IRRF, resulta no líquido desejado. |
 | Horas extras e adicionais | Horas extras em duas faixas, adicional noturno com a hora reduzida e o reflexo no DSR, com o líquido do mês. |
+| Insalubridade e periculosidade | Insalubridade de 10%, 20% ou 40% sobre o salário mínimo (ou outra base de convenção) e periculosidade de 30%, aplicando o maior quando os dois se aplicam. |
+| Salário-família | Direito e valor pela remuneração e pelos filhos, com as duas faixas anteriores a 2020 e a cota proporcional na admissão e no desligamento. |
 | 13º salário | 1ª e 2ª parcelas, com médias, avos e INSS e IRRF de tributação exclusiva. |
 | Férias | Férias com 1/3, dias de direito conforme as faltas, venda de 1/3 (abono, isento) e adiantamento do 13º. |
+| PLR | IRRF pela tabela anual exclusiva da Lei 10.101/2000, recalculado sobre o total do ano, com a dedução da pensão alimentícia e sem INSS e FGTS. |
 | Rescisão | Verbas por motivo de desligamento, aviso prévio proporcional com projeção, férias vencidas e proporcionais, FGTS, multa e saque. |
 | Custo do funcionário | Encargos por regime tributário (Lucro Real ou Presumido e Simples Nacional), provisões de 13º e férias e benefícios. |
 | Pró-labore e autônomo | INSS de 11% até o teto, IRRF, ISS do autônomo e o custo para a empresa. |
@@ -88,7 +91,7 @@ As regras da CLT ficam em `Domain/Trabalhista/RegrasTrabalhistas`, e a apuraçã
 
 ### Gestão de tabelas
 
-- Mantém localmente faixas de INSS e IRRF, dedução por dependente, desconto simplificado, desconto mínimo e redução mensal.
+- Mantém localmente faixas de INSS e IRRF, dedução por dependente, desconto simplificado, desconto mínimo, redução mensal, tabela anual da PLR, salário-família e salário mínimo, com o histórico desde 2017.
 - Permite incluir, editar e remover registros por competência.
 - Inicializa dados históricos de forma idempotente, sem sobrescrever manutenções locais.
 - Atualiza tabelas de INSS e IRRF pela fonte oficial ou, quando ela ainda não publicou a tabela do ano, por duas fontes alternativas que concordem entre si; em caso de falha, preserva os dados locais.
